@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TidyWeb's Learn Python Data Preparation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#e8edf1;
+  --panel:#fffdfa;
+  --ink:#202124;
+  --muted:#5f6368;
+  --line:#dde2e8;
+  --rail-bg:#17212b;
+  --rail-text:#dce7ef;
+  --rail-muted:#8fa4b5;
+  --navy:#1f4f82;
+  --cyan:#1f7a8c;
+  --yellow:#f6c85f;
+  --green:#4d6b4f;
+  --orange:#d97706;
+  --plum:#7d4655;
+  --mono-bg:#f4f5f7;
+  --shadow:0 16px 46px rgba(39,50,60,.18);
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body { background:linear-gradient(180deg, #e8edf1 0%, #f3f6f8 100%); color:var(--ink); font-family:'IBM Plex Sans', sans-serif; }
+.frame {
+  width:min(1240px, calc(100vw - 32px));
+  margin:30px auto 60px;
+  display:grid;
+  grid-template-columns:240px minmax(0,1fr);
+  background:var(--panel);
+  border:1px solid var(--line);
+  box-shadow:var(--shadow);
+}
+.rail {
+  background:var(--rail-bg);
+  color:var(--rail-text);
+  padding:32px 22px 40px;
+  position:sticky;
+  top:0;
+  height:100vh;
+  overflow-y:auto;
+}
+.rail-logo-wrap {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin:0 0 18px;
+  padding:0 0 18px;
+  border-bottom:1px solid rgba(255,255,255,.1);
+}
+.rail-logo {
+  display:block;
+  width:min(132px, 100%);
+  height:auto;
+  filter:drop-shadow(0 10px 18px rgba(34, 214, 255, .16));
+}
+.rail-title { font-family:'Atkinson Hyperlegible', sans-serif; font-size:20px; font-weight:700; color:#fff; line-height:1.2; margin-bottom:8px; }
+.rail-sub { font-size:12px; color:var(--rail-muted); line-height:1.55; margin-bottom:28px; padding-bottom:20px; border-bottom:1px solid rgba(255,255,255,.1); }
+.token {
+  display:flex; gap:10px; align-items:center; padding:9px 0;
+  border-top:1px solid rgba(255,255,255,.1);
+  font:600 11px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.06em;
+  color:var(--rail-muted);
+}
+.dot { width:10px; height:10px; border-radius:50%; background:var(--yellow); flex-shrink:0; }
+.dot.cyan { background:var(--cyan); }
+.dot.green { background:var(--green); }
+.dot.orange { background:var(--orange); }
+.rail-nav { margin-top:22px; border-top:1px solid rgba(255,255,255,.1); padding-top:16px; }
+.rail-nav-label { font:600 10px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.08em; color:var(--rail-muted); margin-bottom:10px; }
+.rail-nav a {
+  display:flex; align-items:center; gap:8px; padding:7px 0; font-size:13px; color:var(--rail-text);
+  text-decoration:none; line-height:1.35; border-bottom:1px solid rgba(255,255,255,.06);
+}
+.rail-nav a:hover { color:#fff; }
+.rail-nav .num { font:600 10px 'IBM Plex Mono', monospace; color:var(--rail-muted); width:22px; flex-shrink:0; }
+main { padding:48px 52px 72px; }
+.page-mode { font:700 11px 'IBM Plex Mono', monospace; letter-spacing:.1em; text-transform:uppercase; color:var(--cyan); margin-bottom:10px; }
+.page-title { font-family:'Atkinson Hyperlegible', sans-serif; font-size:40px; font-weight:700; color:var(--navy); line-height:1.06; margin-bottom:14px; }
+.page-sub { font-size:17px; line-height:1.8; color:var(--muted); margin-bottom:48px; padding-bottom:28px; border-bottom:2px solid var(--mono-bg); max-width:78ch; }
+.page-sub p + p { margin-top:18px; }
+.note-section { margin-bottom:64px; scroll-margin-top:20px; }
+.note-eyebrow { display:flex; align-items:center; gap:12px; margin-bottom:20px; }
+.note-num { font:600 11px 'IBM Plex Mono', monospace; color:var(--muted); letter-spacing:.06em; }
+.note-heading { font-family:'Atkinson Hyperlegible', sans-serif; font-size:24px; font-weight:700; color:var(--navy); line-height:1.2; }
+.note-rule { flex:1; height:1px; background:var(--line); margin-left:4px; }
+.stack { display:grid; gap:14px; }
+.panel { border:1px solid var(--line); background:#fbfcfd; border-radius:4px; overflow:hidden; }
+.panel header { display:flex; justify-content:space-between; align-items:center; padding:8px 14px; border-bottom:1px solid var(--line); font:600 11px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.08em; }
+.panel header .tag { color:var(--navy); }
+.panel header .type { color:var(--muted); }
+.panel .body { padding:18px 20px; font-size:16px; line-height:1.8; }
+.panel .body p + p { margin-top:10px; }
+.panel.translation { border-left:4px solid var(--yellow); }
+.panel.rule { border-left:4px solid var(--orange); }
+.panel.resolution { border-left:4px solid var(--cyan); }
+.plain-english { font-style:italic; font-size:15px; color:var(--muted); border-top:1px solid var(--line); padding:14px 20px; line-height:1.7; background:#fbfcfd; }
+.shelf {
+  display:grid;
+  grid-template-columns:1fr;
+  gap:18px;
+}
+.card {
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  border:1px solid var(--line);
+  border-left:7px solid var(--navy);
+  border-radius:12px;
+  background:linear-gradient(180deg, #ffffff 0%, #f7fafc 100%);
+  padding:22px 26px;
+  box-shadow:0 10px 20px rgba(31,79,130,.08);
+}
+.card.visual { border-left-color:var(--cyan); }
+.card.stats { border-left-color:var(--orange); }
+.card sql { border-left-color:var(--plum); }
+.card .eyebrow { font:600 11px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); }
+.card h3 { font-family:'Atkinson Hyperlegible', sans-serif; color:var(--navy); font-size:24px; line-height:1.2; }
+.card p { font-size:16px; line-height:1.8; color:#3f4954; max-width:72ch; }
+.link-row { display:flex; gap:10px; flex-wrap:wrap; margin-top:auto; }
+.btn {
+  display:inline-flex; align-items:center; justify-content:center;
+  padding:10px 14px; border-radius:999px; text-decoration:none;
+  font:600 13px 'IBM Plex Sans', sans-serif; border:1px solid var(--line);
+  color:var(--navy); background:#fff;
+}
+.btn.primary { background:var(--navy); color:#fff; border-color:var(--navy); }
+.btn:hover { filter:brightness(.98); }
+.inline-list { display:grid; gap:10px; }
+.inline-list a { color:var(--navy); text-decoration:none; font-weight:600; }
+.inline-list a:hover { text-decoration:underline; }
+.mono { font-family:'IBM Plex Mono', monospace; background:var(--mono-bg); border-radius:4px; padding:.05em .3em; white-space:nowrap; }
+.footer { color:var(--muted); font-size:13px; text-align:center; margin-top:64px; }
+@media (max-width:980px) {
+  .frame { grid-template-columns:1fr; }
+  .rail { display:none; }
+  main { padding:32px 22px 48px; }
+  .page-title { font-size:28px; }
+  .shelf { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+<article class="frame">
+  <aside class="rail">
+    <div class="rail-logo-wrap">
+      <img class="rail-logo" src="assets/tidyweb_logo.png" alt="TidyWeb logo">
+    </div>
+    <div class="rail-title">TidyWeb's Learn Python Data Preparation</div>
+    <div class="rail-sub">A Git-facing bookshelf for data analysis notes, companion notebooks, and bundled datasets. The HTML book is the main public experience. The notebooks sit alongside it as working companions.</div>
+    <div class="token"><span class="dot"></span> Chapter Page</div>
+    <div class="token"><span class="dot cyan"></span> Field Or Tool Reference</div>
+    <div class="token"><span class="dot orange"></span> Skill Block</div>
+    <div class="token"><span class="dot green"></span> Notebook Companion</div>
+    <nav class="rail-nav">
+      <div class="rail-nav-label">Bookshelf Home</div>
+      <a href="index.html" class="active"><span class="num">00</span><span>Main Shelf</span></a>
+    </nav>
+    <nav class="rail-nav">
+      <div class="rail-nav-label">Course Chapters</div>
+      <a href="notes/data_analysis_field_overview.html"><span class="num">01</span><span>Field Overview</span></a>
+      <a href="notes/block_1_table_literacy_bridge.html"><span class="num">02</span><span>Block 1</span></a>
+      <a href="notes/block_2_selection_and_filtering.html"><span class="num">03</span><span>Block 2</span></a>
+      <a href="notes/block_3_missing_data_and_cleaning.html"><span class="num">04</span><span>Block 3</span></a>
+      <a href="notes/block_4_grouping_and_insight.html"><span class="num">05</span><span>Block 4</span></a>
+      <a href="notes/block_5_visualisation.html"><span class="num">06</span><span>Block 5</span></a>
+      <a href="notes/block_6_statistics_foundations.html"><span class="num">07</span><span>Block 6</span></a>
+      <a href="notes/block_7_hypothesis_and_evidence.html"><span class="num">08</span><span>Block 7</span></a>
+      <a href="notes/block_8_full_eda_cycle.html"><span class="num">09</span><span>Block 8</span></a>
+      <a href="notes/block_9_etl_drill.html"><span class="num">10</span><span>Block 9</span></a>
+      <a href="notes/block_10_dashboard_and_presentation.html"><span class="num">11</span><span>Block 10</span></a>
+    </nav>
+    <nav class="rail-nav">
+      <div class="rail-nav-label">This Page</div>
+      <a href="#start"><span class="num">01</span><span>How To Use</span></a>
+      <a href="#chapters"><span class="num">02</span><span>Core Chapters</span></a>
+      <a href="#companions"><span class="num">03</span><span>Notebook Companions</span></a>
+      <a href="#references"><span class="num">04</span><span>Reference Shelf</span></a>
+    </nav>
+  </aside>
+  <main>
+    <div class="page-mode">Bookshelf</div>
+    <h1 class="page-title">TidyWeb's Learn Python Data Preparation</h1>
+    <div class="page-sub">
+      <p>This project is structured as a web-first learning book. The HTML chapters are the main reading path. The notebooks are companion materials that let the learner actually perform the moves on bundled datasets. The aim is to keep the project portable, self-contained, and clear enough that a learner can read online first, then work locally second.</p>
+      <p>This course was built in preparation for Code Institute's Data Analyst with AI Bootcamp. Although it is aimed at that course, it should also work well as preparation for other data-analysis skills bootcamps and as a solid grounding for anyone who wants to begin learning data analysis in a more structured way.</p>
+    </div>
+
+    <section class="note-section" id="start">
+      <div class="note-eyebrow">
+        <span class="note-num">START</span>
+        <h2 class="note-heading">How To Use This Project</h2>
+        <span class="note-rule"></span>
+      </div>
+      <div class="stack">
+        <div class="panel resolution">
+          <header><span class="tag">Reading Order</span><span class="type">html first, notebook second</span></header>
+          <div class="body">
+            <p>Read the HTML chapter first. Each chapter is written to clarify the concept before the learner has to perform it. Then open the matching notebook and practise the move on the bundled dataset.</p>
+            <p>The project is designed so learners do not need to hunt for datasets elsewhere. The CSV files used by the notebooks are included in the repo.</p>
+          </div>
+          <div class="plain-english">The book explains first. The notebook makes you do it.</div>
+        </div>
+        <div class="panel rule">
+          <header><span class="tag">Important boundary</span><span class="type">static site versus execution</span></header>
+          <div class="body">
+            <p>The HTML side is intended for live web hosting through GitHub Pages. The notebooks are included as companion learning files. They can be downloaded and opened locally in Jupyter. They are not being presented here as full in-browser live notebooks.</p>
+          </div>
+          <div class="plain-english">This site is the book. The notebooks are the companion workshop materials.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="note-section" id="chapters">
+      <div class="note-eyebrow">
+        <span class="note-num">SHELF 01</span>
+        <h2 class="note-heading">Core Chapters</h2>
+        <span class="note-rule"></span>
+      </div>
+      <div class="shelf">
+        <article class="card">
+          <div class="eyebrow">Field Map</div>
+          <h3>Data Analysis Field Overview</h3>
+          <p>A wide conceptual map of the field: pipelines, roles, tools, statistics, SQL, and how data work becomes decision support.</p>
+          <div class="link-row">
+            <a class="btn primary" href="notes/data_analysis_field_overview.html">Open Chapter</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="eyebrow">Block 1</div>
+          <h3>Table Literacy</h3>
+          <p>Reading tables, loading CSVs, and understanding what a pandas table actually is before moving into filtering or grouping.</p>
+          <div class="link-row">
+            <a class="btn primary" href="notes/block_1_table_literacy_bridge.html">Open Chapter</a>
+            <a class="btn" href="notebooks/blocks_1_10/block_01_table_literacy.ipynb">Notebook</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="eyebrow">Block 2</div>
+          <h3>Selection And Filtering</h3>
+          <p>Filtering rows, asking yes-or-no questions of a table, and understanding the bracket logic that makes those filters work.</p>
+          <div class="link-row">
+            <a class="btn primary" href="notes/block_2_selection_and_filtering.html">Open Chapter</a>
+            <a class="btn" href="notebooks/blocks_1_10/block_02_selection_and_filtering.ipynb">Notebook</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="eyebrow">Block 3</div>
+          <h3>Missing Data And Cleaning</h3>
+          <p>How to inspect missingness, decide what to preserve, and clean a table without losing sight of what the operation does.</p>
+          <div class="link-row">
+            <a class="btn primary" href="notes/block_3_missing_data_and_cleaning.html">Open Chapter</a>
+            <a class="btn" href="notebooks/blocks_1_10/block_03_missing_data_and_cleaning.ipynb">Notebook</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="eyebrow">Block 4</div>
+          <h3>Grouping And Insight</h3>
+          <p>Turning raw rows into grouped summaries and learning how grouped analysis becomes findings rather than just output.</p>
+          <div class="link-row">
+            <a class="btn primary" href="notes/block_4_grouping_and_insight.html">Open Chapter</a>
+            <a class="btn" href="notebooks/blocks_1_10/block_04_grouping_and_insight.ipynb">Notebook</a>
+          </div>
+        </article>
+
+        <article class="card visual">
+          <div class="eyebrow">Block 5</div>
+          <h3>Visualisation</h3>
+          <p>Choosing charts for a reason, reading what they do and do not show, and using visuals to support the analytical question.</p>
+          <div class="link-row">
+            <a class="btn primary" href="notes/block_5_visualisation.html">Open Chapter</a>
+            <a class="btn" href="notebooks/blocks_1_10/block_05_visualisation.ipynb">Notebook</a>
+          </div>
+        </article>
+
+        <article class="card stats">
+          <div class="eyebrow">Block 6</div>
+          <h3>Statistics Foundations</h3>
+          <p>Statistical thinking in plain English: measures, distributions, and the ideas that support later evidence-based analysis.</p>
+          <div class="link-row">
+            <a class="btn primary" href="notes/block_6_statistics_foundations.html">Open Chapter</a>
+            <a class="btn" href="notebooks/blocks_1_10/block_06_statistics_foundations.ipynb">Notebook</a>
+          </div>
+        </article>
+
+        <article class="card stats">
+          <div class="eyebrow">Block 7</div>
+          <h3>Hypothesis And Evidence</h3>
+          <p>Using data as evidence, distinguishing importance from significance, and reading what a result actually justifies.</p>
+          <div class="link-row">
+            <a class="btn primary" href="notes/block_7_hypothesis_and_evidence.html">Open Chapter</a>
+            <a class="btn" href="notebooks/blocks_1_10/block_07_hypothesis_and_evidence.ipynb">Notebook</a>
+          </div>
+        </article>
+
+        <article class="card stats">
+          <div class="eyebrow">Block 8</div>
+          <h3>Full EDA Cycle</h3>
+          <p>A performance block: load an unfamiliar dataset, inspect it, clean it, analyse it, and write the findings without teaching scaffolds.</p>
+          <div class="link-row">
+            <a class="btn primary" href="notes/block_8_full_eda_cycle.html">Open Chapter</a>
+            <a class="btn" href="notebooks/blocks_1_10/block_08_full_eda_cycle.ipynb">Notebook</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="eyebrow">Block 9</div>
+          <h3>ETL Drill</h3>
+          <p>Load, clean, transform, save, and explain. The learner repeats the pipeline on two datasets, with the second run used as a timed drill.</p>
+          <div class="link-row">
+            <a class="btn primary" href="notes/block_9_etl_drill.html">Open Chapter</a>
+            <a class="btn" href="notebooks/blocks_1_10/block_09_etl_drill.ipynb">Notebook</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="eyebrow">Block 10</div>
+          <h3>Dashboard And Presentation</h3>
+          <p>Moving from analysis into communication: KPIs, chart selection, findings summaries, and presentation-ready outputs.</p>
+          <div class="link-row">
+            <a class="btn primary" href="notes/block_10_dashboard_and_presentation.html">Open Chapter</a>
+            <a class="btn" href="notebooks/blocks_1_10/block_10_dashboard_and_presentation.ipynb">Notebook</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="note-section" id="companions">
+      <div class="note-eyebrow">
+        <span class="note-num">SHELF 02</span>
+        <h2 class="note-heading">Notebook Companions</h2>
+        <span class="note-rule"></span>
+      </div>
+      <div class="stack">
+        <div class="panel resolution">
+          <header><span class="tag">What the notebooks are</span><span class="type">companion materials</span></header>
+          <div class="body">
+            <p>The notebooks are included so the learner can actually perform the moves discussed in the HTML chapters. They belong to the same project and use the bundled datasets in <span class="mono">datasets/</span>.</p>
+            <p>Some notebooks ask the learner to create new output files as part of the exercise. Those are learner-generated results, not files the project has to ship with in advance.</p>
+          </div>
+          <div class="plain-english">Inputs ship with the project. Some outputs are created by the learner.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="note-section" id="references">
+      <div class="note-eyebrow">
+        <span class="note-num">SHELF 03</span>
+        <h2 class="note-heading">Reference Shelf</h2>
+        <span class="note-rule"></span>
+      </div>
+      <div class="stack">
+        <div class="panel translation">
+          <header><span class="tag">Extra references</span><span class="type">side modules and support</span></header>
+          <div class="body">
+            <div class="inline-list">
+              <a href="notes/seaborn_foundations.html">Seaborn Foundations</a>
+              <a href="notes/sql_reference.html">SQL Reference</a>
+              <a href="notes/sql_exercise_list.md">SQL Exercise List</a>
+              <a href="notes/git_and_github/git_and_github_reference.html">Git and GitHub Reference</a>
+              <a href="notes/git_and_github/git_and_github_exercise_walkthrough.md">Git and GitHub Exercise Walkthrough</a>
+            </div>
+          </div>
+          <div class="plain-english">These support the main learning path rather than replacing it.</div>
+        </div>
+      </div>
+    </section>
+
+    <p class="footer">Git-facing bookshelf for Learn Python Data. HTML is the live book. Notebooks and datasets travel with it.</p>
+  </main>
+</article>
+</body>
+</html>

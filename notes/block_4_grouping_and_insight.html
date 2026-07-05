@@ -1,0 +1,651 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Block 4 Grouping and Insight</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#eef1f4;
+  --panel:#fffdfa;
+  --ink:#202124;
+  --muted:#5f6368;
+  --line:#dde2e8;
+  --rail-bg:#17212b;
+  --rail-text:#dce7ef;
+  --rail-muted:#8fa4b5;
+  --navy:#1f4f82;
+  --cyan:#1f7a8c;
+  --yellow:#f6c85f;
+  --green:#4d6b4f;
+  --orange:#d97706;
+  --plum:#7d4655;
+  --code-bg:#111820;
+  --code-bg2:#18222c;
+  --mono-bg:#f4f5f7;
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body { background:var(--bg); color:var(--ink); font-family:'IBM Plex Sans', sans-serif; }
+.frame {
+  width: min(1160px, calc(100vw - 32px));
+  margin: 30px auto 60px;
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  box-shadow: 0 16px 46px rgba(39,50,60,.18);
+}
+.rail {
+  background: var(--rail-bg);
+  color: var(--rail-text);
+  padding: 32px 22px 40px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.rail-logo-wrap {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin: 0 0 18px;
+  padding: 0 0 18px;
+  border-bottom: 1px solid rgba(255,255,255,.1);
+}
+.rail-logo {
+  display:block;
+  width: min(132px, 100%);
+  height: auto;
+  filter: drop-shadow(0 10px 18px rgba(34, 214, 255, .16));
+}
+
+.rail-title {
+  font-family: 'Atkinson Hyperlegible', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: white;
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+.rail-sub {
+  font-size: 12px;
+  color: var(--rail-muted);
+  line-height: 1.55;
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(255,255,255,.1);
+}
+.token {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 9px 0;
+  border-top: 1px solid rgba(255,255,255,.1);
+  font: 600 11px 'IBM Plex Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--rail-muted);
+}
+.dot { width:10px; height:10px; border-radius:50%; background:var(--yellow); flex-shrink:0; }
+.dot.cyan { background:var(--cyan); }
+.dot.green { background:var(--green); }
+.dot.orange { background:var(--orange); }
+.rail-nav { margin-top: 22px; border-top: 1px solid rgba(255,255,255,.1); padding-top:16px; }
+.rail-nav-label {
+  font: 600 10px 'IBM Plex Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--rail-muted);
+  margin-bottom: 10px;
+}
+.rail-nav a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 0;
+  font-size: 13px;
+  color: var(--rail-text);
+  text-decoration: none;
+  line-height: 1.35;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+.rail-nav a:hover { color: white; }
+.rail-nav a .num {
+  font: 600 10px 'IBM Plex Mono', monospace;
+  color: var(--rail-muted);
+  flex-shrink: 0;
+  width: 22px;
+}
+
+.course-nav a.active { color:white; font-weight:700; }
+.course-nav a.active .num { color:white; }
+.chapter-nav {
+  margin-top: 42px;
+  padding-top: 22px;
+  border-top: 2px solid var(--mono-bg);
+  display: flex;
+  justify-content: flex-end;
+}
+.chapter-next {
+  display:inline-flex;
+  align-items:center;
+  gap:12px;
+  padding:14px 20px;
+  border-radius:999px;
+  text-decoration:none;
+  background:var(--navy);
+  color:#fff;
+  box-shadow:0 10px 20px rgba(31,79,130,.18);
+  border:1px solid var(--navy);
+}
+.chapter-next:hover { filter:brightness(.96); }
+.chapter-next .label {
+  font:600 11px 'IBM Plex Mono', monospace;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  color:#d8e7ff;
+}
+.chapter-next .title {
+  font-family:'Atkinson Hyperlegible', sans-serif;
+  font-size:18px;
+  line-height:1.2;
+  color:#fff;
+}
+.chapter-next .arrow {
+  font-size:20px;
+  line-height:1;
+  color:#fff;
+}
+
+main { padding: 48px 52px 72px; }
+.page-mode {
+  font: 700 11px 'IBM Plex Mono', monospace;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  margin-bottom: 10px;
+}
+.page-title {
+  font-family: 'Atkinson Hyperlegible', sans-serif;
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1.1;
+  margin-bottom: 14px;
+}
+.page-sub {
+  font-size: 16px;
+  line-height: 1.75;
+  color: var(--muted);
+  margin-bottom: 48px;
+  padding-bottom: 28px;
+  border-bottom: 2px solid var(--mono-bg);
+}
+.note-section { margin-bottom: 64px; scroll-margin-top: 20px; }
+.note-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.note-num {
+  font: 600 11px 'IBM Plex Mono', monospace;
+  color: var(--muted);
+  letter-spacing: .06em;
+}
+.note-heading {
+  font-family: 'Atkinson Hyperlegible', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1.2;
+}
+.note-rule {
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+  margin-left: 4px;
+}
+.stack { display: grid; gap: 12px; }
+.panel {
+  border: 1px solid var(--line);
+  background: #fbfcfd;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.panel header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--line);
+  font: 600 11px 'IBM Plex Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+.panel header .tag  { color: var(--navy); }
+.panel header .type { color: var(--muted); }
+.panel .body { padding: 16px 20px; font-size: 16px; line-height: 1.8; }
+.panel .body p + p { margin-top: 10px; }
+.panel.translation { border-left: 4px solid var(--yellow); }
+.panel.rule { border-left: 4px solid var(--orange); }
+.panel.resolution { border-left: 4px solid var(--cyan); }
+.panel.code {
+  background: var(--code-bg);
+  color: #e8eef4;
+  border-color: #26313c;
+  border-left-color: #26313c;
+}
+.panel.code header {
+  background: var(--code-bg2);
+  border-color: #26313c;
+  color: #8ea3b5;
+}
+.panel.code header .tag { color: #c5d8ea; }
+.panel.code .body { padding: 0; }
+.panel.code pre {
+  margin: 0;
+  padding: 18px 22px;
+  font: 15px/1.9 'IBM Plex Mono', monospace;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.command-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+.command-box {
+  display: block;
+  border: 2px solid #cfd8e3;
+  border-left: 7px solid var(--cyan);
+  border-radius: 12px;
+  background: linear-gradient(180deg, #ffffff 0%, #f6f9fc 100%);
+  padding: 18px 20px;
+  min-height: 122px;
+  box-shadow: 0 8px 18px rgba(31, 79, 130, .08);
+}
+.command-box .command {
+  display: block;
+  font: 700 21px/1.35 'IBM Plex Mono', monospace;
+  color: var(--navy);
+  margin-bottom: 10px;
+  overflow-wrap: anywhere;
+}
+.command-box .meaning {
+  display: block;
+  font-size: 16px;
+  line-height: 1.55;
+  color: #3f4954;
+}
+.command-box.inspect { border-left-color: var(--orange); }
+.command-box.structure { border-left-color: var(--green); }
+.command-box.select { border-left-color: var(--plum); }
+.command-box.count { border-left-color: var(--yellow); }
+.part-outer { color: #d97706; font-weight: 600; }
+.part-inner { color: #1f4f82; font-weight: 600; }
+.part-core { color: #4d6b4f; font-weight: 600; }
+.part-var { color: #d8e7ff; }
+.part-note { color: #9ed18c; }
+.mono {
+  font-family:'IBM Plex Mono', monospace;
+  background:var(--mono-bg);
+  border-radius:4px;
+  padding:.05em .3em;
+  white-space:nowrap;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+th, td {
+  border: 1px solid var(--line);
+  padding: 12px 14px;
+  vertical-align: top;
+  text-align: left;
+}
+th {
+  background: #f7f9fb;
+  color: var(--navy);
+  font-family:'IBM Plex Mono', monospace;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+.legend {
+  display: grid;
+  gap: 8px;
+  font-size: 15px;
+}
+.legend p { line-height: 1.7; }
+.plain-english {
+  font-style: italic;
+  font-size: 15px;
+  color: var(--muted);
+  border-top: 1px solid var(--line);
+  padding: 14px 20px;
+  line-height: 1.7;
+  background: #fbfcfd;
+}
+.footer { color:var(--muted); font-size:13px; text-align:center; margin-top:64px; }
+@media (max-width:860px) {
+  .frame { grid-template-columns: 1fr; }
+  .rail  { display: none; }
+  main   { padding: 32px 22px 48px; }
+  .page-title { font-size: 26px; }
+  .command-grid { grid-template-columns: 1fr; }
+  .command-box .command { font-size: 18px; }
+}
+</style>
+</head>
+<body>
+<article class="frame">
+  <aside class="rail">
+    <div class="rail-logo-wrap">
+      <img class="rail-logo" src="../assets/tidyweb_logo.png" alt="TidyWeb logo">
+    </div>
+    <div class="rail-title">Block 4 Grouping and Insight</div>
+    <div class="rail-sub">A reference guide to sorting, counting, grouping, and turning grouped results into plain-English findings.</div>
+    <div class="token"><span class="dot"></span> Translation</div>
+    <div class="token"><span class="dot cyan"></span> Command Meaning</div>
+    <div class="token"><span class="dot green"></span> Code Breakdown</div>
+    <div class="token"><span class="dot orange"></span> Rule</div>
+        <nav class="rail-nav course-nav">
+      <div class="rail-nav-label">Bookshelf Home</div>
+      <a href="../index.html"><span class="num">00</span><span>Main Shelf</span></a>
+    </nav>
+    <nav class="rail-nav course-nav">
+      <div class="rail-nav-label">Course Chapters</div>
+      <a href="data_analysis_field_overview.html"><span class="num">01</span><span>Field Overview</span></a>
+      <a href="block_1_table_literacy_bridge.html"><span class="num">02</span><span>Block 1</span></a>
+      <a href="block_2_selection_and_filtering.html"><span class="num">03</span><span>Block 2</span></a>
+      <a href="block_3_missing_data_and_cleaning.html"><span class="num">04</span><span>Block 3</span></a>
+      <a href="block_4_grouping_and_insight.html" class="active"><span class="num">05</span><span>Block 4</span></a>
+      <a href="block_5_visualisation.html"><span class="num">06</span><span>Block 5</span></a>
+      <a href="block_6_statistics_foundations.html"><span class="num">07</span><span>Block 6</span></a>
+      <a href="block_7_hypothesis_and_evidence.html"><span class="num">08</span><span>Block 7</span></a>
+      <a href="block_8_full_eda_cycle.html"><span class="num">09</span><span>Block 8</span></a>
+      <a href="block_9_etl_drill.html"><span class="num">10</span><span>Block 9</span></a>
+      <a href="block_10_dashboard_and_presentation.html"><span class="num">11</span><span>Block 10</span></a>
+    </nav>
+    <nav class="rail-nav">
+      <div class="rail-nav-label">This Chapter</div>
+      <a href="#grouping"><span class="num">01</span><span>What Grouping Is</span></a>
+      <a href="#commands"><span class="num">02</span><span>Command Boxes</span></a>
+      <a href="#breakdowns"><span class="num">03</span><span>Part-by-part Breakdowns</span></a>
+      <a href="#findings"><span class="num">04</span><span>Findings Rule</span></a>
+      <a href="#carryover"><span class="num">05</span><span>What Does Not Change</span></a>
+    </nav>
+  </aside>
+  <main>
+    <div class="page-mode">Reference Guide</div>
+    <h1 class="page-title">Block 4 Grouping and Insight</h1>
+    <p class="page-sub">Block 4 moves from looking at individual rows to asking what happens inside groups. The aim is not just to produce a table of numbers. The aim is to compare categories and then say, in plain English, what those grouped results show.</p>
+
+    <section class="note-section" id="grouping">
+      <div class="note-eyebrow">
+        <span class="note-num">NOTE 01</span>
+        <h2 class="note-heading">What Grouping Is</h2>
+        <span class="note-rule"></span>
+      </div>
+      <div class="stack">
+        <div class="panel resolution">
+          <header><span class="tag">Plain English</span><span class="type">split then summarise</span></header>
+          <div class="body">
+            <p>Grouping means splitting the table into category buckets, then calculating something inside each bucket.</p>
+            <p>You are no longer asking only about one row at a time. You are comparing groups such as passenger classes, weather types, or product categories.</p>
+          </div>
+          <div class="plain-english">Group first. Then summarise. Then say what the grouped result shows.</div>
+        </div>
+        <div class="panel translation">
+          <header><span class="tag">Before and after</span><span class="type">mental move</span></header>
+          <div class="body legend">
+            <p><strong>Before:</strong> one command tells you about one column or one filtered slice.</p>
+            <p><strong>After:</strong> one command compares several groups at once.</p>
+            <p><strong>Result:</strong> a grouped summary is usually the start of an explanation, not the explanation itself.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="note-section" id="commands">
+      <div class="note-eyebrow">
+        <span class="note-num">NOTE 02</span>
+        <h2 class="note-heading">At-a-glance Command Boxes</h2>
+        <span class="note-rule"></span>
+      </div>
+      <div class="stack">
+        <div class="panel resolution">
+          <header><span class="tag">Grouping and insight</span><span class="type">Block 4 core moves</span></header>
+          <div class="body">
+            <div class="command-grid">
+              <div class="command-box inspect">
+                <span class="command">df.sort_values("column")</span>
+                <span class="meaning">Reorder the table by one column.</span>
+              </div>
+              <div class="command-box count">
+                <span class="command">df["column"].value_counts()</span>
+                <span class="meaning">Count how often each category appears.</span>
+              </div>
+              <div class="command-box structure">
+                <span class="command">df.groupby("group")["value"].mean()</span>
+                <span class="meaning">Calculate the average inside each group.</span>
+              </div>
+              <div class="command-box structure">
+                <span class="command">df.groupby("group")["value"].count()</span>
+                <span class="meaning">Count how many rows appear inside each group.</span>
+              </div>
+              <div class="command-box select">
+                <span class="command">df.groupby("group").agg({...})</span>
+                <span class="meaning">Calculate several summaries for each group at once.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="note-section" id="breakdowns">
+      <div class="note-eyebrow">
+        <span class="note-num">NOTE 03</span>
+        <h2 class="note-heading">Part-by-part Breakdowns</h2>
+        <span class="note-rule"></span>
+      </div>
+      <div class="stack">
+        <div class="panel resolution">
+          <header><span class="tag">Command 1</span><span class="type">sort rows</span></header>
+          <div class="body">
+            <p><span class="mono">df.sort_values("column")</span> reorders rows by the values in one named column.</p>
+            <p>This does not calculate a new statistic. It changes the row order so the pattern is easier to inspect.</p>
+          </div>
+        </div>
+        <div class="panel code">
+          <header><span class="tag">Code breakdown</span><span class="type">sorting</span></header>
+          <div class="body">
+            <pre><span class="part-var">df</span><span class="part-outer">.sort_values(</span><span class="part-core">"sales"</span><span class="part-outer">)</span></pre>
+          </div>
+        </div>
+        <div class="panel translation">
+          <header><span class="tag">What each part means</span><span class="type">sort_values</span></header>
+          <div class="body legend">
+            <p><span class="part-var">df</span> = the table variable.</p>
+            <p><span class="part-outer">.sort_values()</span> = the tool that reorders rows.</p>
+            <p><span class="part-core">"sales"</span> = the column used as the ordering rule.</p>
+          </div>
+        </div>
+
+        <div class="panel resolution">
+          <header><span class="tag">Command 2</span><span class="type">count categories</span></header>
+          <div class="body">
+            <p><span class="mono">df["column"].value_counts()</span> counts how often each distinct category appears.</p>
+            <p>This is often the fastest way to answer questions such as how many passengers were in each class or how many days fall into each weather label.</p>
+          </div>
+        </div>
+        <div class="panel code">
+          <header><span class="tag">Code breakdown</span><span class="type">value counts</span></header>
+          <div class="body">
+            <pre><span class="part-var">df</span><span class="part-outer">[</span><span class="part-core">"weather"</span><span class="part-outer">]</span><span class="part-inner">.value_counts()</span></pre>
+          </div>
+        </div>
+        <div class="panel translation">
+          <header><span class="tag">What each part means</span><span class="type">category count</span></header>
+          <div class="body legend">
+            <p><span class="part-var">df["weather"]</span> = select the category column first.</p>
+            <p><span class="part-inner">.value_counts()</span> = count each distinct category value.</p>
+          </div>
+        </div>
+
+        <div class="panel resolution">
+          <header><span class="tag">Command 3</span><span class="type">group and average</span></header>
+          <div class="body">
+            <p><span class="mono">df.groupby("group")["value"].mean()</span> answers a comparison question such as: what is the average fare for each passenger class?</p>
+            <p>The group column creates the buckets. The value column tells pandas what to average inside each bucket.</p>
+          </div>
+        </div>
+        <div class="panel code">
+          <header><span class="tag">Code breakdown</span><span class="type">groupby mean</span></header>
+          <div class="body">
+            <pre><span class="part-var">df</span><span class="part-outer">.groupby(</span><span class="part-core">"category"</span><span class="part-outer">)</span><span class="part-inner">[</span><span class="part-core">"value"</span><span class="part-inner">]</span><span class="part-note">.mean()</span></pre>
+          </div>
+        </div>
+        <div class="panel translation">
+          <header><span class="tag">What each part means</span><span class="type">group average</span></header>
+          <div class="body legend">
+            <p><span class="part-outer">.groupby("category")</span> = split the rows into category groups.</p>
+            <p><span class="part-inner">["value"]</span> = choose the column to summarise inside each group.</p>
+            <p><span class="part-note">.mean()</span> = calculate the average for each group.</p>
+          </div>
+        </div>
+
+        <div class="panel resolution">
+          <header><span class="tag">Command 4</span><span class="type">group and count</span></header>
+          <div class="body">
+            <p><span class="mono">df.groupby("group")["value"].count()</span> counts how many non-missing rows appear inside each group for the chosen value column.</p>
+            <p>This is useful when you want to compare group sizes rather than group averages.</p>
+          </div>
+        </div>
+        <div class="panel code">
+          <header><span class="tag">Code breakdown</span><span class="type">groupby count</span></header>
+          <div class="body">
+            <pre><span class="part-var">df</span><span class="part-outer">.groupby(</span><span class="part-core">"weather"</span><span class="part-outer">)</span><span class="part-inner">[</span><span class="part-core">"date"</span><span class="part-inner">]</span><span class="part-note">.count()</span></pre>
+          </div>
+        </div>
+        <div class="panel translation">
+          <header><span class="tag">What each part means</span><span class="type">group count</span></header>
+          <div class="body legend">
+            <p><span class="part-outer">.groupby("weather")</span> = split rows by weather type.</p>
+            <p><span class="part-inner">["date"]</span> = choose one column to count.</p>
+            <p><span class="part-note">.count()</span> = count how many rows are present in each group for that column.</p>
+          </div>
+        </div>
+
+        <div class="panel resolution">
+          <header><span class="tag">Command 5</span><span class="type">several summaries at once</span></header>
+          <div class="body">
+            <p><span class="mono">df.groupby("group").agg({...})</span> lets one grouped result show several summary measures at once.</p>
+            <p>This is useful when one average alone is too thin and you want count plus average, or average plus maximum, side by side.</p>
+          </div>
+        </div>
+        <div class="panel code">
+          <header><span class="tag">Code breakdown</span><span class="type">agg</span></header>
+          <div class="body">
+            <pre><span class="part-var">df</span><span class="part-outer">.groupby(</span><span class="part-core">"Segment"</span><span class="part-outer">)</span><span class="part-note">.agg(</span>{<span class="part-core">"Sales"</span>: [<span class="part-core">"mean"</span>, <span class="part-core">"max"</span>]}<span class="part-note">)</span></pre>
+          </div>
+        </div>
+        <div class="panel translation">
+          <header><span class="tag">What each part means</span><span class="type">aggregation bundle</span></header>
+          <div class="body legend">
+            <p><span class="part-outer">.groupby("Segment")</span> = make the customer-segment groups.</p>
+            <p><span class="part-note">.agg(...)</span> = ask for several summary calculations.</p>
+            <p><span class="part-core">"Sales"</span> = the column being summarised.</p>
+            <p><span class="part-core">"mean", "max"</span> = the summary tools to run for each group.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="note-section" id="findings">
+      <div class="note-eyebrow">
+        <span class="note-num">NOTE 04</span>
+        <h2 class="note-heading">The Findings Rule</h2>
+        <span class="note-rule"></span>
+      </div>
+      <div class="stack">
+        <div class="panel rule">
+          <header><span class="tag">Required move</span><span class="type">numbers then sentence</span></header>
+          <div class="body">
+            <p>Every grouped result must be followed by a plain-English sentence saying what the data shows.</p>
+            <p>A grouped table is not the finished thought. The grouped table is the evidence.</p>
+          </div>
+          <div class="plain-english">Bad: "Here is the groupby result." Better: "First-class passengers had the highest average fare in this table."</div>
+        </div>
+        <div class="panel translation">
+          <header><span class="tag">Useful sentence stems</span><span class="type">reader-facing findings</span></header>
+          <div class="body legend">
+            <p><strong>Highest/lowest:</strong> The highest average ___ appears in ___.</p>
+            <p><strong>Count comparison:</strong> The largest group in this table is ___.</p>
+            <p><strong>Difference:</strong> Group ___ is higher than group ___ on average.</p>
+            <p><strong>Caution:</strong> This grouped result shows a pattern, but it does not explain why the pattern exists.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="note-section" id="carryover">
+      <div class="note-eyebrow">
+        <span class="note-num">NOTE 05</span>
+        <h2 class="note-heading">What Does Not Change Between Block 3 And Block 4</h2>
+        <span class="note-rule"></span>
+      </div>
+      <div class="stack">
+        <div class="panel translation">
+          <header><span class="tag">Block 3 to Block 4</span><span class="type">same table, bigger question</span></header>
+          <div class="body">
+            <table>
+              <thead>
+                <tr>
+                  <th>Earlier move</th>
+                  <th>Block 4 move</th>
+                  <th>What changed</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="mono">df["column"].value_counts()</span></td>
+                  <td><span class="mono">df.groupby("group")["value"].count()</span></td>
+                  <td>Instead of counting one column directly, you now count inside groups.</td>
+                </tr>
+                <tr>
+                  <td><span class="mono">df.shape</span></td>
+                  <td><span class="mono">grouped result + finding sentence</span></td>
+                  <td>Instead of stopping at inspection, you now explain what the summary means.</td>
+                </tr>
+                <tr>
+                  <td><span class="mono">df.sort_values(...)</span></td>
+                  <td><span class="mono">df.groupby(...)</span></td>
+                  <td>Sorting reorders rows. Grouping splits rows into comparison buckets.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="chapter-nav">
+      <a class="chapter-next" href="block_5_visualisation.html">
+        <span class="label">Next Chapter</span>
+        <span class="title">Block 5</span>
+        <span class="arrow">&rarr;</span>
+      </a>
+    </div>
+
+    <p class="footer">Created for the Block 4 grouping and insight workflow in the Learning_Python project.</p>
+  </main>
+</article>
+</body>
+</html>

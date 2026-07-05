@@ -1,0 +1,860 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Data Analytics — Field Overview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#eef1f4;
+  --panel:#fffdfa;
+  --ink:#202124;
+  --muted:#5f6368;
+  --line:#dde2e8;
+  --rail-bg:#17212b;
+  --rail-text:#dce7ef;
+  --rail-muted:#8fa4b5;
+  --navy:#1f4f82;
+  --cyan:#1f7a8c;
+  --yellow:#f6c85f;
+  --green:#4d6b4f;
+  --orange:#d97706;
+  --plum:#7d4655;
+  --code-bg:#111820;
+  --code-bg2:#18222c;
+  --mono-bg:#f4f5f7;
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body { background:var(--bg); color:var(--ink); font-family:'IBM Plex Sans', sans-serif; }
+.frame { width:min(1160px, calc(100vw - 32px)); margin:30px auto 60px; display:grid; grid-template-columns:220px minmax(0,1fr); background:var(--panel); border:1px solid var(--line); box-shadow:0 16px 46px rgba(39,50,60,.18); }
+.rail { background:var(--rail-bg); color:var(--rail-text); padding:32px 22px 40px; position:sticky; top:0; height:100vh; overflow-y:auto; }
+
+.rail-logo-wrap {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin: 0 0 18px;
+  padding: 0 0 18px;
+  border-bottom: 1px solid rgba(255,255,255,.1);
+}
+.rail-logo {
+  display:block;
+  width: min(132px, 100%);
+  height: auto;
+  filter: drop-shadow(0 10px 18px rgba(34, 214, 255, .16));
+}
+
+.rail-title { font-family:'Atkinson Hyperlegible', sans-serif; font-size:20px; font-weight:700; color:white; line-height:1.2; margin-bottom:6px; }
+.rail-sub { font-size:12px; color:var(--rail-muted); line-height:1.55; margin-bottom:28px; padding-bottom:20px; border-bottom:1px solid rgba(255,255,255,.1); }
+.token { display:flex; gap:10px; align-items:center; padding:9px 0; border-top:1px solid rgba(255,255,255,.1); font:600 11px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.06em; color:var(--rail-muted); }
+.dot { width:10px; height:10px; border-radius:50%; background:var(--yellow); flex-shrink:0; }
+.dot.cyan { background:var(--cyan); }
+.dot.green { background:var(--green); }
+.dot.orange { background:var(--orange); }
+.rail-nav { margin-top:22px; border-top:1px solid rgba(255,255,255,.1); padding-top:16px; }
+.rail-nav-label { font:600 10px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.08em; color:var(--rail-muted); margin-bottom:10px; }
+.rail-nav a { display:flex; align-items:center; gap:8px; padding:7px 0; font-size:13px; color:var(--rail-text); text-decoration:none; line-height:1.35; border-bottom:1px solid rgba(255,255,255,.06); }
+.rail-nav a:hover { color:white; }
+.rail-nav a .num { font:600 10px 'IBM Plex Mono', monospace; color:var(--rail-muted); flex-shrink:0; width:22px; }
+main { padding:48px 52px 72px; }
+.page-mode { font:700 11px 'IBM Plex Mono', monospace; letter-spacing:.1em; text-transform:uppercase; color:var(--cyan); margin-bottom:10px; }
+.page-title { font-family:'Atkinson Hyperlegible', sans-serif; font-size:36px; font-weight:700; color:var(--navy); line-height:1.1; margin-bottom:14px; }
+.page-sub { font-size:16px; line-height:1.75; color:var(--muted); margin-bottom:48px; padding-bottom:28px; border-bottom:2px solid var(--mono-bg); }
+.note-section { margin-bottom:64px; scroll-margin-top:20px; }
+.note-eyebrow { display:flex; align-items:center; gap:12px; margin-bottom:20px; }
+.note-num { font:600 11px 'IBM Plex Mono', monospace; color:var(--muted); letter-spacing:.06em; }
+.note-heading { font-family:'Atkinson Hyperlegible', sans-serif; font-size:24px; font-weight:700; color:var(--navy); line-height:1.2; }
+.note-rule { flex:1; height:1px; background:var(--line); margin-left:4px; }
+.stack { display:grid; gap:12px; }
+.panel { border:1px solid var(--line); background:#fbfcfd; border-radius:4px; overflow:hidden; }
+.panel header { display:flex; justify-content:space-between; align-items:center; padding:8px 14px; border-bottom:1px solid var(--line); font:600 11px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.08em; }
+.panel header .tag { color:var(--navy); }
+.panel header .type { color:var(--muted); }
+.panel .body { padding:16px 20px; font-size:16px; line-height:1.8; }
+.panel .body p + p { margin-top:10px; }
+.panel.translation { border-left:4px solid var(--yellow); }
+.panel.rule { border-left:4px solid var(--orange); }
+.panel.resolution { border-left:4px solid var(--cyan); }
+.panel.code { background:var(--code-bg); color:#e8eef4; border-color:#26313c; border-left-color:#26313c; }
+.panel.code header { background:var(--code-bg2); border-color:#26313c; color:#8ea3b5; }
+.panel.code header .tag { color:#c5d8ea; }
+.panel.code .body { padding:0; }
+.panel.code pre { margin:0; padding:18px 22px; font:15px/1.9 'IBM Plex Mono', monospace; white-space:pre-wrap; overflow-wrap:anywhere; }
+.command-grid { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:14px; }
+.command-box { display:block; border:2px solid #cfd8e3; border-left:7px solid var(--cyan); border-radius:12px; background:linear-gradient(180deg, #ffffff 0%, #f6f9fc 100%); padding:18px 20px; min-height:122px; box-shadow:0 8px 18px rgba(31,79,130,.08); }
+.command-box .command { display:block; font:700 21px/1.35 'IBM Plex Mono', monospace; color:var(--navy); margin-bottom:10px; overflow-wrap:anywhere; }
+.command-box .meaning { display:block; font-size:16px; line-height:1.55; color:#3f4954; }
+.command-box.inspect { border-left-color:var(--orange); }
+.command-box.structure { border-left-color:var(--green); }
+.command-box.select { border-left-color:var(--plum); }
+.command-box.count { border-left-color:var(--yellow); }
+.part-outer { color:#d97706; font-weight:600; }
+.part-inner { color:#1f4f82; font-weight:600; }
+.part-core { color:#4d6b4f; font-weight:600; }
+.part-var { color:#d8e7ff; }
+.part-note { color:#9ed18c; }
+.mono { font-family:'IBM Plex Mono', monospace; background:var(--mono-bg); border-radius:4px; padding:.05em .3em; white-space:nowrap; }
+table { width:100%; border-collapse:collapse; font-size:15px; }
+th, td { border:1px solid var(--line); padding:12px 14px; vertical-align:top; text-align:left; }
+th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospace; font-size:12px; text-transform:uppercase; letter-spacing:.05em; }
+.legend { display:grid; gap:8px; font-size:15px; }
+.legend p { line-height:1.7; }
+.plain-english { font-style:italic; font-size:15px; color:var(--muted); border-top:1px solid var(--line); padding:14px 20px; line-height:1.7; background:#fbfcfd; }
+.footer { color:var(--muted); font-size:13px; text-align:center; margin-top:64px; }
+
+.chapter-nav {
+  margin-top: 42px;
+  padding-top: 22px;
+  border-top: 2px solid var(--mono-bg);
+  display: flex;
+  justify-content: flex-end;
+}
+.chapter-next {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  border-radius: 999px;
+  text-decoration: none;
+  background: var(--navy);
+  color: #fff;
+  box-shadow: 0 10px 20px rgba(31,79,130,.18);
+  border: 1px solid var(--navy);
+}
+.chapter-next:hover { filter: brightness(.96); }
+.chapter-next .label {
+  font: 600 11px 'IBM Plex Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: #d8e7ff;
+}
+.chapter-next .title {
+  font-family: 'Atkinson Hyperlegible', sans-serif;
+  font-size: 18px;
+  line-height: 1.2;
+  color: #fff;
+}
+.chapter-next .arrow {
+  font-size: 20px;
+  line-height: 1;
+  color: #fff;
+}
+@media (max-width:860px) {
+  .chapter-nav { justify-content: stretch; }
+  .chapter-next { width: 100%; justify-content: center; }
+}
+
+@media (max-width:860px) { .frame { grid-template-columns:1fr; } .rail { display:none; } main { padding:32px 22px 48px; } .page-title { font-size:26px; } .command-grid { grid-template-columns:1fr; } .command-box .command { font-size:18px; } }
+</style>
+</head>
+<body>
+<article class="frame">
+  <aside class="rail">
+    <div class="rail-logo-wrap">
+      <img class="rail-logo" src="../assets/tidyweb_logo.png" alt="TidyWeb logo">
+    </div>
+    <div class="rail-title">DA Field Overview</div>
+    <div class="rail-sub">A wide conceptual map of the data analytics field. No code. No syntax. Built to anchor understanding before technical detail arrives.</div>
+    <div class="token"><span class="dot"></span> Translation</div>
+    <div class="token"><span class="dot cyan"></span> Definition Or Concept</div>
+    <div class="token"><span class="dot orange"></span> Caution Or Important Rule</div>
+    <div class="token"><span class="dot green"></span> Plain-English Summary</div>
+        <nav class="rail-nav course-nav">
+      <div class="rail-nav-label">Bookshelf Home</div>
+      <a href="../index.html"><span class="num">00</span><span>Main Shelf</span></a>
+    </nav>
+    <nav class="rail-nav course-nav">
+      <div class="rail-nav-label">Course Chapters</div>
+      <a href="data_analysis_field_overview.html" class="active"><span class="num">01</span><span>Field Overview</span></a>
+      <a href="block_1_table_literacy_bridge.html"><span class="num">02</span><span>Block 1</span></a>
+      <a href="block_2_selection_and_filtering.html"><span class="num">03</span><span>Block 2</span></a>
+      <a href="block_3_missing_data_and_cleaning.html"><span class="num">04</span><span>Block 3</span></a>
+      <a href="block_4_grouping_and_insight.html"><span class="num">05</span><span>Block 4</span></a>
+      <a href="block_5_visualisation.html"><span class="num">06</span><span>Block 5</span></a>
+      <a href="block_6_statistics_foundations.html"><span class="num">07</span><span>Block 6</span></a>
+      <a href="block_7_hypothesis_and_evidence.html"><span class="num">08</span><span>Block 7</span></a>
+      <a href="block_8_full_eda_cycle.html"><span class="num">09</span><span>Block 8</span></a>
+      <a href="block_9_etl_drill.html"><span class="num">10</span><span>Block 9</span></a>
+      <a href="block_10_dashboard_and_presentation.html"><span class="num">11</span><span>Block 10</span></a>
+    </nav>
+    <nav class="rail-nav">
+      <div class="rail-nav-label">This Chapter</div>
+      <a href="#field"><span class="num">01</span><span>The Field Defined</span></a>
+      <a href="#pipeline"><span class="num">02</span><span>Raw Data to Decision</span></a>
+      <a href="#toolkit"><span class="num">03</span><span>Tools and What They Do</span></a>
+      <a href="#stats"><span class="num">04</span><span>Statistics Without Formulas</span></a>
+      <a href="#ml"><span class="num">05</span><span>Machine Learning Concepts</span></a>
+      <a href="#sql"><span class="num">06</span><span>SQL and Databases</span></a>
+      <a href="#ethics"><span class="num">07</span><span>Ethics and Responsibility</span></a>
+    </nav>
+  </aside>
+  <main>
+    <div class="page-mode">Field Reference</div>
+    <h1 class="page-title">Data Analytics — Field Overview</h1>
+    <p class="page-sub">This page is a conceptual map of the data analytics field. It is meant to make the terrain legible before tools, formulas, and workflows start arriving in detail. The aim is not to turn every topic into a specialist course. The aim is to show what each part of the field is for, how the parts connect, and why the same project often moves across several disciplines before a useful decision is made.</p>
+
+    <section class="note-section" id="field">
+      <div class="note-eyebrow">
+        <span class="note-num">NOTE 01</span>
+        <h2 class="note-heading">What Data Analytics Is and Isn't</h2>
+        <span class="note-rule"></span>
+      </div>
+      <div class="stack">
+        <div class="panel resolution">
+          <header><span class="tag">Definition</span><span class="type">a working discipline</span></header>
+          <div class="body">
+            <p>Data analytics is the disciplined practice of turning raw records into useful understanding for a real decision. It begins with messy evidence and ends with a clearer answer to a business, operational, scientific, or public question.</p>
+            <p>That answer is rarely just a number. It usually includes context, caveats, comparison, and an argument about what the evidence does and does not justify.</p>
+          </div>
+          <div class="plain-english">Data analytics is not just counting things. It is evidence work for decisions.</div>
+        </div>
+
+        <div class="panel resolution">
+          <header><span class="tag">What the job really involves</span><span class="type">week-to-week reality</span></header>
+          <div class="body">
+            <p>The title <strong>data analyst</strong> sounds as if the work begins at analysis and stays there. In reality, much of the week is spent clarifying the question, checking the data source, cleaning broken records, aligning definitions, validating results, rebuilding charts, and rewriting explanations for non-technical readers.</p>
+            <p>A working analyst often moves back and forth between detective, translator, skeptic, and communicator. The spreadsheet or dashboard is only the visible surface of a larger reasoning process.</p>
+          </div>
+        </div>
+
+        <div class="panel translation">
+          <header><span class="tag">Neighbouring roles</span><span class="type">same ecosystem, different jobs</span></header>
+          <div class="body">
+            <table>
+              <thead>
+                <tr>
+                  <th>Role</th>
+                  <th>Main concern</th>
+                  <th>Typical output</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Data analytics</strong></td>
+                  <td>What happened, why it happened, and what it means for action now</td>
+                  <td>Findings, dashboards, decision support, recommendations</td>
+                </tr>
+                <tr>
+                  <td><strong>Data science</strong></td>
+                  <td>Deeper modelling, experimentation, statistical inference, and more complex prediction</td>
+                  <td>Models, experiments, advanced methods, research-style findings</td>
+                </tr>
+                <tr>
+                  <td><strong>Data engineering</strong></td>
+                  <td>How data is collected, moved, stored, transformed, and kept reliable</td>
+                  <td>Pipelines, data infrastructure, warehousing, stable sources</td>
+                </tr>
+                <tr>
+                  <td><strong>Machine learning</strong></td>
+                  <td>Pattern-finding systems that generalise to new data</td>
+                  <td>Trained models, predictions, classification systems</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="plain-english">These roles overlap, but they are not interchangeable.</div>
+        </div>
+
+        <div class="panel resolution">
+          <header><span class="tag">Why organisations need analysts</span><span class="type">decision support</span></header>
+          <div class="body">
+            <p>Organisations need analysts because modern systems produce more data than intuition alone can absorb. Leaders want to know what customers are doing, which process is failing, whether a campaign worked, where money is leaking, what demand looks like next month, and which risks deserve attention first.</p>
+            <p>Analysts help convert scattered records into prioritised understanding. They reduce guesswork, expose hidden patterns, and make trade-offs more visible.</p>
+          </div>
+        </div>
+
+        <div class="panel translation">
+          <header><span class="tag">Four analytics types</span><span class="type">question to decision ladder</span></header>
+          <div class="body">
+            <table>
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>Core question</th>
+                  <th>Example</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Descriptive</strong></td>
+                  <td>What happened?</td>
+                  <td>Sales fell by 12% last quarter.</td>
+                </tr>
+                <tr>
+                  <td><strong>Diagnostic</strong></td>
+                  <td>Why did it happen?</td>
+                  <td>Sales fell mainly in one region after stock shortages.</td>
+                </tr>
+                <tr>
+                  <td><strong>Predictive</strong></td>
+                  <td>What is likely to happen next?</td>
+                  <td>Demand is likely to stay weak next month if supply stays unstable.</td>
+                </tr>
+                <tr>
+                  <td><strong>Prescriptive</strong></td>
+                  <td>What should we do?</td>
+                  <td>Shift inventory earlier and prioritise the region with the strongest recovery.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="plain-english">The field moves from seeing the past to guiding action.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="note-section" id="pipeline">
+      <div class="note-eyebrow">
+        <span class="note-num">NOTE 02</span>
+        <h2 class="note-heading">The Data Pipeline</h2>
+        <span class="note-rule"></span>
+      </div>
+      <div class="stack">
+        <div class="panel resolution">
+          <header><span class="tag">Pipeline view</span><span class="type">raw data to decision</span></header>
+          <div class="body">
+            <p>The pipeline is the full journey from reality to decision. Something happens in the world, a system records it, the records are stored, cleaned, analysed, visualised, discussed, and finally turned into action.</p>
+            <p>The important idea is that a wrong decision at the end may come from a fault much earlier in the chain. A beautiful dashboard cannot repair bad collection, missing context, or broken definitions.</p>
+          </div>
+        </div>
+
+        <div class="panel translation">
+          <header><span class="tag">Stage by stage</span><span class="type">what each step does</span></header>
+          <div class="body">
+            <table>
+              <thead>
+                <tr>
+                  <th>Stage</th>
+                  <th>Purpose</th>
+                  <th>What can go wrong</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Collection</strong></td>
+                  <td>Capture events, transactions, answers, or sensor readings</td>
+                  <td>Missing fields, biased sampling, inconsistent definitions</td>
+                </tr>
+                <tr>
+                  <td><strong>Storage</strong></td>
+                  <td>Keep data somewhere reliable and retrievable</td>
+                  <td>Duplicated records, poor schema design, access confusion</td>
+                </tr>
+                <tr>
+                  <td><strong>Cleaning</strong></td>
+                  <td>Repair obvious defects so the data can be trusted</td>
+                  <td>Silent data loss, bad fill choices, inconsistent formats</td>
+                </tr>
+                <tr>
+                  <td><strong>Analysis</strong></td>
+                  <td>Ask structured questions and build evidence</td>
+                  <td>Wrong metric choice, false comparison, overconfident claims</td>
+                </tr>
+                <tr>
+                  <td><strong>Visualisation</strong></td>
+                  <td>Make patterns and contrasts easier to see</td>
+                  <td>Misleading axes, poor chart choice, decorative clutter</td>
+                </tr>
+                <tr>
+                  <td><strong>Decision</strong></td>
+                  <td>Use the evidence to choose an action</td>
+                  <td>Ignoring caveats, over-trusting weak data, political misuse</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel resolution">
+          <header><span class="tag">Data shapes</span><span class="type">structured vs unstructured</span></header>
+          <div class="body">
+            <p><strong>Structured data</strong> is organised into a predictable shape such as rows and columns. It is easier to sort, filter, group, and summarise because each field has a known place.</p>
+            <p><strong>Unstructured data</strong> does not arrive in neat table form. Emails, documents, call recordings, photographs, chat logs, and video are all rich in meaning but harder to query directly.</p>
+            <p>Much real-world work involves either turning unstructured material into a more structured form or combining the two carefully.</p>
+          </div>
+          <div class="plain-english">Tables are easier to analyse, but much of the world does not arrive as a table.</div>
+        </div>
+
+        <div class="panel translation">
+          <header><span class="tag">Formats in plain English</span><span class="type">CSV, JSON, API</span></header>
+          <div class="body legend">
+            <p><strong>CSV:</strong> a simple flat file where each row is one record and commas separate the fields. Good for moving tabular data around, but not ideal for complex nested structure.</p>
+            <p><strong>JSON:</strong> a flexible text format that can hold lists, labels, and nested structure. Common when systems exchange richer data.</p>
+            <p><strong>API:</strong> not a file format but a controlled way for one system to ask another for data or services. An API is more like a doorway or contract than a saved document.</p>
+          </div>
+        </div>
+
+        <div class="panel rule">
+          <header><span class="tag">Cleaning time caution</span><span class="type">why analysis feels delayed</span></header>
+          <div class="body">
+            <p>Cleaning often takes more time than the visible analysis because reality is untidy. Fields are missing, dates are inconsistent, categories drift, identifiers are reused, and source systems rarely agree perfectly.</p>
+            <p>When cleaning is skipped or rushed, the final analysis may look precise while resting on shaky foundations.</p>
+          </div>
+          <div class="plain-english">Most frustration in analytics comes from imperfect data, not from difficult charts.</div>
+        </div>
+
+        <div class="panel resolution">
+          <header><span class="tag">Version control</span><span class="type">what problem Git solves</span></header>
+          <div class="body">
+            <p>Version control exists because analysis changes over time. Questions shift. Definitions evolve. Old results need checking. Teammates need to see what changed and why.</p>
+            <p>Git gives a project memory for files. It helps analysts compare versions, reverse bad edits, trace the source of a result, and collaborate without turning the work into a folder full of conflicting copies.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="note-section" id="toolkit">
+      <div class="note-eyebrow">
+        <span class="note-num">NOTE 03</span>
+        <h2 class="note-heading">The Toolkit Landscape</h2>
+        <span class="note-rule"></span>
+      </div>
+      <div class="stack">
+        <div class="panel rule">
+          <header><span class="tag">Group 1</span><span class="type">data handling</span></header>
+          <div class="body">
+            <p>This group is about getting hold of data, shaping it, asking direct questions of it, and preparing it for the rest of the workflow.</p>
+          </div>
+        </div>
+
+        <div class="panel resolution">
+          <header><span class="tag">Python</span><span class="type">general-purpose language</span></header>
+          <div class="body">
+            <p>Python is a readable programming language that became central to analytics because it can glue many parts of the workflow together. It is not just for data, but data work is one of the reasons it became so widely adopted.</p>
+          </div>
+        </div>
+        <div class="panel resolution">
+          <header><span class="tag">pandas</span><span class="type">table-shaped data work</span></header>
+          <div class="body">
+            <p>pandas is the library analysts use when they want Python to behave more like a table tool. It supports filtering, grouping, aggregation, cleaning, reshaping, and summary work on structured data.</p>
+          </div>
+        </div>
+        <div class="panel resolution">
+          <header><span class="tag">NumPy</span><span class="type">fast numerical computing</span></header>
+          <div class="body">
+            <p>NumPy provides fast numerical arrays and the mathematical backbone underneath much of the Python data ecosystem. Analysts may not always touch it directly at first, but many tools depend on it.</p>
+          </div>
+        </div>
+        <div class="panel resolution">
+          <header><span class="tag">scipy</span><span class="type">statistical tests and scientific computing</span></header>
+          <div class="body">
+            <p>scipy extends NumPy with tools for scientific and statistical work. In analytics, the part most commonly used is scipy.stats, which provides hypothesis tests including the t-test.</p>
+            <p>pandas can describe data. scipy.stats can test it.</p>
+          </div>
+          <div class="plain-english">scipy is where the statistics moves from description to evidence testing.</div>
+        </div>
+        <div class="panel resolution">
+          <header><span class="tag">SQL</span><span class="type">database questioning language</span></header>
+          <div class="body">
+            <p>SQL is the language used to ask questions of relational databases. It is older than Python, separate from Python, and still essential because most organisational data lives in database systems rather than loose files.</p>
+          </div>
+        </div>
+
+        <div class="panel rule">
+          <header><span class="tag">Group 2</span><span class="type">visualisation and communication</span></header>
+          <div class="body">
+            <p>This group helps turn analysis into visible evidence that other people can inspect, compare, and discuss.</p>
+          </div>
+        </div>
+
+        <div class="panel resolution">
+          <header><span class="tag">Matplotlib</span><span class="type">foundational charting library</span></header>
+          <div class="body">
+            <p>Matplotlib is the foundational charting layer in Python. It gives low-level control over charts and sits underneath many higher-level visual tools.</p>
+          </div>
+        </div>
+        <div class="panel resolution">
+          <header><span class="tag">Seaborn</span><span class="type">higher-level statistical charting</span></header>
+          <div class="body">
+            <p>Seaborn builds on Matplotlib and makes many statistical chart types easier to create cleanly. It is often chosen when the analyst wants polished comparisons quickly.</p>
+          </div>
+        </div>
+        <div class="panel resolution">
+          <header><span class="tag">Power BI</span><span class="type">interactive dashboards</span></header>
+          <div class="body">
+            <p>Power BI is a business intelligence tool that lets analysts build dashboards and share results with decision-makers who may never read a notebook or a script.</p>
+          </div>
+        </div>
+        <div class="panel resolution">
+          <header><span class="tag">Streamlit</span><span class="type">analysis into lightweight apps</span></header>
+          <div class="body">
+            <p>Streamlit is used when an analysis needs a simple interactive front end. It helps turn Python work into something colleagues can explore without reading the underlying workflow.</p>
+          </div>
+        </div>
+
+        <div class="panel rule">
+          <header><span class="tag">Group 3</span><span class="type">workflow and collaboration</span></header>
+          <div class="body">
+            <p>This group is about how analysts think, explain, record, and share their work while it is still evolving.</p>
+          </div>
+        </div>
+
+        <div class="panel resolution">
+          <header><span class="tag">Jupyter Notebooks</span><span class="type">working document for analysis</span></header>
+          <div class="body">
+            <p>Jupyter Notebooks combine explanation, executable work, outputs, and charts in one place. They are useful for exploration, teaching, prototypes, and transparent reasoning.</p>
+          </div>
+        </div>
+        <div class="panel resolution">
+          <header><span class="tag">Git</span><span class="type">local change tracking</span></header>
+          <div class="body">
+            <p>Git keeps a structured history of how files changed over time. It gives analysts a disciplined way to revise work without losing earlier states.</p>
+          </div>
+        </div>
+        <div class="panel resolution">
+          <header><span class="tag">GitHub</span><span class="type">shared repository platform</span></header>
+          <div class="body">
+            <p>GitHub sits on top of Git and makes collaboration easier through sharing, review, discussion, and project visibility.</p>
+          </div>
+        </div>
+
+        <div class="panel rule">
+          <header><span class="tag">Group 4</span><span class="type">machine learning</span></header>
+          <div class="body">
+            <p>This group becomes important when the goal shifts from description and explanation toward automated prediction or pattern learning.</p>
+          </div>
+        </div>
+
+        <div class="panel resolution">
+          <header><span class="tag">Scikit-Learn</span><span class="type">classical machine learning library</span></header>
+          <div class="body">
+            <p>Scikit-Learn is the standard Python library for many machine learning workflows such as classification, regression, clustering, model evaluation, and preprocessing.</p>
+          </div>
+          <div class="plain-english">Not every analyst becomes a machine learning practitioner, but analysts benefit from understanding where ML fits.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="note-section" id="stats">
+      <div class="note-eyebrow">
+        <span class="note-num">NOTE 04</span>
+        <h2 class="note-heading">Statistics as a Language</h2>
+        <span class="note-rule"></span>
+      </div>
+      <div class="stack">
+        <div class="panel resolution">
+          <header><span class="tag">Why statistics matters</span><span class="type">more than counting</span></header>
+          <div class="body">
+            <p>Counting tells you how many. Statistics helps tell you what is typical, what is unusual, how spread out the values are, how much uncertainty is attached to a claim, and whether an observed pattern may just be noise.</p>
+            <p>It is a language for describing evidence under uncertainty.</p>
+          </div>
+        </div>
+
+        <div class="panel translation">
+          <header><span class="tag">Centre measures</span><span class="type">mean, median, mode</span></header>
+          <div class="body legend">
+            <p><strong>Mean:</strong> the average. Useful when every value should influence the centre, but sensitive to extreme values.</p>
+            <p><strong>Median:</strong> the middle value after sorting. More robust when the data contains outliers or strong skew.</p>
+            <p><strong>Mode:</strong> the most common value. Useful when frequency matters more than the middle.</p>
+          </div>
+          <div class="plain-english">These three words all describe “centre,” but they do not mean the same kind of centre.</div>
+        </div>
+
+        <div class="panel resolution">
+          <header><span class="tag">Spread and shape</span><span class="type">what the centre cannot show</span></header>
+          <div class="body">
+            <p>A centre measure alone can hide the character of the data. Range gives the span from lowest to highest. Standard deviation gives a sense of how tightly or loosely the values sit around the mean.</p>
+            <p>Distribution shape asks a different question again: do values cluster, lean, split into groups, or stretch heavily to one side? Two datasets can share the same mean and still feel completely different once you see their shape.</p>
+          </div>
+        </div>
+
+        <div class="panel resolution">
+          <header><span class="tag">Probability and testing</span><span class="type">reasoning under uncertainty</span></header>
+          <div class="body">
+            <p>Probability is the language of likelihood. It helps analysts reason about how plausible different outcomes are and whether an observed pattern may simply be random variation.</p>
+            <p>Hypothesis testing adds a formal structure: make a claim, define the competing default position, compare the evidence to that default, and judge how surprising the observed result would be if the default were true.</p>
+          </div>
+        </div>
+
+        <div class="panel rule">
+          <header><span class="tag">p-value caution</span><span class="type">not a verdict machine</span></header>
+          <div class="body">
+            <p>A p-value is not a truth detector, not a guaranteed measure of importance, and not a magical pass-fail stamp. It is a statement about how surprising the observed result would be under a particular null hypothesis.</p>
+            <p>If the underlying question is weak, the data is biased, or the assumptions are poor, a tidy p-value does not rescue the conclusion.</p>
+          </div>
+          <div class="plain-english">A p-value is one clue inside an argument, not the whole argument.</div>
+        </div>
+
+        <div class="panel translation">
+          <header><span class="tag">Significance vs importance</span><span class="type">statistical vs practical</span></header>
+          <div class="body">
+            <table>
+              <thead>
+                <tr>
+                  <th>Question</th>
+                  <th>What it asks</th>
+                  <th>Why both matter</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Statistical significance</strong></td>
+                  <td>Is the pattern unlikely to be random under the chosen assumptions?</td>
+                  <td>A tiny effect can clear a statistical threshold in a large dataset.</td>
+                </tr>
+                <tr>
+                  <td><strong>Practical importance</strong></td>
+                  <td>Is the size of the effect large enough to matter in the real world?</td>
+                  <td>A result can be real yet still too small to justify action.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel resolution">
+          <header><span class="tag">Sample vs population</span><span class="type">what the data stands for</span></header>
+          <div class="body">
+            <p>A population means the full set of cases you care about. A sample means you only have some of them. Most datasets available to analysts are samples, even when they look large.</p>
+            <p>That means many conclusions are provisional. They describe the evidence you have directly and suggest something about the wider world, but they do not settle it beyond doubt.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="note-section" id="ml">
+      <div class="note-eyebrow">
+        <span class="note-num">NOTE 05</span>
+        <h2 class="note-heading">Machine Learning Without the Mysticism</h2>
+        <span class="note-rule"></span>
+      </div>
+      <div class="stack">
+        <div class="panel resolution">
+          <header><span class="tag">What machine learning is</span><span class="type">pattern finding that generalises</span></header>
+          <div class="body">
+            <p>Machine learning is about building systems that learn patterns from past data and use those patterns on new, unseen cases. The central test is not whether the system remembers the training data. The central test is whether it generalises.</p>
+          </div>
+        </div>
+
+        <div class="panel translation">
+          <header><span class="tag">Traditional programming vs ML</span><span class="type">where the rules come from</span></header>
+          <div class="body">
+            <table>
+              <thead>
+                <tr>
+                  <th>Approach</th>
+                  <th>Human provides</th>
+                  <th>System produces</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Traditional programming</strong></td>
+                  <td>Explicit rules</td>
+                  <td>Outputs after following those rules</td>
+                </tr>
+                <tr>
+                  <td><strong>Machine learning</strong></td>
+                  <td>Examples and a learning setup</td>
+                  <td>A model that infers rules from the examples</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="plain-english">In ordinary programming the rules are hand-written. In ML the rules are learned from data.</div>
+        </div>
+
+        <div class="panel resolution">
+          <header><span class="tag">Learning types</span><span class="type">supervised and unsupervised</span></header>
+          <div class="body">
+            <p><strong>Supervised learning</strong> uses labelled data, where the correct answer is already known for past examples. The system learns the relationship between inputs and that known answer.</p>
+            <p><strong>Unsupervised learning</strong> does not begin with known answer labels. The system looks for structure, clusters, or underlying patterns without being told what the final grouping should be.</p>
+          </div>
+        </div>
+
+        <div class="panel translation">
+          <header><span class="tag">Core prediction tasks</span><span class="type">classification, regression, clustering</span></header>
+          <div class="body legend">
+            <p><strong>Classification:</strong> predict which category something belongs to.</p>
+            <p><strong>Regression:</strong> predict a numeric value.</p>
+            <p><strong>Clustering:</strong> group similar items together without pre-existing labels.</p>
+          </div>
+        </div>
+
+        <div class="panel resolution">
+          <header><span class="tag">Training and testing</span><span class="type">why the split matters</span></header>
+          <div class="body">
+            <p>Data is split because evaluating a model on the same cases it learned from tells you almost nothing about whether it will work on new data. The model must be judged on cases it has not already seen.</p>
+          </div>
+        </div>
+
+        <div class="panel rule">
+          <header><span class="tag">Overfitting caution</span><span class="type">memorising instead of learning</span></header>
+          <div class="body">
+            <p>Overfitting happens when a model learns the training data too closely, including noise and accident, and then performs badly on fresh cases. It can look brilliant during training and disappointing in reality.</p>
+          </div>
+          <div class="plain-english">A model that knows the past perfectly may still fail the future.</div>
+        </div>
+
+        <div class="panel resolution">
+          <header><span class="tag">Neural networks</span><span class="type">where they sit</span></header>
+          <div class="body">
+            <p>Neural networks are one family of machine learning models. Conceptually, they are layers of connected units that learn to transform inputs into outputs through many small weighted adjustments.</p>
+            <p>They are powerful for complex tasks, but they do not replace the need for simpler models, careful evaluation, clean data, or good problem framing.</p>
+          </div>
+        </div>
+
+        <div class="panel translation">
+          <header><span class="tag">Evaluation metrics</span><span class="type">no single score tells all</span></header>
+          <div class="body legend">
+            <p><strong>Accuracy:</strong> how often the model is correct overall.</p>
+            <p><strong>Precision:</strong> when the model predicts a positive case, how often that prediction is truly positive.</p>
+            <p><strong>Recall:</strong> of all the true positive cases available, how many the model successfully found.</p>
+            <p><strong>RMSE:</strong> a common way to measure the average size of prediction error in numeric forecasting tasks.</p>
+          </div>
+          <div class="plain-english">Different mistakes matter differently, so the “best” metric depends on the real-world cost of being wrong.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="note-section" id="sql">
+      <div class="note-eyebrow">
+        <span class="note-num">NOTE 06</span>
+        <h2 class="note-heading">SQL and Relational Databases</h2>
+        <span class="note-rule"></span>
+      </div>
+      <div class="stack">
+        <div class="panel resolution">
+          <header><span class="tag">What a database is</span><span class="type">production storage</span></header>
+          <div class="body">
+            <p>A database is a managed system for storing, organising, and retrieving data at scale. Organisations use databases instead of loose CSV files because production data changes constantly, needs controlled access, and must remain reliable under many users and processes.</p>
+          </div>
+        </div>
+
+        <div class="panel resolution">
+          <header><span class="tag">Relational logic</span><span class="type">multiple connected tables</span></header>
+          <div class="body">
+            <p>A relational database stores information across multiple tables that connect through shared identifiers. One table might describe customers, another orders, another products. The relationship lets you connect them when answering richer questions.</p>
+          </div>
+          <div class="plain-english">Relational does not mean “large.” It means the tables are linked by design.</div>
+        </div>
+
+        <div class="panel resolution">
+          <header><span class="tag">What SQL is</span><span class="type">declarative questioning</span></header>
+          <div class="body">
+            <p>SQL is a declarative language. That means you say what data you want, not every low-level step for how the system must fetch it. You describe the target result, and the database engine works out an execution plan.</p>
+          </div>
+        </div>
+
+        <div class="panel resolution">
+          <header><span class="tag">Why analysts need SQL as well as Python</span><span class="type">different contexts</span></header>
+          <div class="body">
+            <p>SQL is strongest close to the database, where large tables already live. Python is stronger when the analyst wants flexible transformation, richer custom logic, modelling, automation, or visual output beyond a database query.</p>
+          </div>
+        </div>
+
+        <div class="panel translation">
+          <header><span class="tag">Conceptual query flow</span><span class="type">how a database question is shaped</span></header>
+          <div class="body legend">
+            <p><strong>Select:</strong> what information do you want back?</p>
+            <p><strong>From:</strong> which table or source should it come from?</p>
+            <p><strong>Where:</strong> which rows should be included or excluded?</p>
+            <p><strong>Group by:</strong> when should many rows be collapsed into summaries?</p>
+            <p><strong>Join:</strong> when do you need to connect information from separate tables?</p>
+          </div>
+        </div>
+
+        <div class="panel resolution">
+          <header><span class="tag">What a join does</span><span class="type">connecting tables</span></header>
+          <div class="body">
+            <p>A join combines rows from two tables based on a shared identifier. It is the conceptual move that lets a system say, for example, “take the order records and attach the customer details that match each one.”</p>
+          </div>
+        </div>
+
+        <div class="panel translation">
+          <header><span class="tag">SQL vs pandas</span><span class="type">same task, different place</span></header>
+          <div class="body">
+            <table>
+              <thead>
+                <tr>
+                  <th>Question</th>
+                  <th>SQL is often better when</th>
+                  <th>pandas is often better when</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Filter, group, join, summarise</td>
+                  <td>The data already lives in a database and is too large or shared to pull casually into memory</td>
+                  <td>The analyst is already working locally and wants flexible manipulation, exploration, or follow-on modelling</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="plain-english">SQL and pandas are not rivals so much as partners at different stages of the same job.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="note-section" id="ethics">
+      <div class="note-eyebrow">
+        <span class="note-num">NOTE 07</span>
+        <h2 class="note-heading">Ethics, Bias, and the Real World</h2>
+        <span class="note-rule"></span>
+      </div>
+      <div class="stack">
+        <div class="panel resolution">
+          <header><span class="tag">Where problems really come from</span><span class="type">bad assumptions, not just bad maths</span></header>
+          <div class="body">
+            <p>Data work can fail even when the calculations are correct. If the data excludes certain groups, reflects biased historical decisions, encodes unfair categories, or hides important context, the final analysis may be technically tidy and still socially harmful.</p>
+          </div>
+        </div>
+
+        <div class="panel rule">
+          <header><span class="tag">Bias caution</span><span class="type">the data can be the problem</span></header>
+          <div class="body">
+            <p>Bias means the evidence does not represent the wider reality fairly. This can happen through who gets measured, how labels are assigned, which outcomes are recorded, or which cases were historically given more attention than others.</p>
+            <p>Historical bias is especially dangerous because a model can quietly learn yesterday's unfairness and reproduce it tomorrow at scale.</p>
+          </div>
+          <div class="plain-english">A model can be mathematically sound and still be unfair.</div>
+        </div>
+
+        <div class="panel resolution">
+          <header><span class="tag">GDPR in plain English</span><span class="type">data rights and limits</span></header>
+          <div class="body">
+            <p>GDPR is a legal framework that says personal data cannot be treated as a free raw material. People have rights over how their data is collected, used, stored, and deleted.</p>
+            <p>In plain terms, analysts must know why the data is being used, whether that use is allowed, whether people consented where needed, and whether a person can ask for correction or removal.</p>
+          </div>
+        </div>
+
+        <div class="panel resolution">
+          <header><span class="tag">Data governance</span><span class="type">ownership, access, accountability</span></header>
+          <div class="body">
+            <p>Data governance is the system of rules and responsibilities around who owns data, who can access it, how it is documented, and who is accountable when it is misused or misunderstood.</p>
+          </div>
+        </div>
+
+        <div class="panel translation">
+          <header><span class="tag">Biased model vs broken model</span><span class="type">different failure modes</span></header>
+          <div class="body legend">
+            <p><strong>Broken model:</strong> produces poor predictions because it does not work technically.</p>
+            <p><strong>Biased model:</strong> may work technically by its own metric and still produce systematically unfair outcomes for certain groups.</p>
+          </div>
+        </div>
+
+        <div class="panel resolution">
+          <header><span class="tag">Responsible practice</span><span class="type">what a good team does</span></header>
+          <div class="body">
+            <p>Responsible teams document data sources, define metrics clearly, state limitations openly, question representativeness, and avoid presenting uncertain findings as settled truth.</p>
+            <p>They treat transparency as part of the work, not as an optional moral extra added after the charts are finished.</p>
+          </div>
+          <div class="plain-english">Responsible analytics means making the limits of the evidence visible, not hiding them.</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="chapter-nav">
+      <a class="chapter-next" href="block_1_table_literacy_bridge.html">
+        <span class="label">Next Chapter</span>
+        <span class="title">Block 1</span>
+        <span class="arrow">&rarr;</span>
+      </a>
+    </div>
+
+    <p class="footer">Created for the data analytics prep workflow in the Learning_Python project and shared learning notes area.</p>
+  </main>
+</article>
+</body>
+</html>

@@ -1,0 +1,653 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Block 1 Table Literacy Bridge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#eef1f4;
+  --panel:#fffdfa;
+  --ink:#202124;
+  --muted:#5f6368;
+  --line:#dde2e8;
+  --rail-bg:#17212b;
+  --rail-text:#dce7ef;
+  --rail-muted:#8fa4b5;
+  --navy:#1f4f82;
+  --cyan:#1f7a8c;
+  --yellow:#f6c85f;
+  --green:#4d6b4f;
+  --orange:#d97706;
+  --plum:#7d4655;
+  --code-bg:#111820;
+  --code-bg2:#18222c;
+  --mono-bg:#f4f5f7;
+  --mono-border:#e3e6ea;
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body { background:var(--bg); color:var(--ink); font-family:'IBM Plex Sans', sans-serif; }
+.frame {
+  width: min(1160px, calc(100vw - 32px));
+  margin: 30px auto 60px;
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  box-shadow: 0 16px 46px rgba(39,50,60,.18);
+}
+.rail {
+  background: var(--rail-bg);
+  color: var(--rail-text);
+  padding: 32px 22px 40px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.rail-logo-wrap {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin: 0 0 18px;
+  padding: 0 0 18px;
+  border-bottom: 1px solid rgba(255,255,255,.1);
+}
+.rail-logo {
+  display:block;
+  width: min(132px, 100%);
+  height: auto;
+  filter: drop-shadow(0 10px 18px rgba(34, 214, 255, .16));
+}
+
+.rail-title {
+  font-family: 'Atkinson Hyperlegible', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: white;
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+.rail-sub {
+  font-size: 12px;
+  color: var(--rail-muted);
+  line-height: 1.55;
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(255,255,255,.1);
+}
+.token {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 9px 0;
+  border-top: 1px solid rgba(255,255,255,.1);
+  font: 600 11px 'IBM Plex Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--rail-muted);
+}
+.dot { width:10px; height:10px; border-radius:50%; background:var(--yellow); flex-shrink:0; }
+.dot.cyan { background:var(--cyan); }
+.dot.green { background:var(--green); }
+.dot.orange { background:var(--orange); }
+.rail-nav { margin-top: 22px; border-top: 1px solid rgba(255,255,255,.1); padding-top:16px; }
+.rail-nav-label {
+  font: 600 10px 'IBM Plex Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--rail-muted);
+  margin-bottom: 10px;
+}
+.rail-nav a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 0;
+  font-size: 13px;
+  color: var(--rail-text);
+  text-decoration: none;
+  line-height: 1.35;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+.rail-nav a:hover { color: white; }
+.rail-nav a .num {
+  font: 600 10px 'IBM Plex Mono', monospace;
+  color: var(--rail-muted);
+  flex-shrink: 0;
+  width: 22px;
+}
+
+.course-nav a.active { color:white; font-weight:700; }
+.course-nav a.active .num { color:white; }
+.chapter-nav {
+  margin-top: 42px;
+  padding-top: 22px;
+  border-top: 2px solid var(--mono-bg);
+  display: flex;
+  justify-content: flex-end;
+}
+.chapter-next {
+  display:inline-flex;
+  align-items:center;
+  gap:12px;
+  padding:14px 20px;
+  border-radius:999px;
+  text-decoration:none;
+  background:var(--navy);
+  color:#fff;
+  box-shadow:0 10px 20px rgba(31,79,130,.18);
+  border:1px solid var(--navy);
+}
+.chapter-next:hover { filter:brightness(.96); }
+.chapter-next .label {
+  font:600 11px 'IBM Plex Mono', monospace;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  color:#d8e7ff;
+}
+.chapter-next .title {
+  font-family:'Atkinson Hyperlegible', sans-serif;
+  font-size:18px;
+  line-height:1.2;
+  color:#fff;
+}
+.chapter-next .arrow {
+  font-size:20px;
+  line-height:1;
+  color:#fff;
+}
+
+main { padding: 48px 52px 72px; }
+.page-mode {
+  font: 700 11px 'IBM Plex Mono', monospace;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  margin-bottom: 10px;
+}
+.page-title {
+  font-family: 'Atkinson Hyperlegible', sans-serif;
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1.1;
+  margin-bottom: 14px;
+}
+.page-sub {
+  font-size: 16px;
+  line-height: 1.75;
+  color: var(--muted);
+  margin-bottom: 48px;
+  padding-bottom: 28px;
+  border-bottom: 2px solid var(--mono-bg);
+}
+.note-section { margin-bottom: 64px; scroll-margin-top: 20px; }
+.note-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.note-num {
+  font: 600 11px 'IBM Plex Mono', monospace;
+  color: var(--muted);
+  letter-spacing: .06em;
+}
+.note-heading {
+  font-family: 'Atkinson Hyperlegible', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1.2;
+}
+.note-rule {
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+  margin-left: 4px;
+}
+.stack { display: grid; gap: 12px; }
+.panel {
+  border: 1px solid var(--line);
+  background: #fbfcfd;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.panel header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--line);
+  font: 600 11px 'IBM Plex Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+.panel header .tag  { color: var(--navy); }
+.panel header .type { color: var(--muted); }
+.panel .body { padding: 16px 20px; font-size: 16px; line-height: 1.8; }
+.panel .body p + p { margin-top: 10px; }
+.panel.translation { border-left: 4px solid var(--yellow); }
+.panel.rule { border-left: 4px solid var(--orange); }
+.panel.resolution { border-left: 4px solid var(--cyan); }
+.panel.code {
+  background: var(--code-bg);
+  color: #e8eef4;
+  border-color: #26313c;
+  border-left-color: #26313c;
+}
+.panel.code header {
+  background: var(--code-bg2);
+  border-color: #26313c;
+  color: #8ea3b5;
+}
+.panel.code header .tag { color: #c5d8ea; }
+.panel.code .body { padding: 0; }
+.panel.code pre {
+  margin: 0;
+  padding: 18px 22px;
+  font: 15px/1.9 'IBM Plex Mono', monospace;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.command-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+.command-box {
+  display: block;
+  border: 2px solid #cfd8e3;
+  border-left: 7px solid var(--cyan);
+  border-radius: 12px;
+  background: linear-gradient(180deg, #ffffff 0%, #f6f9fc 100%);
+  padding: 18px 20px;
+  min-height: 122px;
+  box-shadow: 0 8px 18px rgba(31, 79, 130, .08);
+}
+.command-box .command {
+  display: block;
+  font: 700 21px/1.35 'IBM Plex Mono', monospace;
+  color: var(--navy);
+  margin-bottom: 10px;
+  overflow-wrap: anywhere;
+}
+.command-box .meaning {
+  display: block;
+  font-size: 16px;
+  line-height: 1.55;
+  color: #3f4954;
+}
+.command-box.inspect { border-left-color: var(--orange); }
+.command-box.structure { border-left-color: var(--green); }
+.command-box.select { border-left-color: var(--plum); }
+.command-box.count { border-left-color: var(--yellow); }
+.part-outer { color: #d97706; font-weight: 600; }
+.part-inner { color: #1f4f82; font-weight: 600; }
+.part-core { color: #4d6b4f; font-weight: 600; }
+.part-var { color: #d8e7ff; }
+.part-note { color: #9ed18c; }
+.mono {
+  font-family:'IBM Plex Mono', monospace;
+  background:var(--mono-bg);
+  border-radius:4px;
+  padding:.05em .3em;
+  white-space:nowrap;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+th, td {
+  border: 1px solid var(--line);
+  padding: 12px 14px;
+  vertical-align: top;
+  text-align: left;
+}
+th {
+  background: #f7f9fb;
+  color: var(--navy);
+  font-family:'IBM Plex Mono', monospace;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+.legend {
+  display: grid;
+  gap: 8px;
+  font-size: 15px;
+}
+.legend p { line-height: 1.7; }
+.plain-english {
+  font-style: italic;
+  font-size: 15px;
+  color: var(--muted);
+  border-top: 1px solid var(--line);
+  padding: 14px 20px;
+  line-height: 1.7;
+  background: #fbfcfd;
+}
+.footer { color:var(--muted); font-size:13px; text-align:center; margin-top:64px; }
+@media (max-width:860px) {
+  .frame { grid-template-columns: 1fr; }
+  .rail  { display: none; }
+  main   { padding: 32px 22px 48px; }
+  .page-title { font-size: 26px; }
+  .command-grid { grid-template-columns: 1fr; }
+  .command-box .command { font-size: 18px; }
+}
+</style>
+</head>
+<body>
+<article class="frame">
+  <aside class="rail">
+    <div class="rail-logo-wrap">
+      <img class="rail-logo" src="../assets/tidyweb_logo.png" alt="TidyWeb logo">
+    </div>
+    <div class="rail-title">Block 1 Table Literacy Bridge</div>
+    <div class="rail-sub">A reference bridge from the earlier Python notebooks into the Block 1 table literacy workflow.</div>
+    <div class="token"><span class="dot"></span> Translation</div>
+    <div class="token"><span class="dot cyan"></span> Command Meaning</div>
+    <div class="token"><span class="dot green"></span> Code Breakdown</div>
+    <div class="token"><span class="dot orange"></span> Vocabulary Rule</div>
+        <nav class="rail-nav course-nav">
+      <div class="rail-nav-label">Bookshelf Home</div>
+      <a href="../index.html"><span class="num">00</span><span>Main Shelf</span></a>
+    </nav>
+    <nav class="rail-nav course-nav">
+      <div class="rail-nav-label">Course Chapters</div>
+      <a href="data_analysis_field_overview.html"><span class="num">01</span><span>Field Overview</span></a>
+      <a href="block_1_table_literacy_bridge.html" class="active"><span class="num">02</span><span>Block 1</span></a>
+      <a href="block_2_selection_and_filtering.html"><span class="num">03</span><span>Block 2</span></a>
+      <a href="block_3_missing_data_and_cleaning.html"><span class="num">04</span><span>Block 3</span></a>
+      <a href="block_4_grouping_and_insight.html"><span class="num">05</span><span>Block 4</span></a>
+      <a href="block_5_visualisation.html"><span class="num">06</span><span>Block 5</span></a>
+      <a href="block_6_statistics_foundations.html"><span class="num">07</span><span>Block 6</span></a>
+      <a href="block_7_hypothesis_and_evidence.html"><span class="num">08</span><span>Block 7</span></a>
+      <a href="block_8_full_eda_cycle.html"><span class="num">09</span><span>Block 8</span></a>
+      <a href="block_9_etl_drill.html"><span class="num">10</span><span>Block 9</span></a>
+      <a href="block_10_dashboard_and_presentation.html"><span class="num">11</span><span>Block 10</span></a>
+    </nav>
+    <nav class="rail-nav">
+      <div class="rail-nav-label">This Chapter</div>
+      <a href="#shift"><span class="num">01</span><span>The Layer Shift</span></a>
+      <a href="#table"><span class="num">02</span><span>Translation Table</span></a>
+      <a href="#commands"><span class="num">03</span><span>Block 1 Commands</span></a>
+      <a href="#rule"><span class="num">04</span><span>Main Rule</span></a>
+    </nav>
+  </aside>
+  <main>
+    <div class="page-mode">Reference Guide</div>
+    <h1 class="page-title">Block 1 Table Literacy Bridge</h1>
+    <p class="page-sub">You are not abandoning the Python vocabulary from the earlier notebooks. You are moving up one layer, from hand-built data structures into pandas table work. This page translates the terms and gives you the Block 1 commands as large glanceable boxes.</p>
+
+    <section class="note-section" id="shift">
+      <div class="note-eyebrow">
+        <span class="note-num">NOTE 01</span>
+        <h2 class="note-heading">The Layer Shift</h2>
+        <span class="note-rule"></span>
+      </div>
+      <div class="stack">
+        <div class="panel resolution">
+          <header><span class="tag">At-a-glance command boxes</span><span class="type">Block 1 core moves</span></header>
+          <div class="body">
+            <div class="command-grid">
+              <div class="command-box">
+                <span class="command">pd.read_csv()</span>
+                <span class="meaning">Reads a CSV file and turns it into a pandas table. Usually stored as <span class="mono">df</span>.</span>
+              </div>
+              <div class="command-box inspect">
+                <span class="command">df.head()</span>
+                <span class="meaning">Shows the first few rows, including the column names across the top.</span>
+              </div>
+              <div class="command-box inspect">
+                <span class="command">df.shape</span>
+                <span class="meaning">Shows table size as <span class="mono">(rows, columns)</span>. No brackets.</span>
+              </div>
+              <div class="command-box structure">
+                <span class="command">df.info()</span>
+                <span class="meaning">Shows column names, non-null counts, and data types in one compact report.</span>
+              </div>
+              <div class="command-box structure">
+                <span class="command">df.describe(include="all")</span>
+                <span class="meaning">Builds a summary for numeric and category-style columns. Some cells show <span class="mono">NaN</span> when a summary does not apply.</span>
+              </div>
+              <div class="command-box structure">
+                <span class="command">df.dtypes</span>
+                <span class="meaning">Shows only the data type of each column, without the full <span class="mono">info()</span> report.</span>
+              </div>
+              <div class="command-box select">
+                <span class="command">df["column"]</span>
+                <span class="meaning">Selects one column by its column name.</span>
+              </div>
+              <div class="command-box select">
+                <span class="command">df[["col1", "col2"]]</span>
+                <span class="meaning">Selects multiple columns. The inner list names the columns.</span>
+              </div>
+              <div class="command-box count">
+                <span class="command">df["column"].value_counts()</span>
+                <span class="meaning">Counts how often each value appears in one column.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel resolution">
+          <header><span class="tag">What changed</span><span class="type">same foundation, higher layer</span></header>
+          <div class="body">
+            <p><strong>Python basics</strong> means building the machinery yourself: lists, dictionaries, keys, loops, and indexing.</p>
+            <p><strong>pandas</strong> means using a ready-made table tool built on top of Python.</p>
+            <p>The older words still matter. The newer words are usually better for talking about table analysis.</p>
+          </div>
+          <div class="plain-english">Earlier you were learning how Python stores data. Now you are learning how pandas analyses that data in table form.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="note-section" id="table">
+      <div class="note-eyebrow">
+        <span class="note-num">NOTE 02</span>
+        <h2 class="note-heading">Translation Table</h2>
+        <span class="note-rule"></span>
+      </div>
+      <div class="stack">
+        <div class="panel translation">
+          <header><span class="tag">Python to pandas</span><span class="type">vocabulary bridge</span></header>
+          <div class="body">
+            <table>
+              <thead>
+                <tr>
+                  <th>Earlier Python idea</th>
+                  <th>pandas / data analysis idea</th>
+                  <th>What changed</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="mono">list</span></td>
+                  <td>table / DataFrame</td>
+                  <td>Instead of one Python container, think about a whole table of rows and columns.</td>
+                </tr>
+                <tr>
+                  <td><span class="mono">dictionary</span></td>
+                  <td>row / record / observation</td>
+                  <td>In pandas, one row plays the role that one dictionary used to play in the earlier exercises.</td>
+                </tr>
+                <tr>
+                  <td><span class="mono">key</span></td>
+                  <td>column name</td>
+                  <td>In pandas, we usually say column name rather than key.</td>
+                </tr>
+                <tr>
+                  <td><span class="mono">value</span></td>
+                  <td>cell value</td>
+                  <td>The value now lives at the intersection of a row and a column.</td>
+                </tr>
+                <tr>
+                  <td><span class="mono">for item in list:</span></td>
+                  <td>whole-column or whole-table operation</td>
+                  <td>pandas often works on many rows at once instead of one item at a time.</td>
+                </tr>
+                <tr>
+                  <td><span class="mono">print(...)</span> to inspect</td>
+                  <td><span class="mono">head()</span>, <span class="mono">shape</span>, <span class="mono">info()</span>, <span class="mono">describe()</span></td>
+                  <td>pandas gives you built-in table inspection tools.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="note-section" id="commands">
+      <div class="note-eyebrow">
+        <span class="note-num">NOTE 03</span>
+        <h2 class="note-heading">The Block 1 Commands</h2>
+        <span class="note-rule"></span>
+      </div>
+      <div class="stack">
+        <div class="panel resolution">
+          <header><span class="tag">Command 1</span><span class="type">bring pandas in</span></header>
+          <div class="body">
+            <p><span class="mono">import pandas as pd</span> means: bring the pandas library into the notebook and give it the short nickname <span class="mono">pd</span>.</p>
+          </div>
+        </div>
+        <div class="panel code">
+          <header><span class="tag">Code breakdown</span><span class="type">import line</span></header>
+          <div class="body">
+            <pre><span class="part-outer">import</span> <span class="part-inner">pandas</span> <span class="part-core">as pd</span></pre>
+          </div>
+        </div>
+        <div class="panel resolution">
+          <header><span class="tag">Command 2</span><span class="type">load the CSV</span></header>
+          <div class="body">
+            <p><span class="mono">df = pd.read_csv("/home/Phil/C&amp;C/Learn_Python_Data/datasets/iris.csv")</span> loads the file and stores the table in <span class="mono">df</span>.</p>
+            <p>The path is inside quotes, and it starts with <span class="mono">/home</span>.</p>
+          </div>
+        </div>
+        <div class="panel code">
+          <header><span class="tag">Code breakdown</span><span class="type">load line</span></header>
+          <div class="body">
+            <pre><span class="part-var">df</span> = <span class="part-outer">pd</span>.<span class="part-inner">read_csv</span>(<span class="part-core">"/home/Phil/C&amp;C/Learn_Python_Data/datasets/iris.csv"</span>)</pre>
+          </div>
+        </div>
+        <div class="panel translation">
+          <header><span class="tag">What each part means</span><span class="type">load line</span></header>
+          <div class="body legend">
+            <p><span class="part-var">df</span> = the variable that will hold the table</p>
+            <p><span class="part-outer">pd</span> = the pandas nickname</p>
+            <p><span class="part-inner">read_csv</span> = the pandas tool that reads a CSV file</p>
+            <p><span class="part-core">"/home/Phil/C&amp;C/Learn_Python_Data/datasets/iris.csv"</span> = the full file path written inside quotes</p>
+          </div>
+        </div>
+        <div class="panel resolution">
+          <header><span class="tag">Command 3</span><span class="type">first look</span></header>
+          <div class="body">
+            <p><span class="mono">df.head()</span> shows the first few rows of the table and the column names across the top.</p>
+            <p>Nothing goes inside the brackets for the default version.</p>
+          </div>
+        </div>
+        <div class="panel code">
+          <header><span class="tag">Code breakdown</span><span class="type">first look</span></header>
+          <div class="body">
+            <pre><span class="part-var">df</span>.<span class="part-inner">head</span><span class="part-core">()</span></pre>
+          </div>
+        </div>
+        <div class="panel resolution">
+          <header><span class="tag">Command 4</span><span class="type">table size</span></header>
+          <div class="body">
+            <p><span class="mono">df.shape</span> tells you the table size in the form <span class="mono">(rows, columns)</span>.</p>
+            <p>This one does <strong>not</strong> take brackets here.</p>
+          </div>
+        </div>
+        <div class="panel code">
+          <header><span class="tag">Code breakdown</span><span class="type">table size</span></header>
+          <div class="body">
+            <pre><span class="part-var">df</span>.<span class="part-inner">shape</span></pre>
+          </div>
+        </div>
+        <div class="panel resolution">
+          <header><span class="tag">Command 5</span><span class="type">structure check</span></header>
+          <div class="body">
+            <p><span class="mono">df.info()</span> shows column names, non-null counts, and data types.</p>
+            <p><span class="mono">dtype</span> means data type. <span class="mono">float64</span> means decimal numbers stored in a specific machine format.</p>
+          </div>
+        </div>
+        <div class="panel code">
+          <header><span class="tag">Code breakdown</span><span class="type">structure check</span></header>
+          <div class="body">
+            <pre><span class="part-var">df</span>.<span class="part-inner">info</span><span class="part-core">()</span></pre>
+          </div>
+        </div>
+        <div class="panel resolution">
+          <header><span class="tag">Command 6</span><span class="type">summary</span></header>
+          <div class="body">
+            <p><span class="mono">df.describe(include="all")</span> calculates a built-in summary for the columns.</p>
+            <p><span class="mono">include="all"</span> tells pandas to include both numeric and text-style columns in that summary.</p>
+            <p>The rows like <span class="mono">mean</span>, <span class="mono">std</span>, <span class="mono">min</span>, <span class="mono">25%</span>, <span class="mono">50%</span>, <span class="mono">75%</span>, and <span class="mono">max</span> are calculated by pandas. They are not extra rows from the CSV.</p>
+            <p><span class="mono">NaN</span> usually means that summary slot does not apply there.</p>
+          </div>
+        </div>
+        <div class="panel code">
+          <header><span class="tag">Code breakdown</span><span class="type">summary</span></header>
+          <div class="body">
+            <pre><span class="part-var">df</span>.<span class="part-inner">describe</span>(<span class="part-core">include="all"</span>)</pre>
+          </div>
+        </div>
+        <div class="panel rule">
+          <header><span class="tag">Dot rule</span><span class="type">how to read it</span></header>
+          <div class="body">
+            <p>The dot means: reach into this thing and use one of its built-in tools.</p>
+            <p>Examples: <span class="mono">pd.read_csv(...)</span>, <span class="mono">df.head()</span>, <span class="mono">df.info()</span>.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="note-section" id="rule">
+      <div class="note-eyebrow">
+        <span class="note-num">NOTE 04</span>
+        <h2 class="note-heading">The Main Vocabulary Rule</h2>
+        <span class="note-rule"></span>
+      </div>
+      <div class="stack">
+        <div class="panel translation">
+          <header><span class="tag">Use the older words when</span><span class="type">beginner Python</span></header>
+          <div class="body">
+            <p>list, dictionary, key, loop</p>
+          </div>
+        </div>
+        <div class="panel translation">
+          <header><span class="tag">Use the newer words when</span><span class="type">pandas</span></header>
+          <div class="body">
+            <p>DataFrame, row, column, column name, summary</p>
+          </div>
+        </div>
+        <div class="panel resolution">
+          <header><span class="tag">Safest bridge sentence</span><span class="type">keep this</span></header>
+          <div class="body">
+            <p><span class="mono">Earlier I was learning how Python stores and handles data. Now I am learning how pandas analyses that data in table form.</span></p>
+          </div>
+          <div class="plain-english">You are not replacing one vocabulary with another. You are learning which vocabulary fits which level of work.</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="chapter-nav">
+      <a class="chapter-next" href="block_2_selection_and_filtering.html">
+        <span class="label">Next Chapter</span>
+        <span class="title">Block 2</span>
+        <span class="arrow">&rarr;</span>
+      </a>
+    </div>
+
+    <p class="footer">Created for the Block 1 table literacy workflow in the Learning_Python project.</p>
+  </main>
+</article>
+</body>
+</html>

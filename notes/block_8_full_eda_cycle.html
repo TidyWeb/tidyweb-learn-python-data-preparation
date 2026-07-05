@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Block 8 Full EDA Cycle</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#eef1f4;
+  --panel:#fffdfa;
+  --ink:#202124;
+  --muted:#5f6368;
+  --line:#dde2e8;
+  --rail-bg:#17212b;
+  --rail-text:#dce7ef;
+  --rail-muted:#8fa4b5;
+  --navy:#1f4f82;
+  --cyan:#1f7a8c;
+  --yellow:#f6c85f;
+  --green:#4d6b4f;
+  --orange:#d97706;
+  --plum:#7d4655;
+  --code-bg:#111820;
+  --code-bg2:#18222c;
+  --mono-bg:#f4f5f7;
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body { background:var(--bg); color:var(--ink); font-family:'IBM Plex Sans', sans-serif; }
+.frame { width:min(1160px, calc(100vw - 32px)); margin:30px auto 60px; display:grid; grid-template-columns:220px minmax(0,1fr); background:var(--panel); border:1px solid var(--line); box-shadow:0 16px 46px rgba(39,50,60,.18); }
+.rail { background:var(--rail-bg); color:var(--rail-text); padding:32px 22px 40px; position:sticky; top:0; height:100vh; overflow-y:auto; }
+
+.rail-logo-wrap {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin: 0 0 18px;
+  padding: 0 0 18px;
+  border-bottom: 1px solid rgba(255,255,255,.1);
+}
+.rail-logo {
+  display:block;
+  width: min(132px, 100%);
+  height: auto;
+  filter: drop-shadow(0 10px 18px rgba(34, 214, 255, .16));
+}
+
+.rail-title { font-family:'Atkinson Hyperlegible', sans-serif; font-size:20px; font-weight:700; color:white; line-height:1.2; margin-bottom:6px; }
+.rail-sub { font-size:12px; color:var(--rail-muted); line-height:1.55; margin-bottom:28px; padding-bottom:20px; border-bottom:1px solid rgba(255,255,255,.1); }
+.token { display:flex; gap:10px; align-items:center; padding:9px 0; border-top:1px solid rgba(255,255,255,.1); font:600 11px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.06em; color:var(--rail-muted); }
+.dot { width:10px; height:10px; border-radius:50%; background:var(--yellow); flex-shrink:0; }
+.dot.cyan { background:var(--cyan); }
+.dot.green { background:var(--green); }
+.dot.orange { background:var(--orange); }
+.rail-nav { margin-top:22px; border-top:1px solid rgba(255,255,255,.1); padding-top:16px; }
+.rail-nav-label { font:600 10px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.08em; color:var(--rail-muted); margin-bottom:10px; }
+.rail-nav a { display:flex; align-items:center; gap:8px; padding:7px 0; font-size:13px; color:var(--rail-text); text-decoration:none; line-height:1.35; border-bottom:1px solid rgba(255,255,255,.06); }
+.rail-nav a:hover { color:white; }
+.rail-nav a .num { font:600 10px 'IBM Plex Mono', monospace; color:var(--rail-muted); flex-shrink:0; width:22px; }
+main { padding:48px 52px 72px; }
+.page-mode { font:700 11px 'IBM Plex Mono', monospace; letter-spacing:.1em; text-transform:uppercase; color:var(--cyan); margin-bottom:10px; }
+.page-title { font-family:'Atkinson Hyperlegible', sans-serif; font-size:36px; font-weight:700; color:var(--navy); line-height:1.1; margin-bottom:14px; }
+.page-sub { font-size:16px; line-height:1.75; color:var(--muted); margin-bottom:48px; padding-bottom:28px; border-bottom:2px solid var(--mono-bg); }
+.note-section { margin-bottom:64px; scroll-margin-top:20px; }
+.note-eyebrow { display:flex; align-items:center; gap:12px; margin-bottom:20px; }
+.note-num { font:600 11px 'IBM Plex Mono', monospace; color:var(--muted); letter-spacing:.06em; }
+.note-heading { font-family:'Atkinson Hyperlegible', sans-serif; font-size:24px; font-weight:700; color:var(--navy); line-height:1.2; }
+.note-rule { flex:1; height:1px; background:var(--line); margin-left:4px; }
+.stack { display:grid; gap:12px; }
+.panel { border:1px solid var(--line); background:#fbfcfd; border-radius:4px; overflow:hidden; }
+.panel header { display:flex; justify-content:space-between; align-items:center; padding:8px 14px; border-bottom:1px solid var(--line); font:600 11px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.08em; }
+.panel header .tag { color:var(--navy); }
+.panel header .type { color:var(--muted); }
+.panel .body { padding:16px 20px; font-size:16px; line-height:1.8; }
+.panel .body p + p { margin-top:10px; }
+.panel.translation { border-left:4px solid var(--yellow); }
+.panel.rule { border-left:4px solid var(--orange); }
+.panel.resolution { border-left:4px solid var(--cyan); }
+.panel.code { background:var(--code-bg); color:#e8eef4; border-color:#26313c; border-left-color:#26313c; }
+.panel.code header { background:var(--code-bg2); border-color:#26313c; color:#8ea3b5; }
+.panel.code header .tag { color:#c5d8ea; }
+.panel.code .body { padding:0; }
+.panel.code pre { margin:0; padding:18px 22px; font:15px/1.9 'IBM Plex Mono', monospace; white-space:pre-wrap; overflow-wrap:anywhere; }
+.command-grid { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:14px; }
+.command-box { display:block; border:2px solid #cfd8e3; border-left:7px solid var(--cyan); border-radius:12px; background:linear-gradient(180deg, #ffffff 0%, #f6f9fc 100%); padding:18px 20px; min-height:122px; box-shadow:0 8px 18px rgba(31,79,130,.08); }
+.command-box .command { display:block; font:700 21px/1.35 'IBM Plex Mono', monospace; color:var(--navy); margin-bottom:10px; overflow-wrap:anywhere; }
+.command-box .meaning { display:block; font-size:16px; line-height:1.55; color:#3f4954; }
+.command-box.inspect { border-left-color:var(--orange); }
+.command-box.structure { border-left-color:var(--green); }
+.command-box.select { border-left-color:var(--plum); }
+.command-box.count { border-left-color:var(--yellow); }
+.part-outer { color:#d97706; font-weight:600; }
+.part-inner { color:#1f4f82; font-weight:600; }
+.part-core { color:#4d6b4f; font-weight:600; }
+.part-var { color:#d8e7ff; }
+.part-note { color:#9ed18c; }
+.mono { font-family:'IBM Plex Mono', monospace; background:var(--mono-bg); border-radius:4px; padding:.05em .3em; white-space:nowrap; }
+table { width:100%; border-collapse:collapse; font-size:15px; }
+th, td { border:1px solid var(--line); padding:12px 14px; vertical-align:top; text-align:left; }
+th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospace; font-size:12px; text-transform:uppercase; letter-spacing:.05em; }
+.legend { display:grid; gap:8px; font-size:15px; }
+.legend p { line-height:1.7; }
+.plain-english { font-style:italic; font-size:15px; color:var(--muted); border-top:1px solid var(--line); padding:14px 20px; line-height:1.7; background:#fbfcfd; }
+.footer { color:var(--muted); font-size:13px; text-align:center; margin-top:64px; }
+
+.chapter-nav {
+  margin-top: 42px;
+  padding-top: 22px;
+  border-top: 2px solid var(--mono-bg);
+  display: flex;
+  justify-content: flex-end;
+}
+.chapter-next {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  border-radius: 999px;
+  text-decoration: none;
+  background: var(--navy);
+  color: #fff;
+  box-shadow: 0 10px 20px rgba(31,79,130,.18);
+  border: 1px solid var(--navy);
+}
+.chapter-next:hover { filter: brightness(.96); }
+.chapter-next .label {
+  font: 600 11px 'IBM Plex Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: #d8e7ff;
+}
+.chapter-next .title {
+  font-family: 'Atkinson Hyperlegible', sans-serif;
+  font-size: 18px;
+  line-height: 1.2;
+  color: #fff;
+}
+.chapter-next .arrow {
+  font-size: 20px;
+  line-height: 1;
+  color: #fff;
+}
+@media (max-width:860px) {
+  .chapter-nav { justify-content: stretch; }
+  .chapter-next { width: 100%; justify-content: center; }
+}
+
+@media (max-width:860px) { .frame { grid-template-columns:1fr; } .rail { display:none; } main { padding:32px 22px 48px; } .page-title { font-size:26px; } .command-grid { grid-template-columns:1fr; } .command-box .command { font-size:18px; } }
+</style>
+</head>
+<body>
+<article class="frame">
+  <aside class="rail">
+    <div class="rail-logo-wrap">
+      <img class="rail-logo" src="../assets/tidyweb_logo.png" alt="TidyWeb logo">
+    </div>
+    <div class="rail-title">Block 8 Full EDA Cycle</div>
+    <div class="rail-sub">A performance block. No instruction. No scaffolding. The learner works cold on an unseen dataset using every move from Blocks 1 through 5.</div>
+    <div class="token"><span class="dot"></span> Translation</div>
+    <div class="token"><span class="dot cyan"></span> Definition Or Task</div>
+    <div class="token"><span class="dot orange"></span> Rule</div>
+    <div class="token"><span class="dot green"></span> Plain-English Summary</div>
+        <nav class="rail-nav course-nav">
+      <div class="rail-nav-label">Bookshelf Home</div>
+      <a href="../index.html"><span class="num">00</span><span>Main Shelf</span></a>
+    </nav>
+    <nav class="rail-nav course-nav">
+      <div class="rail-nav-label">Course Chapters</div>
+      <a href="data_analysis_field_overview.html"><span class="num">01</span><span>Field Overview</span></a>
+      <a href="block_1_table_literacy_bridge.html"><span class="num">02</span><span>Block 1</span></a>
+      <a href="block_2_selection_and_filtering.html"><span class="num">03</span><span>Block 2</span></a>
+      <a href="block_3_missing_data_and_cleaning.html"><span class="num">04</span><span>Block 3</span></a>
+      <a href="block_4_grouping_and_insight.html"><span class="num">05</span><span>Block 4</span></a>
+      <a href="block_5_visualisation.html"><span class="num">06</span><span>Block 5</span></a>
+      <a href="block_6_statistics_foundations.html"><span class="num">07</span><span>Block 6</span></a>
+      <a href="block_7_hypothesis_and_evidence.html"><span class="num">08</span><span>Block 7</span></a>
+      <a href="block_8_full_eda_cycle.html" class="active"><span class="num">09</span><span>Block 8</span></a>
+      <a href="block_9_etl_drill.html"><span class="num">10</span><span>Block 9</span></a>
+      <a href="block_10_dashboard_and_presentation.html"><span class="num">11</span><span>Block 10</span></a>
+    </nav>
+    <nav class="rail-nav">
+      <div class="rail-nav-label">This Chapter</div>
+      <a href="#what"><span class="num">01</span><span>What This Block Is</span></a>
+      <a href="#questions"><span class="num">02</span><span>The Four Questions</span></a>
+      <a href="#done"><span class="num">03</span><span>What Counts As Done</span></a>
+      <a href="#moves"><span class="num">04</span><span>Moves Available</span></a>
+    </nav>
+  </aside>
+  <main>
+    <div class="page-mode">Performance Block</div>
+    <h1 class="page-title">Block 8 — Full EDA Cycle</h1>
+    <p class="page-sub">Block 8 has no teaching cells, no worked examples, and no prompting. The learner loads an unseen dataset and runs a complete exploratory data analysis using every move from Blocks 1 through 5 without assistance. The artifact is the findings note, not the notebook. This document describes the task, the four questions the findings must answer, and the core moves available to use.</p>
+
+    <section class="note-section" id="what">
+      <div class="note-eyebrow">
+        <span class="note-num">NOTE 01</span>
+        <h2 class="note-heading">What This Block Is</h2>
+        <span class="note-rule"></span>
+      </div>
+      <div class="stack">
+        <div class="panel resolution">
+          <header><span class="tag">Plain English</span><span class="type">performance, not practice</span></header>
+          <div class="body">
+            <p>Block 8 is not a teaching block. There are no explanations, no worked examples, and no hints. The learner loads a dataset they have not seen before and runs a full exploratory data analysis from start to findings note using the moves built across Blocks 1 through 5.</p>
+            <p>The notebook is working space. It is not the deliverable. The deliverable is a plain-English findings note answering four specific questions.</p>
+            <p>The unseen dataset may come from a different domain than the earlier blocks. That is intentional. The test is whether the analysis moves transfer, not whether the topic feels familiar.</p>
+          </div>
+          <div class="plain-english">The point is not to produce perfect code. The point is to produce a clear account of what the data shows.</div>
+        </div>
+        <div class="panel rule">
+          <header><span class="tag">Rule</span><span class="type">no assistance during the block</span></header>
+          <div class="body">
+            <p>No reference documents, worked examples, or block notes should be consulted while the EDA is running. This document should be read before starting. Once the dataset is loaded, close the notes and work cold.</p>
+          </div>
+          <div class="plain-english">The value of Block 8 comes from the absence of scaffolding.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="note-section" id="questions">
+      <div class="note-eyebrow">
+        <span class="note-num">NOTE 02</span>
+        <h2 class="note-heading">The Four Questions the Findings Must Answer</h2>
+        <span class="note-rule"></span>
+      </div>
+      <div class="stack">
+        <div class="panel translation">
+          <header><span class="tag">Findings Structure</span><span class="type">four required answers</span></header>
+          <div class="body">
+            <table>
+              <thead>
+                <tr>
+                  <th>Question</th>
+                  <th>What a good answer includes</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>What does this data contain?</strong></td>
+                  <td>Dataset shape, column names, data types, and a plain-English description of what each column appears to represent.</td>
+                </tr>
+                <tr>
+                  <td><strong>What stands out?</strong></td>
+                  <td>Unusual values, unexpected distributions, columns with high missingness, category imbalance, weak or strong relationships, or patterns that would prompt a follow-up question.</td>
+                </tr>
+                <tr>
+                  <td><strong>What would you check next?</strong></td>
+                  <td>Specific further questions the data raises but does not answer on its own. Name the columns and the move you would use.</td>
+                </tr>
+                <tr>
+                  <td><strong>What can you not conclude from this data alone?</strong></td>
+                  <td>Honest limits. What the dataset cannot confirm, what context is missing, and what assumptions would be needed to go further.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="plain-english">The findings note is an argument, not a summary. It should show thinking, not just outputs.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="note-section" id="done">
+      <div class="note-eyebrow">
+        <span class="note-num">NOTE 03</span>
+        <h2 class="note-heading">What Counts As Done</h2>
+        <span class="note-rule"></span>
+      </div>
+      <div class="stack">
+        <div class="panel resolution">
+          <header><span class="tag">Completion standard</span><span class="type">four criteria</span></header>
+          <div class="body">
+            <p>The EDA is complete when:</p>
+            <p>— the dataset has been loaded and its shape, types, and missingness have been checked</p>
+            <p>— at least one filtering question has been asked and answered from the data</p>
+            <p>— at least one grouping or sorting question has been asked and answered from the data</p>
+            <p>— at least one chart has been produced and described in one plain-English sentence</p>
+            <p>— the four findings questions have been answered in writing</p>
+          </div>
+        </div>
+        <div class="panel rule">
+          <header><span class="tag">Rule</span><span class="type">findings note is the artifact</span></header>
+          <div class="body">
+            <p>The notebook cells are scratch work. They do not need to be clean or linear. The findings note must be clear, specific, and written in plain English.</p>
+            <p>Vague findings such as <span class="mono">the data was interesting</span> do not count. Every observation in the findings note must be traceable to something visible in the data.</p>
+          </div>
+          <div class="plain-english">A good findings note could be read by someone who never opened the notebook.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="note-section" id="moves">
+      <div class="note-eyebrow">
+        <span class="note-num">NOTE 04</span>
+        <h2 class="note-heading">Moves Available — Blocks 1 Through 5</h2>
+        <span class="note-rule"></span>
+      </div>
+      <div class="stack">
+        <div class="panel resolution">
+          <header><span class="tag">Reminder</span><span class="type">what you already have</span></header>
+          <div class="body">
+            <p>These are the moves built across Blocks 1 through 5. They are listed here as a reminder to read before starting. Do not consult this page once the dataset is loaded.</p>
+          </div>
+        </div>
+
+        <div class="panel resolution">
+          <header><span class="tag">Block 1</span><span class="type">table literacy</span></header>
+          <div class="body">
+            <div class="command-grid">
+              <div class="command-box">
+                <span class="command">pd.read_csv("path")</span>
+                <span class="meaning">Load a CSV file into a dataframe.</span>
+              </div>
+              <div class="command-box">
+                <span class="command">df.head()</span>
+                <span class="meaning">First five rows.</span>
+              </div>
+              <div class="command-box inspect">
+                <span class="command">df.shape</span>
+                <span class="meaning">Row and column count as a tuple.</span>
+              </div>
+              <div class="command-box inspect">
+                <span class="command">df.info()</span>
+                <span class="meaning">Column names, types, and non-null counts.</span>
+              </div>
+              <div class="command-box inspect">
+                <span class="command">df.describe(include="all")</span>
+                <span class="meaning">Summary statistics for all columns.</span>
+              </div>
+              <div class="command-box inspect">
+                <span class="command">df.dtypes</span>
+                <span class="meaning">Data type of every column.</span>
+              </div>
+              <div class="command-box structure">
+                <span class="command">df["column"]</span>
+                <span class="meaning">Select one column.</span>
+              </div>
+              <div class="command-box structure">
+                <span class="command">df[["col1", "col2"]]</span>
+                <span class="meaning">Select multiple columns.</span>
+              </div>
+              <div class="command-box count">
+                <span class="command">df["column"].value_counts()</span>
+                <span class="meaning">Frequency count of each unique value.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel resolution">
+          <header><span class="tag">Block 2</span><span class="type">selection and filtering</span></header>
+          <div class="body">
+            <div class="command-grid">
+              <div class="command-box">
+                <span class="command">df[df["col"] == value]</span>
+                <span class="meaning">Keep rows where column equals value.</span>
+              </div>
+              <div class="command-box">
+                <span class="command">df[df["col"] != value]</span>
+                <span class="meaning">Keep rows where column does not equal value.</span>
+              </div>
+              <div class="command-box">
+                <span class="command">df[df["col"] &gt; value]</span>
+                <span class="meaning">Keep rows where column is greater than value.</span>
+              </div>
+              <div class="command-box structure">
+                <span class="command">df[(df["col1"] == a) &amp; (df["col2"] == b)]</span>
+                <span class="meaning">Two conditions, both must be true.</span>
+              </div>
+              <div class="command-box structure">
+                <span class="command">df[(df["col1"] == a) | (df["col2"] == b)]</span>
+                <span class="meaning">Two conditions, either can be true.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel resolution">
+          <header><span class="tag">Block 3</span><span class="type">missing data and cleaning</span></header>
+          <div class="body">
+            <div class="command-grid">
+              <div class="command-box inspect">
+                <span class="command">df.isnull()</span>
+                <span class="meaning">Show where missing values appear in the table.</span>
+              </div>
+              <div class="command-box inspect">
+                <span class="command">df.isnull().sum()</span>
+                <span class="meaning">Count missing values per column.</span>
+              </div>
+              <div class="command-box structure">
+                <span class="command">df.dropna()</span>
+                <span class="meaning">Remove rows with any missing value.</span>
+              </div>
+              <div class="command-box count">
+                <span class="command">df["column"].fillna(value)</span>
+                <span class="meaning">Fill missing values in one named column.</span>
+              </div>
+              <div class="command-box structure">
+                <span class="command">df_clean = df.copy()</span>
+                <span class="meaning">Preserve the original before changes.</span>
+              </div>
+              <div class="command-box structure">
+                <span class="command">df.to_csv("path", index=False)</span>
+                <span class="meaning">Save a cleaned dataframe to CSV.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel resolution">
+          <header><span class="tag">Block 4</span><span class="type">grouping and insight</span></header>
+          <div class="body">
+            <div class="command-grid">
+              <div class="command-box">
+                <span class="command">df.sort_values("column")</span>
+                <span class="meaning">Sort rows by a column, ascending by default.</span>
+              </div>
+              <div class="command-box">
+                <span class="command">df.sort_values("column", ascending=False)</span>
+                <span class="meaning">Sort rows descending.</span>
+              </div>
+              <div class="command-box count">
+                <span class="command">df["column"].value_counts()</span>
+                <span class="meaning">Count how often each category appears.</span>
+              </div>
+              <div class="command-box structure">
+                <span class="command">df.groupby("col")["num"].mean()</span>
+                <span class="meaning">Mean of a numeric column per group.</span>
+              </div>
+              <div class="command-box structure">
+                <span class="command">df.groupby("col")["num"].count()</span>
+                <span class="meaning">Count of rows per group.</span>
+              </div>
+              <div class="command-box count">
+                <span class="command">df.groupby("col").agg({"num": ["mean", "max"]})</span>
+                <span class="meaning">Multiple aggregations per group.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel resolution">
+          <header><span class="tag">Block 5</span><span class="type">visualisation</span></header>
+          <div class="body">
+            <div class="command-grid">
+              <div class="command-box">
+                <span class="command">df["col"].value_counts().plot(kind="bar")</span>
+                <span class="meaning">Bar chart of category frequencies.</span>
+              </div>
+              <div class="command-box">
+                <span class="command">df["col"].plot(kind="hist")</span>
+                <span class="meaning">Histogram of a numeric column.</span>
+              </div>
+              <div class="command-box structure">
+                <span class="command">df.plot(kind="scatter", x="col1", y="col2")</span>
+                <span class="meaning">Scatter plot of two numeric columns.</span>
+              </div>
+              <div class="command-box inspect">
+                <span class="command">plt.title("text")</span>
+                <span class="meaning">Add a title to the current chart.</span>
+              </div>
+              <div class="command-box inspect">
+                <span class="command">plt.show()</span>
+                <span class="meaning">Render the chart.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel rule">
+          <header><span class="tag">Rule</span><span class="type">after each chart</span></header>
+          <div class="body">
+            <p>For every chart produced during the EDA, write one sentence stating what the chart shows and one sentence stating what the chart cannot tell from that view alone. This is not optional. It is part of the Block 5 standard.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="chapter-nav">
+      <a class="chapter-next" href="block_9_etl_drill.html">
+        <span class="label">Next Chapter</span>
+        <span class="title">Block 9</span>
+        <span class="arrow">&rarr;</span>
+      </a>
+    </div>
+
+    <p class="footer">Created for the Block 8 full EDA cycle in the Learning_Python project.</p>
+  </main>
+</article>
+</body>
+</html>
+        <span class="label">Next Chapter</span>
+        <span class="title">Block 10</span>
+        <span class="arrow">&rarr;</span>
+      </a>
+    </div>
+
+    <p class="footer">Created for the Block 8 full EDA cycle in the Learning_Python project.</p>
+  </main>
+</article>
+</body>
+</html>

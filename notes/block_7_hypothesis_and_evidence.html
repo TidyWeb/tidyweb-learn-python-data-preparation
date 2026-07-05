@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Block 7 Hypothesis and Evidence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#eef1f4;
+  --panel:#fffdfa;
+  --ink:#202124;
+  --muted:#5f6368;
+  --line:#dde2e8;
+  --rail-bg:#17212b;
+  --rail-text:#dce7ef;
+  --rail-muted:#8fa4b5;
+  --navy:#1f4f82;
+  --cyan:#1f7a8c;
+  --yellow:#f6c85f;
+  --green:#4d6b4f;
+  --orange:#d97706;
+  --plum:#7d4655;
+  --code-bg:#111820;
+  --code-bg2:#18222c;
+  --mono-bg:#f4f5f7;
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body { background:var(--bg); color:var(--ink); font-family:'IBM Plex Sans', sans-serif; }
+.frame { width:min(1160px, calc(100vw - 32px)); margin:30px auto 60px; display:grid; grid-template-columns:220px minmax(0,1fr); background:var(--panel); border:1px solid var(--line); box-shadow:0 16px 46px rgba(39,50,60,.18); }
+.rail { background:var(--rail-bg); color:var(--rail-text); padding:32px 22px 40px; position:sticky; top:0; height:100vh; overflow-y:auto; }
+
+.rail-logo-wrap {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin: 0 0 18px;
+  padding: 0 0 18px;
+  border-bottom: 1px solid rgba(255,255,255,.1);
+}
+.rail-logo {
+  display:block;
+  width: min(132px, 100%);
+  height: auto;
+  filter: drop-shadow(0 10px 18px rgba(34, 214, 255, .16));
+}
+
+.rail-title { font-family:'Atkinson Hyperlegible', sans-serif; font-size:20px; font-weight:700; color:white; line-height:1.2; margin-bottom:6px; }
+.rail-sub { font-size:12px; color:var(--rail-muted); line-height:1.55; margin-bottom:28px; padding-bottom:20px; border-bottom:1px solid rgba(255,255,255,.1); }
+.token { display:flex; gap:10px; align-items:center; padding:9px 0; border-top:1px solid rgba(255,255,255,.1); font:600 11px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.06em; color:var(--rail-muted); }
+.dot { width:10px; height:10px; border-radius:50%; background:var(--yellow); flex-shrink:0; }
+.dot.cyan { background:var(--cyan); }
+.dot.green { background:var(--green); }
+.dot.orange { background:var(--orange); }
+.rail-nav { margin-top:22px; border-top:1px solid rgba(255,255,255,.1); padding-top:16px; }
+.rail-nav-label { font:600 10px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.08em; color:var(--rail-muted); margin-bottom:10px; }
+.rail-nav a { display:flex; align-items:center; gap:8px; padding:7px 0; font-size:13px; color:var(--rail-text); text-decoration:none; line-height:1.35; border-bottom:1px solid rgba(255,255,255,.06); }
+.rail-nav a:hover { color:white; }
+.rail-nav a .num { font:600 10px 'IBM Plex Mono', monospace; color:var(--rail-muted); flex-shrink:0; width:22px; }
+main { padding:48px 52px 72px; }
+.page-mode { font:700 11px 'IBM Plex Mono', monospace; letter-spacing:.1em; text-transform:uppercase; color:var(--cyan); margin-bottom:10px; }
+.page-title { font-family:'Atkinson Hyperlegible', sans-serif; font-size:36px; font-weight:700; color:var(--navy); line-height:1.1; margin-bottom:14px; }
+.page-sub { font-size:16px; line-height:1.75; color:var(--muted); margin-bottom:48px; padding-bottom:28px; border-bottom:2px solid var(--mono-bg); }
+.note-section { margin-bottom:64px; scroll-margin-top:20px; }
+.note-eyebrow { display:flex; align-items:center; gap:12px; margin-bottom:20px; }
+.note-num { font:600 11px 'IBM Plex Mono', monospace; color:var(--muted); letter-spacing:.06em; }
+.note-heading { font-family:'Atkinson Hyperlegible', sans-serif; font-size:24px; font-weight:700; color:var(--navy); line-height:1.2; }
+.note-rule { flex:1; height:1px; background:var(--line); margin-left:4px; }
+.stack { display:grid; gap:12px; }
+.panel { border:1px solid var(--line); background:#fbfcfd; border-radius:4px; overflow:hidden; }
+.panel header { display:flex; justify-content:space-between; align-items:center; padding:8px 14px; border-bottom:1px solid var(--line); font:600 11px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.08em; }
+.panel header .tag { color:var(--navy); }
+.panel header .type { color:var(--muted); }
+.panel .body { padding:16px 20px; font-size:16px; line-height:1.8; }
+.panel .body p + p { margin-top:10px; }
+.panel.translation { border-left:4px solid var(--yellow); }
+.panel.rule { border-left:4px solid var(--orange); }
+.panel.resolution { border-left:4px solid var(--cyan); }
+.panel.code { background:var(--code-bg); color:#e8eef4; border-color:#26313c; border-left-color:#26313c; }
+.panel.code header { background:var(--code-bg2); border-color:#26313c; color:#8ea3b5; }
+.panel.code header .tag { color:#c5d8ea; }
+.panel.code .body { padding:0; }
+.panel.code pre { margin:0; padding:18px 22px; font:15px/1.9 'IBM Plex Mono', monospace; white-space:pre-wrap; overflow-wrap:anywhere; }
+.command-grid { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:14px; }
+.command-box { display:block; border:2px solid #cfd8e3; border-left:7px solid var(--cyan); border-radius:12px; background:linear-gradient(180deg, #ffffff 0%, #f6f9fc 100%); padding:18px 20px; min-height:122px; box-shadow:0 8px 18px rgba(31,79,130,.08); }
+.command-box .command { display:block; font:700 21px/1.35 'IBM Plex Mono', monospace; color:var(--navy); margin-bottom:10px; overflow-wrap:anywhere; }
+.command-box .meaning { display:block; font-size:16px; line-height:1.55; color:#3f4954; }
+.command-box.inspect { border-left-color:var(--orange); }
+.command-box.structure { border-left-color:var(--green); }
+.command-box.select { border-left-color:var(--plum); }
+.command-box.count { border-left-color:var(--yellow); }
+.part-outer { color:#d97706; font-weight:600; }
+.part-inner { color:#1f4f82; font-weight:600; }
+.part-core { color:#4d6b4f; font-weight:600; }
+.part-var { color:#d8e7ff; }
+.part-note { color:#9ed18c; }
+.mono { font-family:'IBM Plex Mono', monospace; background:var(--mono-bg); border-radius:4px; padding:.05em .3em; white-space:nowrap; }
+table { width:100%; border-collapse:collapse; font-size:15px; }
+th, td { border:1px solid var(--line); padding:12px 14px; vertical-align:top; text-align:left; }
+th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospace; font-size:12px; text-transform:uppercase; letter-spacing:.05em; }
+.legend { display:grid; gap:8px; font-size:15px; }
+.legend p { line-height:1.7; }
+.plain-english { font-style:italic; font-size:15px; color:var(--muted); border-top:1px solid var(--line); padding:14px 20px; line-height:1.7; background:#fbfcfd; }
+.footer { color:var(--muted); font-size:13px; text-align:center; margin-top:64px; }
+
+.chapter-nav {
+  margin-top: 42px;
+  padding-top: 22px;
+  border-top: 2px solid var(--mono-bg);
+  display: flex;
+  justify-content: flex-end;
+}
+.chapter-next {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  border-radius: 999px;
+  text-decoration: none;
+  background: var(--navy);
+  color: #fff;
+  box-shadow: 0 10px 20px rgba(31,79,130,.18);
+  border: 1px solid var(--navy);
+}
+.chapter-next:hover { filter: brightness(.96); }
+.chapter-next .label {
+  font: 600 11px 'IBM Plex Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: #d8e7ff;
+}
+.chapter-next .title {
+  font-family: 'Atkinson Hyperlegible', sans-serif;
+  font-size: 18px;
+  line-height: 1.2;
+  color: #fff;
+}
+.chapter-next .arrow {
+  font-size: 20px;
+  line-height: 1;
+  color: #fff;
+}
+@media (max-width:860px) {
+  .chapter-nav { justify-content: stretch; }
+  .chapter-next { width: 100%; justify-content: center; }
+}
+
+@media (max-width:860px) { .frame { grid-template-columns:1fr; } .rail { display:none; } main { padding:32px 22px 48px; } .page-title { font-size:26px; } .command-grid { grid-template-columns:1fr; } .command-box .command { font-size:18px; } }
+</style>
+</head>
+<body>
+<article class="frame">
+  <aside class="rail">
+    <div class="rail-logo-wrap">
+      <img class="rail-logo" src="../assets/tidyweb_logo.png" alt="TidyWeb logo">
+    </div>
+    <div class="rail-title">Block 7 Hypothesis and Evidence</div>
+    <div class="rail-sub">A reference guide to what a hypothesis test is doing, why p-values are evidence rather than verdicts, and how Block 7 moves from description into statistical testing.</div>
+    <div class="token"><span class="dot"></span> Translation</div>
+    <div class="token"><span class="dot cyan"></span> Command Meaning</div>
+    <div class="token"><span class="dot green"></span> Code Breakdown</div>
+    <div class="token"><span class="dot orange"></span> Rule</div>
+        <nav class="rail-nav course-nav">
+      <div class="rail-nav-label">Bookshelf Home</div>
+      <a href="../index.html"><span class="num">00</span><span>Main Shelf</span></a>
+    </nav>
+    <nav class="rail-nav course-nav">
+      <div class="rail-nav-label">Course Chapters</div>
+      <a href="data_analysis_field_overview.html"><span class="num">01</span><span>Field Overview</span></a>
+      <a href="block_1_table_literacy_bridge.html"><span class="num">02</span><span>Block 1</span></a>
+      <a href="block_2_selection_and_filtering.html"><span class="num">03</span><span>Block 2</span></a>
+      <a href="block_3_missing_data_and_cleaning.html"><span class="num">04</span><span>Block 3</span></a>
+      <a href="block_4_grouping_and_insight.html"><span class="num">05</span><span>Block 4</span></a>
+      <a href="block_5_visualisation.html"><span class="num">06</span><span>Block 5</span></a>
+      <a href="block_6_statistics_foundations.html"><span class="num">07</span><span>Block 6</span></a>
+      <a href="block_7_hypothesis_and_evidence.html" class="active"><span class="num">08</span><span>Block 7</span></a>
+      <a href="block_8_full_eda_cycle.html"><span class="num">09</span><span>Block 8</span></a>
+      <a href="block_9_etl_drill.html"><span class="num">10</span><span>Block 9</span></a>
+      <a href="block_10_dashboard_and_presentation.html"><span class="num">11</span><span>Block 10</span></a>
+    </nav>
+    <nav class="rail-nav">
+      <div class="rail-nav-label">This Chapter</div>
+      <a href="#what"><span class="num">01</span><span>What This Block Adds</span></a>
+      <a href="#commands"><span class="num">02</span><span>Command Boxes</span></a>
+      <a href="#evidence"><span class="num">03</span><span>How The Logic Works</span></a>
+      <a href="#importance"><span class="num">04</span><span>Significance And Importance</span></a>
+    </nav>
+  </aside>
+  <main>
+    <div class="page-mode">Reference Guide</div>
+    <h1 class="page-title">Block 7 Hypothesis and Evidence</h1>
+    <p class="page-sub">Block 7 is where the course moves from describing what the data contains into testing whether an observed difference is likely to be real or likely to be chance. The goal is not to turn statistics into a black box. The goal is to understand the order of reasoning: frame the question, state the null and alternative hypotheses, run the test, then interpret the result carefully.</p>
+
+    <section class="note-section" id="what">
+      <div class="note-eyebrow">
+        <span class="note-num">NOTE 01</span>
+        <h2 class="note-heading">What This Block Adds</h2>
+        <span class="note-rule"></span>
+      </div>
+      <div class="stack">
+        <div class="panel resolution">
+          <header><span class="tag">Plain English</span><span class="type">from description to evidence</span></header>
+          <div class="body">
+            <p>Blocks 1 through 6 mostly ask: what is in the table, how is it shaped, what stands out, and how do two groups compare descriptively?</p>
+            <p>Block 7 adds a new question: if two groups look different, is that difference strong enough to count as evidence against the idea that nothing real is going on?</p>
+          </div>
+          <div class="plain-english">Block 7 does not replace earlier summary work. It adds a way to test it.</div>
+        </div>
+
+        <div class="panel translation">
+          <header><span class="tag">Block 7 sequence</span><span class="type">reasoning order</span></header>
+          <div class="body legend">
+            <p><strong>Step 1:</strong> name the two groups and one numeric measure.</p>
+            <p><strong>Step 2:</strong> state the null hypothesis and the alternative hypothesis in plain English.</p>
+            <p><strong>Step 3:</strong> run the test.</p>
+            <p><strong>Step 4:</strong> interpret the p-value and then ask whether the difference matters in practice.</p>
+          </div>
+        </div>
+
+        <div class="panel rule">
+          <header><span class="tag">Main rule</span><span class="type">hypothesis before p-value</span></header>
+          <div class="body">
+            <p>The null and alternative hypotheses must be stated before any p-value appears. The test result does not invent the question afterward. The question comes first.</p>
+          </div>
+          <div class="plain-english">No p-value belongs on the page before the hypothesis does.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="note-section" id="commands">
+      <div class="note-eyebrow">
+        <span class="note-num">NOTE 02</span>
+        <h2 class="note-heading">At-a-glance Command Boxes</h2>
+        <span class="note-rule"></span>
+      </div>
+      <div class="stack">
+        <div class="panel resolution">
+          <header><span class="tag">Hypothesis and evidence</span><span class="type">Block 7 core moves</span></header>
+          <div class="body">
+            <div class="command-grid">
+              <div class="command-box">
+                <span class="command">from scipy import stats</span>
+                <span class="meaning">Import the scipy.stats toolbox for statistical tests.</span>
+              </div>
+              <div class="command-box structure">
+                <span class="command">df[df["group"] == value]["num"]</span>
+                <span class="meaning">Split one numeric measure into one named group.</span>
+              </div>
+              <div class="command-box structure">
+                <span class="command">stats.ttest_ind(group_a, group_b)</span>
+                <span class="meaning">Run an independent-samples t-test on two groups.</span>
+              </div>
+              <div class="command-box inspect">
+                <span class="command">result.statistic</span>
+                <span class="meaning">Read the t-statistic from the test result.</span>
+              </div>
+              <div class="command-box count">
+                <span class="command">result.pvalue</span>
+                <span class="meaning">Read the p-value from the test result.</span>
+              </div>
+              <div class="command-box inspect">
+                <span class="command">group_a.mean()</span>
+                <span class="meaning">Check the average of the first group.</span>
+              </div>
+              <div class="command-box inspect">
+                <span class="command">group_b.mean()</span>
+                <span class="meaning">Check the average of the second group.</span>
+              </div>
+              <div class="command-box structure">
+                <span class="command">group_a.mean() - group_b.mean()</span>
+                <span class="meaning">Measure the size and direction of the gap between the groups.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="note-section" id="evidence">
+      <div class="note-eyebrow">
+        <span class="note-num">NOTE 03</span>
+        <h2 class="note-heading">How The Logic Works</h2>
+        <span class="note-rule"></span>
+      </div>
+      <div class="stack">
+        <div class="panel resolution">
+          <header><span class="tag">Hypothesis</span><span class="type">two statements, not one</span></header>
+          <div class="body">
+            <p>A hypothesis test always starts with two competing statements.</p>
+            <p>The <strong>null hypothesis</strong> says there is no meaningful difference or effect. The <strong>alternative hypothesis</strong> says there is a meaningful difference or effect.</p>
+          </div>
+        </div>
+
+        <div class="panel code">
+          <header><span class="tag">Code breakdown</span><span class="type">t-test core line</span></header>
+          <div class="body">
+            <pre><span class="part-var">stats</span><span class="part-outer">.</span><span class="part-inner">ttest_ind</span><span class="part-outer">(</span><span class="part-core">group_a, group_b</span><span class="part-outer">)</span></pre>
+          </div>
+        </div>
+
+        <div class="panel translation">
+          <header><span class="tag">What the test is asking</span><span class="type">inside the black box</span></header>
+          <div class="body">
+            <p>The t-test is not asking whether the two group means are numerically identical. It is asking whether the distance between them looks large enough, relative to the spread of the data, that the no-difference explanation starts to look weak.</p>
+          </div>
+          <div class="plain-english">A test is comparing signal against noise, not just mean against mean.</div>
+        </div>
+
+        <div class="panel resolution">
+          <header><span class="tag">What a p-value is</span><span class="type">evidence, not verdict</span></header>
+          <div class="body">
+            <p>A p-value measures how surprising the observed result would be if the null hypothesis were true. A smaller p-value means the result would be less expected under the no-difference story.</p>
+            <p>A larger p-value means the result is more compatible with the idea that the apparent difference could have arisen without a real underlying effect.</p>
+          </div>
+        </div>
+
+        <div class="panel rule">
+          <header><span class="tag">Rule</span><span class="type">0.05 is a convention</span></header>
+          <div class="body">
+            <p>The threshold <span class="mono">0.05</span> is common, but it is not a law of nature. It is a convention used to organise judgment. It should never be mistaken for a magic border between truth and falsehood.</p>
+          </div>
+          <div class="plain-english">A p-value helps you reason. It does not excuse you from reasoning.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="note-section" id="importance">
+      <div class="note-eyebrow">
+        <span class="note-num">NOTE 04</span>
+        <h2 class="note-heading">Significance And Importance</h2>
+        <span class="note-rule"></span>
+      </div>
+      <div class="stack">
+        <div class="panel translation">
+          <header><span class="tag">Two different questions</span><span class="type">statistical vs practical</span></header>
+          <div class="body">
+            <table>
+              <thead>
+                <tr>
+                  <th>Question</th>
+                  <th>What it asks</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Statistical significance</strong></td>
+                  <td>Is the observed result unlikely to be explained by chance alone under the null hypothesis?</td>
+                </tr>
+                <tr>
+                  <td><strong>Practical importance</strong></td>
+                  <td>Is the size of the difference large enough to matter in the real world?</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="plain-english">A result can be statistically significant and still be too small to matter.</div>
+        </div>
+
+        <div class="panel resolution">
+          <header><span class="tag">Why the means still matter</span><span class="type">do not skip effect size</span></header>
+          <div class="body">
+            <p>The p-value is not enough on its own. You still need to inspect the group means and the gap between them. If the difference is tiny, the real-world meaning may still be weak even when the test result looks strong.</p>
+          </div>
+        </div>
+
+        <div class="panel rule">
+          <header><span class="tag">Main caution</span><span class="type">do not let the test do all the thinking</span></header>
+          <div class="body">
+            <p>Block 7 is not about handing judgment over to scipy. The test result is one piece of evidence. It must be read alongside the size of the difference, the context of the question, and the limits of what the dataset can actually support.</p>
+          </div>
+          <div class="plain-english">Statistical significance is part of the answer. It is never the whole answer.</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="chapter-nav">
+      <a class="chapter-next" href="block_8_full_eda_cycle.html">
+        <span class="label">Next Chapter</span>
+        <span class="title">Block 8</span>
+        <span class="arrow">&rarr;</span>
+      </a>
+    </div>
+
+    <p class="footer">Created for the Block 7 hypothesis and evidence workflow in the Learning_Python project.</p>
+  </main>
+</article>
+</body>
+</html>

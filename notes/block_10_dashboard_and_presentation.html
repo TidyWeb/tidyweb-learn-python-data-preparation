@@ -1,0 +1,494 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Block 10 Dashboard and Presentation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#eef1f4;
+  --panel:#fffdfa;
+  --ink:#202124;
+  --muted:#5f6368;
+  --line:#dde2e8;
+  --rail-bg:#17212b;
+  --rail-text:#dce7ef;
+  --rail-muted:#8fa4b5;
+  --navy:#1f4f82;
+  --cyan:#1f7a8c;
+  --yellow:#f6c85f;
+  --green:#4d6b4f;
+  --orange:#d97706;
+  --plum:#7d4655;
+  --code-bg:#111820;
+  --code-bg2:#18222c;
+  --mono-bg:#f4f5f7;
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body { background:var(--bg); color:var(--ink); font-family:'IBM Plex Sans', sans-serif; }
+.frame { width:min(1160px, calc(100vw - 32px)); margin:30px auto 60px; display:grid; grid-template-columns:220px minmax(0,1fr); background:var(--panel); border:1px solid var(--line); box-shadow:0 16px 46px rgba(39,50,60,.18); }
+.rail { background:var(--rail-bg); color:var(--rail-text); padding:32px 22px 40px; position:sticky; top:0; height:100vh; overflow-y:auto; }
+
+.rail-logo-wrap {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin: 0 0 18px;
+  padding: 0 0 18px;
+  border-bottom: 1px solid rgba(255,255,255,.1);
+}
+.rail-logo {
+  display:block;
+  width: min(132px, 100%);
+  height: auto;
+  filter: drop-shadow(0 10px 18px rgba(34, 214, 255, .16));
+}
+
+.rail-title { font-family:'Atkinson Hyperlegible', sans-serif; font-size:20px; font-weight:700; color:white; line-height:1.2; margin-bottom:6px; }
+.rail-sub { font-size:12px; color:var(--rail-muted); line-height:1.55; margin-bottom:28px; padding-bottom:20px; border-bottom:1px solid rgba(255,255,255,.1); }
+.token { display:flex; gap:10px; align-items:center; padding:9px 0; border-top:1px solid rgba(255,255,255,.1); font:600 11px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.06em; color:var(--rail-muted); }
+.dot { width:10px; height:10px; border-radius:50%; background:var(--yellow); flex-shrink:0; }
+.dot.cyan { background:var(--cyan); }
+.dot.green { background:var(--green); }
+.dot.orange { background:var(--orange); }
+.rail-nav { margin-top:22px; border-top:1px solid rgba(255,255,255,.1); padding-top:16px; }
+.rail-nav-label { font:600 10px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.08em; color:var(--rail-muted); margin-bottom:10px; }
+.rail-nav a { display:flex; align-items:center; gap:8px; padding:7px 0; font-size:13px; color:var(--rail-text); text-decoration:none; line-height:1.35; border-bottom:1px solid rgba(255,255,255,.06); }
+.rail-nav a:hover { color:white; }
+.rail-nav a .num { font:600 10px 'IBM Plex Mono', monospace; color:var(--rail-muted); flex-shrink:0; width:22px; }
+main { padding:48px 52px 72px; }
+.page-mode { font:700 11px 'IBM Plex Mono', monospace; letter-spacing:.1em; text-transform:uppercase; color:var(--cyan); margin-bottom:10px; }
+.page-title { font-family:'Atkinson Hyperlegible', sans-serif; font-size:36px; font-weight:700; color:var(--navy); line-height:1.1; margin-bottom:14px; }
+.page-sub { font-size:16px; line-height:1.75; color:var(--muted); margin-bottom:48px; padding-bottom:28px; border-bottom:2px solid var(--mono-bg); }
+.note-section { margin-bottom:64px; scroll-margin-top:20px; }
+.note-eyebrow { display:flex; align-items:center; gap:12px; margin-bottom:20px; }
+.note-num { font:600 11px 'IBM Plex Mono', monospace; color:var(--muted); letter-spacing:.06em; }
+.note-heading { font-family:'Atkinson Hyperlegible', sans-serif; font-size:24px; font-weight:700; color:var(--navy); line-height:1.2; }
+.note-rule { flex:1; height:1px; background:var(--line); margin-left:4px; }
+.stack { display:grid; gap:12px; }
+.panel { border:1px solid var(--line); background:#fbfcfd; border-radius:4px; overflow:hidden; }
+.panel header { display:flex; justify-content:space-between; align-items:center; padding:8px 14px; border-bottom:1px solid var(--line); font:600 11px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.08em; }
+.panel header .tag { color:var(--navy); }
+.panel header .type { color:var(--muted); }
+.panel .body { padding:16px 20px; font-size:16px; line-height:1.8; }
+.panel .body p + p { margin-top:10px; }
+.panel.translation { border-left:4px solid var(--yellow); }
+.panel.rule { border-left:4px solid var(--orange); }
+.panel.resolution { border-left:4px solid var(--cyan); }
+.panel.code { background:var(--code-bg); color:#e8eef4; border-color:#26313c; border-left-color:#26313c; }
+.panel.code header { background:var(--code-bg2); border-color:#26313c; color:#8ea3b5; }
+.panel.code header .tag { color:#c5d8ea; }
+.panel.code .body { padding:0; }
+.panel.code pre { margin:0; padding:18px 22px; font:15px/1.9 'IBM Plex Mono', monospace; white-space:pre-wrap; overflow-wrap:anywhere; }
+.command-grid { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:14px; }
+.command-box { display:block; border:2px solid #cfd8e3; border-left:7px solid var(--cyan); border-radius:12px; background:linear-gradient(180deg, #ffffff 0%, #f6f9fc 100%); padding:18px 20px; min-height:122px; box-shadow:0 8px 18px rgba(31,79,130,.08); }
+.command-box .command { display:block; font:700 21px/1.35 'IBM Plex Mono', monospace; color:var(--navy); margin-bottom:10px; overflow-wrap:anywhere; }
+.command-box .meaning { display:block; font-size:16px; line-height:1.55; color:#3f4954; }
+.command-box.inspect { border-left-color:var(--orange); }
+.command-box.structure { border-left-color:var(--green); }
+.command-box.select { border-left-color:var(--plum); }
+.command-box.count { border-left-color:var(--yellow); }
+.part-outer { color:#d97706; font-weight:600; }
+.part-inner { color:#1f4f82; font-weight:600; }
+.part-core { color:#4d6b4f; font-weight:600; }
+.part-var { color:#d8e7ff; }
+.part-note { color:#9ed18c; }
+.mono { font-family:'IBM Plex Mono', monospace; background:var(--mono-bg); border-radius:4px; padding:.05em .3em; white-space:nowrap; }
+table { width:100%; border-collapse:collapse; font-size:15px; }
+th, td { border:1px solid var(--line); padding:12px 14px; vertical-align:top; text-align:left; }
+th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospace; font-size:12px; text-transform:uppercase; letter-spacing:.05em; }
+.legend { display:grid; gap:8px; font-size:15px; }
+.legend p { line-height:1.7; }
+.plain-english { font-style:italic; font-size:15px; color:var(--muted); border-top:1px solid var(--line); padding:14px 20px; line-height:1.7; background:#fbfcfd; }
+.footer { color:var(--muted); font-size:13px; text-align:center; margin-top:64px; }
+
+.chapter-nav {
+  margin-top: 42px;
+  padding-top: 22px;
+  border-top: 2px solid var(--mono-bg);
+  display: flex;
+  justify-content: flex-end;
+}
+.chapter-next {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  border-radius: 999px;
+  text-decoration: none;
+  background: var(--navy);
+  color: #fff;
+  box-shadow: 0 10px 20px rgba(31,79,130,.18);
+  border: 1px solid var(--navy);
+}
+.chapter-next:hover { filter: brightness(.96); }
+.chapter-next .label {
+  font: 600 11px 'IBM Plex Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: #d8e7ff;
+}
+.chapter-next .title {
+  font-family: 'Atkinson Hyperlegible', sans-serif;
+  font-size: 18px;
+  line-height: 1.2;
+  color: #fff;
+}
+.chapter-next .arrow {
+  font-size: 20px;
+  line-height: 1;
+  color: #fff;
+}
+@media (max-width:860px) {
+  .chapter-nav { justify-content: stretch; }
+  .chapter-next { width: 100%; justify-content: center; }
+}
+
+@media (max-width:860px) { .frame { grid-template-columns:1fr; } .rail { display:none; } main { padding:32px 22px 48px; } .page-title { font-size:26px; } .command-grid { grid-template-columns:1fr; } .command-box .command { font-size:18px; } }
+</style>
+</head>
+<body>
+<article class="frame">
+  <aside class="rail">
+    <div class="rail-logo-wrap">
+      <img class="rail-logo" src="../assets/tidyweb_logo.png" alt="TidyWeb logo">
+    </div>
+    <div class="rail-title">Block 10 Dashboard and Presentation</div>
+    <div class="rail-sub">The final block. Choose three KPIs, one chart each, one findings report, one verbal summary delivered aloud.</div>
+    <div class="token"><span class="dot"></span> Translation</div>
+    <div class="token"><span class="dot cyan"></span> Definition Or Task</div>
+    <div class="token"><span class="dot orange"></span> Rule</div>
+    <div class="token"><span class="dot green"></span> Plain-English Summary</div>
+        <nav class="rail-nav course-nav">
+      <div class="rail-nav-label">Bookshelf Home</div>
+      <a href="../index.html"><span class="num">00</span><span>Main Shelf</span></a>
+    </nav>
+    <nav class="rail-nav course-nav">
+      <div class="rail-nav-label">Course Chapters</div>
+      <a href="data_analysis_field_overview.html"><span class="num">01</span><span>Field Overview</span></a>
+      <a href="block_1_table_literacy_bridge.html"><span class="num">02</span><span>Block 1</span></a>
+      <a href="block_2_selection_and_filtering.html"><span class="num">03</span><span>Block 2</span></a>
+      <a href="block_3_missing_data_and_cleaning.html"><span class="num">04</span><span>Block 3</span></a>
+      <a href="block_4_grouping_and_insight.html"><span class="num">05</span><span>Block 4</span></a>
+      <a href="block_5_visualisation.html"><span class="num">06</span><span>Block 5</span></a>
+      <a href="block_6_statistics_foundations.html"><span class="num">07</span><span>Block 6</span></a>
+      <a href="block_7_hypothesis_and_evidence.html"><span class="num">08</span><span>Block 7</span></a>
+      <a href="block_8_full_eda_cycle.html"><span class="num">09</span><span>Block 8</span></a>
+      <a href="block_9_etl_drill.html"><span class="num">10</span><span>Block 9</span></a>
+      <a href="block_10_dashboard_and_presentation.html" class="active"><span class="num">11</span><span>Block 10</span></a>
+    </nav>
+    <nav class="rail-nav">
+      <div class="rail-nav-label">This Chapter</div>
+      <a href="#kpi"><span class="num">01</span><span>What a KPI Is</span></a>
+      <a href="#choosing"><span class="num">02</span><span>Choosing Three KPIs</span></a>
+      <a href="#toolkit"><span class="num">03</span><span>The Visualisation Toolkit</span></a>
+      <a href="#findings"><span class="num">04</span><span>The Findings Report</span></a>
+      <a href="#verbal"><span class="num">05</span><span>The Verbal Summary</span></a>
+    </nav>
+  </aside>
+  <main>
+    <div class="page-mode">Presentation Block</div>
+    <h1 class="page-title">Block 10 — Dashboard and Presentation</h1>
+    <p class="page-sub">Block 10 is the final block. The task is to choose three KPIs from a real dataset, produce one chart per KPI, write a plain-English findings report, and deliver a short verbal summary aloud. This document covers what a KPI is, how to choose one, how to present data clearly, the visualisation toolkit landscape, and what the findings report and verbal summary must contain.</p>
+
+    <section class="note-section" id="kpi">
+      <div class="note-eyebrow">
+        <span class="note-num">NOTE 01</span>
+        <h2 class="note-heading">What a KPI Is</h2>
+        <span class="note-rule"></span>
+      </div>
+      <div class="stack">
+        <div class="panel resolution">
+          <header><span class="tag">Plain English</span><span class="type">key performance indicator</span></header>
+          <div class="body">
+            <p>A KPI — Key Performance Indicator — is a number that measures progress toward a specific goal.</p>
+            <p>Not every column in a dataset is a KPI. A KPI is a number someone cares about for a reason.</p>
+            <p>The reason has to be statable in one sentence: what is being measured, for whom, and why it matters.</p>
+            <p>If you cannot state the reason, it is not a KPI. It is just a metric.</p>
+          </div>
+          <div class="plain-english">A KPI without a stated purpose is just a number with a label.</div>
+        </div>
+        <div class="panel translation">
+          <header><span class="tag">Example</span><span class="type">metric vs KPI</span></header>
+          <div class="body">
+            <table>
+              <thead>
+                <tr>
+                  <th>Just a Metric</th>
+                  <th>A KPI</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Total Sales</td>
+                  <td>Total Sales by Category, tracked to identify which category drives the most revenue</td>
+                </tr>
+                <tr>
+                  <td>Number of orders</td>
+                  <td>Average order value, tracked to assess whether discounting is hurting revenue</td>
+                </tr>
+                <tr>
+                  <td>Profit column exists</td>
+                  <td>Profit margin by region, tracked to find where the business is losing money</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="panel rule">
+          <header><span class="tag">Rule</span><span class="type">three KPIs, three different questions</span></header>
+          <div class="body">
+            <p>Each of your three KPIs must answer a different question.</p>
+            <p>Do not pick three measures of the same thing.</p>
+            <p>At least one KPI should involve a comparison — between categories, segments, or time periods.</p>
+            <p>At least one KPI should reveal something that is not obvious from scanning the raw table.</p>
+          </div>
+          <div class="plain-english">If all three KPIs tell the same story, you have chosen poorly.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="note-section" id="choosing">
+      <div class="note-eyebrow">
+        <span class="note-num">NOTE 02</span>
+        <h2 class="note-heading">Choosing Three KPIs</h2>
+        <span class="note-rule"></span>
+      </div>
+      <div class="stack">
+        <div class="panel resolution">
+          <header><span class="tag">The Selection Criteria</span><span class="type">what makes a good KPI choice</span></header>
+          <div class="body">
+            <p>A good KPI choice meets three tests:</p>
+            <p>— It is arguable. There is a reason to care about this number specifically.</p>
+            <p>— It is computable from the data you have. You can produce it now, with the columns available.</p>
+            <p>— It is interpretable. A non-analyst could understand what it shows in one sentence.</p>
+            <p>If a KPI fails any one of these tests, replace it.</p>
+          </div>
+        </div>
+        <div class="panel translation">
+          <header><span class="tag">Dataset Guidance</span><span class="type">recommended starting point</span></header>
+          <div class="body">
+            <p><span class="mono">superstore_sales.csv</span> is the strongest dataset for this block.</p>
+            <p>It contains Sales, Profit, Quantity, Discount, Category, and Segment — all of which support natural business KPIs.</p>
+            <p>Suggested KPI candidates:</p>
+            <p>— Average profit margin by Category</p>
+            <p>— Total Sales by Segment</p>
+            <p>— Discount rate vs Profit — is discounting hurting profit?</p>
+            <p>These are starting points, not requirements. Choose the three that interest you most and that tell three different stories.</p>
+          </div>
+          <div class="plain-english">The dataset is the same. The story you choose to tell is the block.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="note-section" id="toolkit">
+      <div class="note-eyebrow">
+        <span class="note-num">NOTE 03</span>
+        <h2 class="note-heading">The Visualisation Toolkit</h2>
+        <span class="note-rule"></span>
+      </div>
+      <div class="stack">
+        <div class="panel resolution">
+          <header><span class="tag">Four Routes</span><span class="type">how data gets shown</span></header>
+          <div class="body">
+            <p>There is no single correct tool for visualising data. The right tool depends on who the audience is, how interactive the output needs to be, and how much time is available.</p>
+            <p>This block uses matplotlib because it is already in the stack.</p>
+            <p>But the broader toolkit has four routes worth knowing.</p>
+            <div class="command-grid" style="margin-top:16px;">
+              <div class="command-box">
+                <span class="command">Static Python</span>
+                <span class="meaning">Matplotlib and Seaborn for notebook-first chart building.</span>
+              </div>
+              <div class="command-box inspect">
+                <span class="command">Interactive Python</span>
+                <span class="meaning">Plotly and Streamlit for live browser-based charts and apps.</span>
+              </div>
+              <div class="command-box structure">
+                <span class="command">BI Tools</span>
+                <span class="meaning">Power BI and Looker Studio for business dashboards without code.</span>
+              </div>
+              <div class="command-box count">
+                <span class="command">AI-Assisted</span>
+                <span class="meaning">Prompt-driven chart generation when speed matters more than manual coding.</span>
+              </div>
+            </div>
+          </div>
+          <div class="plain-english">Knowing which tool to reach for is as important as knowing how to use it.</div>
+        </div>
+        <div class="panel resolution">
+          <header><span class="tag">Static Python</span><span class="type">matplotlib and seaborn</span></header>
+          <div class="body">
+            <p>matplotlib is the foundational Python charting library. It produces static images: bar charts, histograms, scatter plots. Precise and flexible, but verbose to style.</p>
+            <p>Seaborn sits on top of matplotlib and produces better-looking charts with less code. It is particularly strong for statistical visualisation — distributions, correlation heatmaps, pair plots.</p>
+            <p>Use when: you want full code control, you are working in a Jupyter notebook, or you are producing charts for a report rather than an interactive dashboard.</p>
+          </div>
+          <div class="plain-english">The bootcamp uses Seaborn in Module 4. It is the next step after matplotlib.</div>
+        </div>
+        <div class="panel resolution">
+          <header><span class="tag">Interactive Python</span><span class="type">Plotly and Streamlit</span></header>
+          <div class="body">
+            <p>Plotly produces interactive charts — hover tooltips, zoom, filter — that run in a browser.</p>
+            <p>The syntax is similar to matplotlib but the output is a live HTML widget, not a static image.</p>
+            <p>Streamlit wraps Python code into a shareable web app with sliders, dropdowns, and charts, deployable with a single command.</p>
+            <p>Use when: the audience will explore the data themselves, or when you need to share a live dashboard without requiring the viewer to run Python.</p>
+          </div>
+          <div class="plain-english">The bootcamp names Streamlit explicitly. It is worth knowing what it produces before you encounter it.</div>
+        </div>
+        <div class="panel resolution">
+          <header><span class="tag">BI Tools</span><span class="type">Power BI and Looker Studio</span></header>
+          <div class="body">
+            <p>Power BI (Microsoft) and Looker Studio (Google) are drag-and-drop dashboard tools.</p>
+            <p>No code required. Connect a data source, drag fields onto a canvas, publish.</p>
+            <p>Power BI is the dominant tool in business analytics. The bootcamp names it explicitly.</p>
+            <p>Looker Studio is free, browser-based, and integrates directly with Google Sheets and BigQuery.</p>
+            <p>Use when: the audience is non-technical, when the dashboard needs to be updated automatically from a live data source, or when the deliverable is a business report, not a notebook.</p>
+          </div>
+          <div class="plain-english">Power BI is what most employers mean when they say "dashboard." Know what it is before the bootcamp introduces it.</div>
+        </div>
+        <div class="panel resolution">
+          <header><span class="tag">AI-Assisted Visualisation</span><span class="type">current and growing</span></header>
+          <div class="body">
+            <p>LLM-based tools can now generate charts directly from a data question stated in plain English.</p>
+            <p>Julius, Rath, and similar tools accept a CSV and a question and produce an interactive chart without requiring any code from the analyst.</p>
+            <p>The same capability exists in tools like Claude, ChatGPT Code Interpreter, and GitHub Copilot — describe the chart you want, supply the data, and the code is generated for you.</p>
+            <p>Use when: speed matters more than precision, when you are exploring rather than delivering, or when the code itself is not the point.</p>
+          </div>
+          <div class="plain-english">AI-assisted visualisation does not replace knowing what chart to ask for. Judgment still sits with the analyst.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="note-section" id="findings">
+      <div class="note-eyebrow">
+        <span class="note-num">NOTE 04</span>
+        <h2 class="note-heading">The Findings Report</h2>
+        <span class="note-rule"></span>
+      </div>
+      <div class="stack">
+        <div class="panel resolution">
+          <header><span class="tag">What Goes In It</span><span class="type">four required elements</span></header>
+          <div class="body">
+            <table>
+              <thead>
+                <tr>
+                  <th>Element</th>
+                  <th>What it must contain</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>What each KPI shows</td>
+                  <td>One sentence per KPI stating the finding in plain English. No jargon.</td>
+                </tr>
+                <tr>
+                  <td>What each KPI does not show</td>
+                  <td>One sentence per KPI on what the chart cannot confirm or what context is missing.</td>
+                </tr>
+                <tr>
+                  <td>What you would check next</td>
+                  <td>One specific follow-up question per KPI. Name the column and the move.</td>
+                </tr>
+                <tr>
+                  <td>What the data cannot tell you</td>
+                  <td>One honest overall limitation of the dataset for the purpose you used it.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="plain-english">A findings report that only describes the charts is not a findings report. It is a caption sheet.</div>
+        </div>
+        <div class="panel rule">
+          <header><span class="tag">Rule</span><span class="type">no vague findings</span></header>
+          <div class="body">
+            <p>Every observation in the findings report must be traceable to something visible in the data.</p>
+            <p>"Sales were interesting" is not a finding.</p>
+            <p>"Technology had the highest average sales but the lowest profit margin of the three categories" is a finding.</p>
+            <p>Vague findings do not count.</p>
+          </div>
+          <div class="plain-english">If you cannot point to the number, you do not have a finding.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="note-section" id="verbal">
+      <div class="note-eyebrow">
+        <span class="note-num">NOTE 05</span>
+        <h2 class="note-heading">The Verbal Summary</h2>
+        <span class="note-rule"></span>
+      </div>
+      <div class="stack">
+        <div class="panel resolution">
+          <header><span class="tag">Structure</span><span class="type">six parts in order</span></header>
+          <div class="body">
+            <table>
+              <thead>
+                <tr>
+                  <th>Part</th>
+                  <th>What to say</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Opening statement</td>
+                  <td>What the dataset is and what you were trying to understand from it. One sentence.</td>
+                </tr>
+                <tr>
+                  <td>KPI 1 summary</td>
+                  <td>What the first KPI shows, in one sentence.</td>
+                </tr>
+                <tr>
+                  <td>KPI 2 summary</td>
+                  <td>What the second KPI shows, in one sentence.</td>
+                </tr>
+                <tr>
+                  <td>KPI 3 summary</td>
+                  <td>What the third KPI shows, in one sentence.</td>
+                </tr>
+                <tr>
+                  <td>Overall conclusion</td>
+                  <td>What the three KPIs together suggest. One sentence.</td>
+                </tr>
+                <tr>
+                  <td>Honest limitation</td>
+                  <td>What the data cannot confirm. One sentence.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="plain-english">Six sentences total. Prepare them. Do not read them. Deliver them.</div>
+        </div>
+        <div class="panel rule">
+          <header><span class="tag">Rule</span><span class="type">no script reading</span></header>
+          <div class="body">
+            <p>Prepare the verbal summary in writing first.</p>
+            <p>Then put the writing aside and deliver it in your own words.</p>
+            <p>If you lose the thread, pause, not filler.</p>
+            <p>The goal is to sound like someone who understands the data, not someone reading about it.</p>
+          </div>
+          <div class="plain-english">A verbal summary read aloud from a script is not a verbal summary. It is a recitation.</div>
+        </div>
+        <div class="panel translation">
+          <header><span class="tag">Example Opening</span><span class="type">what it sounds like</span></header>
+          <div class="body">
+            <p>"This dataset covers retail sales across three product categories and three customer segments. I chose three KPIs to understand where the business is making money, where it is losing margin, and whether discounting is helping or hurting."</p>
+          </div>
+          <div class="plain-english">Thirty seconds. Audience knows what they are about to hear. Done.</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="chapter-nav">
+      <a class="chapter-next" href="../index.html">
+        <span class="label">Next Chapter</span>
+        <span class="title">Bookshelf</span>
+        <span class="arrow">&rarr;</span>
+      </a>
+    </div>
+
+    <p class="footer">Created for the Block 10 dashboard and presentation workflow in the Learning_Python project.</p>
+  </main>
+</article>
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Seaborn Foundations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#eef1f4;
+  --panel:#fffdfa;
+  --ink:#202124;
+  --muted:#5f6368;
+  --line:#dde2e8;
+  --rail-bg:#17212b;
+  --rail-text:#dce7ef;
+  --rail-muted:#8fa4b5;
+  --navy:#1f4f82;
+  --cyan:#1f7a8c;
+  --yellow:#f6c85f;
+  --green:#4d6b4f;
+  --orange:#d97706;
+  --plum:#7d4655;
+  --code-bg:#111820;
+  --code-bg2:#18222c;
+  --mono-bg:#f4f5f7;
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body { background:var(--bg); color:var(--ink); font-family:'IBM Plex Sans', sans-serif; }
+.frame { width:min(1160px, calc(100vw - 32px)); margin:30px auto 60px; display:grid; grid-template-columns:220px minmax(0,1fr); background:var(--panel); border:1px solid var(--line); box-shadow:0 16px 46px rgba(39,50,60,.18); }
+.rail { background:var(--rail-bg); color:var(--rail-text); padding:32px 22px 40px; position:sticky; top:0; height:100vh; overflow-y:auto; }
+.rail-title { font-family:'Atkinson Hyperlegible', sans-serif; font-size:20px; font-weight:700; color:white; line-height:1.2; margin-bottom:6px; }
+.rail-sub { font-size:12px; color:var(--rail-muted); line-height:1.55; margin-bottom:28px; padding-bottom:20px; border-bottom:1px solid rgba(255,255,255,.1); }
+.token { display:flex; gap:10px; align-items:center; padding:9px 0; border-top:1px solid rgba(255,255,255,.1); font:600 11px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.06em; color:var(--rail-muted); }
+.dot { width:10px; height:10px; border-radius:50%; background:var(--yellow); flex-shrink:0; }
+.dot.cyan { background:var(--cyan); }
+.dot.green { background:var(--green); }
+.dot.orange { background:var(--orange); }
+.rail-nav { margin-top:22px; border-top:1px solid rgba(255,255,255,.1); padding-top:16px; }
+.rail-nav-label { font:600 10px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.08em; color:var(--rail-muted); margin-bottom:10px; }
+.rail-nav a { display:flex; align-items:center; gap:8px; padding:7px 0; font-size:13px; color:var(--rail-text); text-decoration:none; line-height:1.35; border-bottom:1px solid rgba(255,255,255,.06); }
+.rail-nav a:hover { color:white; }
+.rail-nav a .num { font:600 10px 'IBM Plex Mono', monospace; color:var(--rail-muted); flex-shrink:0; width:22px; }
+main { padding:48px 52px 72px; }
+.page-mode { font:700 11px 'IBM Plex Mono', monospace; letter-spacing:.1em; text-transform:uppercase; color:var(--cyan); margin-bottom:10px; }
+.page-title { font-family:'Atkinson Hyperlegible', sans-serif; font-size:36px; font-weight:700; color:var(--navy); line-height:1.1; margin-bottom:14px; }
+.page-sub { font-size:16px; line-height:1.75; color:var(--muted); margin-bottom:48px; padding-bottom:28px; border-bottom:2px solid var(--mono-bg); }
+.note-section { margin-bottom:64px; scroll-margin-top:20px; }
+.note-eyebrow { display:flex; align-items:center; gap:12px; margin-bottom:20px; }
+.note-num { font:600 11px 'IBM Plex Mono', monospace; color:var(--muted); letter-spacing:.06em; }
+.note-heading { font-family:'Atkinson Hyperlegible', sans-serif; font-size:24px; font-weight:700; color:var(--navy); line-height:1.2; }
+.note-rule { flex:1; height:1px; background:var(--line); margin-left:4px; }
+.stack { display:grid; gap:12px; }
+.panel { border:1px solid var(--line); background:#fbfcfd; border-radius:4px; overflow:hidden; }
+.panel header { display:flex; justify-content:space-between; align-items:center; padding:8px 14px; border-bottom:1px solid var(--line); font:600 11px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.08em; }
+.panel header .tag { color:var(--navy); }
+.panel header .type { color:var(--muted); }
+.panel .body { padding:16px 20px; font-size:16px; line-height:1.8; }
+.panel .body p + p { margin-top:10px; }
+.panel.translation { border-left:4px solid var(--yellow); }
+.panel.rule { border-left:4px solid var(--orange); }
+.panel.resolution { border-left:4px solid var(--cyan); }
+.panel.code { background:var(--code-bg); color:#e8eef4; border-color:#26313c; border-left-color:#26313c; }
+.panel.code header { background:var(--code-bg2); border-color:#26313c; color:#8ea3b5; }
+.panel.code header .tag { color:#c5d8ea; }
+.panel.code .body { padding:0; }
+.panel.code pre { margin:0; padding:18px 22px; font:15px/1.9 'IBM Plex Mono', monospace; white-space:pre-wrap; overflow-wrap:anywhere; }
+.command-grid { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:14px; }
+.command-box { display:block; border:2px solid #cfd8e3; border-left:7px solid var(--cyan); border-radius:12px; background:linear-gradient(180deg, #ffffff 0%, #f6f9fc 100%); padding:18px 20px; min-height:122px; box-shadow:0 8px 18px rgba(31,79,130,.08); }
+.command-box .command { display:block; font:700 21px/1.35 'IBM Plex Mono', monospace; color:var(--navy); margin-bottom:10px; overflow-wrap:anywhere; }
+.command-box .meaning { display:block; font-size:16px; line-height:1.55; color:#3f4954; }
+.command-box.inspect { border-left-color:var(--orange); }
+.command-box.structure { border-left-color:var(--green); }
+.command-box.select { border-left-color:var(--plum); }
+.command-box.count { border-left-color:var(--yellow); }
+.part-outer { color:#d97706; font-weight:600; }
+.part-inner { color:#1f4f82; font-weight:600; }
+.part-core { color:#4d6b4f; font-weight:600; }
+.part-var { color:#d8e7ff; }
+.part-note { color:#9ed18c; }
+.mono { font-family:'IBM Plex Mono', monospace; background:var(--mono-bg); border-radius:4px; padding:.05em .3em; white-space:nowrap; }
+table { width:100%; border-collapse:collapse; font-size:15px; }
+th, td { border:1px solid var(--line); padding:12px 14px; vertical-align:top; text-align:left; }
+th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospace; font-size:12px; text-transform:uppercase; letter-spacing:.05em; }
+.legend { display:grid; gap:8px; font-size:15px; }
+.legend p { line-height:1.7; }
+.plain-english { font-style:italic; font-size:15px; color:var(--muted); border-top:1px solid var(--line); padding:14px 20px; line-height:1.7; background:#fbfcfd; }
+.footer { color:var(--muted); font-size:13px; text-align:center; margin-top:64px; }
+@media (max-width:860px) { .frame { grid-template-columns:1fr; } .rail { display:none; } main { padding:32px 22px 48px; } .page-title { font-size:26px; } .command-grid { grid-template-columns:1fr; } .command-box .command { font-size:18px; } }
+</style>
+</head>
+<body>
+<article class="frame">
+  <aside class="rail">
+    <div class="rail-title">Seaborn Foundations</div>
+    <div class="rail-sub">Five chart types. Less code than matplotlib. Better output by default.</div>
+    <div class="token"><span class="dot"></span> Translation</div>
+    <div class="token"><span class="dot cyan"></span> Command</div>
+    <div class="token"><span class="dot orange"></span> Rule</div>
+    <div class="token"><span class="dot green"></span> Plain-English Summary</div>
+    <nav class="rail-nav">
+      <div class="rail-nav-label">Sections</div>
+      <a href="#vs"><span class="num">01</span><span>Seaborn vs Matplotlib</span></a>
+      <a href="#scatter"><span class="num">02</span><span>Scatter Plot</span></a>
+      <a href="#bar"><span class="num">03</span><span>Bar Plot</span></a>
+      <a href="#hist"><span class="num">04</span><span>Histogram</span></a>
+      <a href="#box"><span class="num">05</span><span>Box Plot</span></a>
+      <a href="#heatmap"><span class="num">06</span><span>Heatmap</span></a>
+      <a href="#commands"><span class="num">07</span><span>Command Reference</span></a>
+    </nav>
+  </aside>
+  <main>
+    <div class="page-mode">Supplementary Module</div>
+    <h1 class="page-title">Seaborn Foundations</h1>
+    <p class="page-sub">Seaborn is a Python visualisation library built on top of matplotlib. It produces publication-quality charts with less code and is used throughout the bootcamp's Module 4. This reference covers the five core chart types, when to use each one, and the commands needed to produce them.</p>
+
+    <section class="note-section" id="vs">
+      <div class="note-eyebrow"><span class="note-num">NOTE 01</span><h2 class="note-heading">Seaborn vs Matplotlib</h2><span class="note-rule"></span></div>
+      <div class="stack">
+        <div class="panel resolution"><header><span class="tag">Plain English</span><span class="type">what seaborn adds</span></header><div class="body"><p>matplotlib gives you full control over every element of a chart. seaborn gives you better-looking charts with less code by making sensible defaults automatic: colours, spacing, grid style, and legend placement.</p><p>seaborn does not replace matplotlib. It sits on top of it. You still call <span class="mono">plt.show()</span> and <span class="mono">plt.title()</span>. You still import matplotlib. seaborn handles the heavy visual lifting. matplotlib handles the rest.</p></div><div class="plain-english"><span class="mono">import seaborn as sns</span> is the only new import. Everything else stays the same.</div></div>
+        <div class="panel translation"><header><span class="tag">What Changes</span><span class="type">matplotlib vs seaborn comparison</span></header><div class="body"><table><thead><tr><th>Task</th><th>matplotlib</th><th>seaborn</th></tr></thead><tbody><tr><td>Scatter plot</td><td><span class="mono">plt.scatter(x, y)</span></td><td><span class="mono">sns.scatterplot(data=df, x="col", y="col")</span></td></tr><tr><td>Colour by category</td><td>manual colour lists</td><td><span class="mono">hue="col"</span> parameter</td></tr><tr><td>Bar chart</td><td><span class="mono">plt.bar(x, y)</span></td><td><span class="mono">sns.barplot(data=df, x="col", y="col")</span></td></tr><tr><td>Histogram</td><td><span class="mono">plt.hist(col)</span></td><td><span class="mono">sns.histplot(data=df, x="col", kde=True)</span></td></tr><tr><td>Box plot</td><td><span class="mono">plt.boxplot(col)</span></td><td><span class="mono">sns.boxplot(data=df, x="col", y="col")</span></td></tr></tbody></table></div><div class="plain-english">seaborn takes the dataframe directly. No need to extract columns manually.</div></div>
+      </div>
+    </section>
+
+    <section class="note-section" id="scatter"><div class="note-eyebrow"><span class="note-num">NOTE 02</span><h2 class="note-heading">Scatter Plot</h2><span class="note-rule"></span></div><div class="stack"><div class="panel resolution"><header><span class="tag">When to use it</span><span class="type">two numeric columns, one categorical</span></header><div class="body"><p>Use a scatter plot when you want to see the relationship between two numeric columns. Add hue to colour dots by a categorical column and reveal whether the relationship differs by group.</p><div class="command-grid"><div class="command-box"><span class="command">sns.scatterplot(data=df, x="col1", y="col2")</span><span class="meaning">Basic scatter plot of two numeric columns.</span></div><div class="command-box structure"><span class="command">sns.scatterplot(data=df, x="col1", y="col2", hue="cat_col")</span><span class="meaning">Colour dots by a categorical column to reveal group patterns.</span></div></div></div><div class="plain-english">If two numeric columns might be related, a scatter plot is the first check.</div></div></div></section>
+    <section class="note-section" id="bar"><div class="note-eyebrow"><span class="note-num">NOTE 03</span><h2 class="note-heading">Bar Plot</h2><span class="note-rule"></span></div><div class="stack"><div class="panel resolution"><header><span class="tag">When to use it</span><span class="type">compare averages across categories</span></header><div class="body"><p>Use a bar plot when you want to compare the average of a numeric column across categories. Each bar shows the mean for that group. Seaborn adds confidence interval lines by default.</p><div class="command-grid"><div class="command-box"><span class="command">sns.barplot(data=df, x="cat_col", y="num_col")</span><span class="meaning">One bar per category showing the mean of the numeric column.</span></div><div class="command-box structure"><span class="command">sns.barplot(data=df, x="cat_col", y="num_col", hue="cat_col2")</span><span class="meaning">Split bars by a second categorical column.</span></div></div></div><div class="plain-english">Bar plots show averages. They do not show the spread of values within each group.</div></div></div></section>
+    <section class="note-section" id="hist"><div class="note-eyebrow"><span class="note-num">NOTE 04</span><h2 class="note-heading">Histogram</h2><span class="note-rule"></span></div><div class="stack"><div class="panel resolution"><header><span class="tag">When to use it</span><span class="type">distribution of one numeric column</span></header><div class="body"><p>Use a histogram when you want to see how values in one numeric column are distributed. <span class="mono">kde=True</span> overlays a smooth density curve that shows the shape of the distribution more clearly than the bars alone.</p><div class="command-grid"><div class="command-box"><span class="command">sns.histplot(data=df, x="num_col")</span><span class="meaning">Basic histogram of one numeric column.</span></div><div class="command-box structure"><span class="command">sns.histplot(data=df, x="num_col", kde=True)</span><span class="meaning">Histogram with a smooth density curve overlaid.</span></div></div></div><div class="plain-english">If you want to know whether data is skewed, peaked, or spread evenly, histogram first.</div></div></div></section>
+    <section class="note-section" id="box"><div class="note-eyebrow"><span class="note-num">NOTE 05</span><h2 class="note-heading">Box Plot</h2><span class="note-rule"></span></div><div class="stack"><div class="panel resolution"><header><span class="tag">When to use it</span><span class="type">spread and outliers by category</span></header><div class="body"><p>Use a box plot when you want to compare the spread of a numeric column across categories. The box shows the middle 50% of values. The line is the median. Dots beyond the whiskers are potential outliers.</p><div class="command-grid"><div class="command-box"><span class="command">sns.boxplot(data=df, x="cat_col", y="num_col")</span><span class="meaning">One box per category showing spread, median, and outliers.</span></div><div class="command-box structure"><span class="command">sns.boxplot(data=df, x="cat_col", y="num_col", hue="cat_col2")</span><span class="meaning">Split boxes by a second categorical column.</span></div></div></div><div class="plain-english">A bar plot shows averages. A box plot shows spread. Use box plots when outliers matter.</div></div></div></section>
+    <section class="note-section" id="heatmap"><div class="note-eyebrow"><span class="note-num">NOTE 06</span><h2 class="note-heading">Heatmap</h2><span class="note-rule"></span></div><div class="stack"><div class="panel resolution"><header><span class="tag">When to use it</span><span class="type">correlation between numeric columns</span></header><div class="body"><p>Use a heatmap to visualise a correlation matrix: how strongly each numeric column relates to every other numeric column. Values near 1 indicate a strong positive relationship. Values near -1 indicate a strong negative relationship. Values near 0 indicate no meaningful relationship.</p><p>Compute the matrix with <span class="mono">df.corr()</span> then pass it to <span class="mono">sns.heatmap()</span>.</p><div class="command-grid"><div class="command-box"><span class="command">sns.heatmap(df.corr(), annot=True, fmt=".2f")</span><span class="meaning">Heatmap of the full correlation matrix with values shown.</span></div><div class="command-box structure"><span class="command">sns.heatmap(df[["col1","col2","col3"]].corr(), annot=True, fmt=".2f", cmap="coolwarm")</span><span class="meaning">Heatmap of selected columns only, with a diverging colour scale.</span></div></div></div><div class="plain-english">A heatmap of correlations is the fastest way to see which columns are related.</div></div></div></section>
+    <section class="note-section" id="commands"><div class="note-eyebrow"><span class="note-num">NOTE 07</span><h2 class="note-heading">Command Reference</h2><span class="note-rule"></span></div><div class="stack"><div class="panel resolution"><header><span class="tag">Reference</span><span class="type">core seaborn patterns</span></header><div class="body"><div class="command-grid"><div class="command-box"><span class="command">import seaborn as sns</span><span class="meaning">Import seaborn. Always alongside import matplotlib.pyplot as plt.</span></div><div class="command-box"><span class="command">sns.scatterplot(data=df, x="col1", y="col2", hue="cat")</span><span class="meaning">Scatter plot coloured by category.</span></div><div class="command-box"><span class="command">sns.barplot(data=df, x="cat", y="num")</span><span class="meaning">Bar plot of mean numeric value per category.</span></div><div class="command-box"><span class="command">sns.histplot(data=df, x="num", kde=True)</span><span class="meaning">Histogram with density curve.</span></div><div class="command-box"><span class="command">sns.boxplot(data=df, x="cat", y="num")</span><span class="meaning">Box plot showing spread per category.</span></div><div class="command-box structure"><span class="command">sns.heatmap(df.corr(), annot=True, fmt=".2f", cmap="coolwarm")</span><span class="meaning">Correlation heatmap.</span></div><div class="command-box inspect"><span class="command">plt.title("text")</span><span class="meaning">Add a title. Still required alongside seaborn.</span></div><div class="command-box inspect"><span class="command">plt.show()</span><span class="meaning">Render the chart. Still required alongside seaborn.</span></div></div></div></div></div></section>
+    <p class="footer">Created as a supplementary module for Seaborn in the Learning_Python project.</p>
+  </main>
+</article>
+</body>
+</html>

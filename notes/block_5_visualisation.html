@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Block 5 Visualisation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#eef1f4;
+  --panel:#fffdfa;
+  --ink:#202124;
+  --muted:#5f6368;
+  --line:#dde2e8;
+  --rail-bg:#17212b;
+  --rail-text:#dce7ef;
+  --rail-muted:#8fa4b5;
+  --navy:#1f4f82;
+  --cyan:#1f7a8c;
+  --yellow:#f6c85f;
+  --green:#4d6b4f;
+  --orange:#d97706;
+  --plum:#7d4655;
+  --code-bg:#111820;
+  --code-bg2:#18222c;
+  --mono-bg:#f4f5f7;
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body { background:var(--bg); color:var(--ink); font-family:'IBM Plex Sans', sans-serif; }
+.frame { width:min(1160px, calc(100vw - 32px)); margin:30px auto 60px; display:grid; grid-template-columns:220px minmax(0,1fr); background:var(--panel); border:1px solid var(--line); box-shadow:0 16px 46px rgba(39,50,60,.18); }
+.rail { background:var(--rail-bg); color:var(--rail-text); padding:32px 22px 40px; position:sticky; top:0; height:100vh; overflow-y:auto; }
+
+.rail-logo-wrap {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin: 0 0 18px;
+  padding: 0 0 18px;
+  border-bottom: 1px solid rgba(255,255,255,.1);
+}
+.rail-logo {
+  display:block;
+  width: min(132px, 100%);
+  height: auto;
+  filter: drop-shadow(0 10px 18px rgba(34, 214, 255, .16));
+}
+
+.rail-title { font-family:'Atkinson Hyperlegible', sans-serif; font-size:20px; font-weight:700; color:white; line-height:1.2; margin-bottom:6px; }
+.rail-sub { font-size:12px; color:var(--rail-muted); line-height:1.55; margin-bottom:28px; padding-bottom:20px; border-bottom:1px solid rgba(255,255,255,.1); }
+.token { display:flex; gap:10px; align-items:center; padding:9px 0; border-top:1px solid rgba(255,255,255,.1); font:600 11px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.06em; color:var(--rail-muted); }
+.dot { width:10px; height:10px; border-radius:50%; background:var(--yellow); flex-shrink:0; }
+.dot.cyan { background:var(--cyan); }
+.dot.green { background:var(--green); }
+.dot.orange { background:var(--orange); }
+.rail-nav { margin-top:22px; border-top:1px solid rgba(255,255,255,.1); padding-top:16px; }
+.rail-nav-label { font:600 10px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.08em; color:var(--rail-muted); margin-bottom:10px; }
+.rail-nav a { display:flex; align-items:center; gap:8px; padding:7px 0; font-size:13px; color:var(--rail-text); text-decoration:none; line-height:1.35; border-bottom:1px solid rgba(255,255,255,.06); }
+.rail-nav a:hover { color:white; }
+.rail-nav a .num { font:600 10px 'IBM Plex Mono', monospace; color:var(--rail-muted); flex-shrink:0; width:22px; }
+main { padding:48px 52px 72px; }
+.page-mode { font:700 11px 'IBM Plex Mono', monospace; letter-spacing:.1em; text-transform:uppercase; color:var(--cyan); margin-bottom:10px; }
+.page-title { font-family:'Atkinson Hyperlegible', sans-serif; font-size:36px; font-weight:700; color:var(--navy); line-height:1.1; margin-bottom:14px; }
+.page-sub { font-size:16px; line-height:1.75; color:var(--muted); margin-bottom:48px; padding-bottom:28px; border-bottom:2px solid var(--mono-bg); }
+.note-section { margin-bottom:64px; scroll-margin-top:20px; }
+.note-eyebrow { display:flex; align-items:center; gap:12px; margin-bottom:20px; }
+.note-num { font:600 11px 'IBM Plex Mono', monospace; color:var(--muted); letter-spacing:.06em; }
+.note-heading { font-family:'Atkinson Hyperlegible', sans-serif; font-size:24px; font-weight:700; color:var(--navy); line-height:1.2; }
+.note-rule { flex:1; height:1px; background:var(--line); margin-left:4px; }
+.stack { display:grid; gap:12px; }
+.panel { border:1px solid var(--line); background:#fbfcfd; border-radius:4px; overflow:hidden; }
+.panel header { display:flex; justify-content:space-between; align-items:center; padding:8px 14px; border-bottom:1px solid var(--line); font:600 11px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.08em; }
+.panel header .tag { color:var(--navy); }
+.panel header .type { color:var(--muted); }
+.panel .body { padding:16px 20px; font-size:16px; line-height:1.8; }
+.panel .body p + p { margin-top:10px; }
+.panel.translation { border-left:4px solid var(--yellow); }
+.panel.rule { border-left:4px solid var(--orange); }
+.panel.resolution { border-left:4px solid var(--cyan); }
+.panel.code { background:var(--code-bg); color:#e8eef4; border-color:#26313c; border-left-color:#26313c; }
+.panel.code header { background:var(--code-bg2); border-color:#26313c; color:#8ea3b5; }
+.panel.code header .tag { color:#c5d8ea; }
+.panel.code .body { padding:0; }
+.panel.code pre { margin:0; padding:18px 22px; font:15px/1.9 'IBM Plex Mono', monospace; white-space:pre-wrap; overflow-wrap:anywhere; }
+.command-grid { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:14px; }
+.command-box { display:block; border:2px solid #cfd8e3; border-left:7px solid var(--cyan); border-radius:12px; background:linear-gradient(180deg, #ffffff 0%, #f6f9fc 100%); padding:18px 20px; min-height:122px; box-shadow:0 8px 18px rgba(31,79,130,.08); }
+.command-box .command { display:block; font:700 21px/1.35 'IBM Plex Mono', monospace; color:var(--navy); margin-bottom:10px; overflow-wrap:anywhere; }
+.command-box .meaning { display:block; font-size:16px; line-height:1.55; color:#3f4954; }
+.command-box.inspect { border-left-color:var(--orange); }
+.command-box.structure { border-left-color:var(--green); }
+.command-box.select { border-left-color:var(--plum); }
+.command-box.count { border-left-color:var(--yellow); }
+.part-outer { color:#d97706; font-weight:600; }
+.part-inner { color:#1f4f82; font-weight:600; }
+.part-core { color:#4d6b4f; font-weight:600; }
+.part-var { color:#d8e7ff; }
+.part-note { color:#9ed18c; }
+.mono { font-family:'IBM Plex Mono', monospace; background:var(--mono-bg); border-radius:4px; padding:.05em .3em; white-space:nowrap; }
+table { width:100%; border-collapse:collapse; font-size:15px; }
+th, td { border:1px solid var(--line); padding:12px 14px; vertical-align:top; text-align:left; }
+th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospace; font-size:12px; text-transform:uppercase; letter-spacing:.05em; }
+.legend { display:grid; gap:8px; font-size:15px; }
+.legend p { line-height:1.7; }
+.plain-english { font-style:italic; font-size:15px; color:var(--muted); border-top:1px solid var(--line); padding:14px 20px; line-height:1.7; background:#fbfcfd; }
+.footer { color:var(--muted); font-size:13px; text-align:center; margin-top:64px; }
+
+.chapter-nav {
+  margin-top: 42px;
+  padding-top: 22px;
+  border-top: 2px solid var(--mono-bg);
+  display: flex;
+  justify-content: flex-end;
+}
+.chapter-next {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  border-radius: 999px;
+  text-decoration: none;
+  background: var(--navy);
+  color: #fff;
+  box-shadow: 0 10px 20px rgba(31,79,130,.18);
+  border: 1px solid var(--navy);
+}
+.chapter-next:hover { filter: brightness(.96); }
+.chapter-next .label {
+  font: 600 11px 'IBM Plex Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: #d8e7ff;
+}
+.chapter-next .title {
+  font-family: 'Atkinson Hyperlegible', sans-serif;
+  font-size: 18px;
+  line-height: 1.2;
+  color: #fff;
+}
+.chapter-next .arrow {
+  font-size: 20px;
+  line-height: 1;
+  color: #fff;
+}
+@media (max-width:860px) {
+  .chapter-nav { justify-content: stretch; }
+  .chapter-next { width: 100%; justify-content: center; }
+}
+
+@media (max-width:860px) { .frame { grid-template-columns:1fr; } .rail { display:none; } main { padding:32px 22px 48px; } .page-title { font-size:26px; } .command-grid { grid-template-columns:1fr; } .command-box .command { font-size:18px; } }
+</style>
+</head>
+<body>
+<article class="frame">
+  <aside class="rail">
+    <div class="rail-logo-wrap">
+      <img class="rail-logo" src="../assets/tidyweb_logo.png" alt="TidyWeb logo">
+    </div>
+    <div class="rail-title">Block 5 Visualisation</div>
+    <div class="rail-sub">A reference guide to choosing basic chart types and writing clear sentences about what a chart shows and what it cannot show by itself.</div>
+    <div class="token"><span class="dot"></span> Translation</div>
+    <div class="token"><span class="dot cyan"></span> Command Meaning</div>
+    <div class="token"><span class="dot green"></span> Code Breakdown</div>
+    <div class="token"><span class="dot orange"></span> Rule</div>
+        <nav class="rail-nav course-nav">
+      <div class="rail-nav-label">Bookshelf Home</div>
+      <a href="../index.html"><span class="num">00</span><span>Main Shelf</span></a>
+    </nav>
+    <nav class="rail-nav course-nav">
+      <div class="rail-nav-label">Course Chapters</div>
+      <a href="data_analysis_field_overview.html"><span class="num">01</span><span>Field Overview</span></a>
+      <a href="block_1_table_literacy_bridge.html"><span class="num">02</span><span>Block 1</span></a>
+      <a href="block_2_selection_and_filtering.html"><span class="num">03</span><span>Block 2</span></a>
+      <a href="block_3_missing_data_and_cleaning.html"><span class="num">04</span><span>Block 3</span></a>
+      <a href="block_4_grouping_and_insight.html"><span class="num">05</span><span>Block 4</span></a>
+      <a href="block_5_visualisation.html" class="active"><span class="num">06</span><span>Block 5</span></a>
+      <a href="block_6_statistics_foundations.html"><span class="num">07</span><span>Block 6</span></a>
+      <a href="block_7_hypothesis_and_evidence.html"><span class="num">08</span><span>Block 7</span></a>
+      <a href="block_8_full_eda_cycle.html"><span class="num">09</span><span>Block 8</span></a>
+      <a href="block_9_etl_drill.html"><span class="num">10</span><span>Block 9</span></a>
+      <a href="block_10_dashboard_and_presentation.html"><span class="num">11</span><span>Block 10</span></a>
+    </nav>
+    <nav class="rail-nav">
+      <div class="rail-nav-label">This Chapter</div>
+      <a href="#why"><span class="num">01</span><span>Why Use A Chart</span></a>
+      <a href="#commands"><span class="num">02</span><span>Command Boxes</span></a>
+      <a href="#choices"><span class="num">03</span><span>Chart Choice Rule</span></a>
+      <a href="#reading"><span class="num">04</span><span>Show And Cannot Show</span></a>
+    </nav>
+  </aside>
+  <main>
+    <div class="page-mode">Reference Guide</div>
+    <h1 class="page-title">Block 5 Visualisation</h1>
+    <p class="page-sub">Block 5 turns table results into views that are quicker to scan. The goal is not decoration. The goal is to choose a chart shape that matches the question, then state clearly what the chart shows and what it still cannot tell from that view alone.</p>
+
+    <section class="note-section" id="why">
+      <div class="note-eyebrow">
+        <span class="note-num">NOTE 01</span>
+        <h2 class="note-heading">Why Use A Chart</h2>
+        <span class="note-rule"></span>
+      </div>
+      <div class="stack">
+        <div class="panel resolution">
+          <header><span class="tag">Plain English</span><span class="type">pattern first</span></header>
+          <div class="body">
+            <p>A chart helps the eye notice pattern, spread, imbalance, or relationship faster than a long printed table.</p>
+            <p>A chart is not automatically an explanation. It is a view of the data from one angle.</p>
+          </div>
+          <div class="plain-english">A chart is a fast view, not the final conclusion.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="note-section" id="commands">
+      <div class="note-eyebrow">
+        <span class="note-num">NOTE 02</span>
+        <h2 class="note-heading">At-a-glance Command Boxes</h2>
+        <span class="note-rule"></span>
+      </div>
+      <div class="stack">
+        <div class="panel resolution">
+          <header><span class="tag">Visualisation</span><span class="type">Block 5 core moves</span></header>
+          <div class="body">
+            <div class="command-grid">
+              <div class="command-box count">
+                <span class="command">df["column"].value_counts().plot(kind="bar")</span>
+                <span class="meaning">Bar chart for category counts.</span>
+              </div>
+              <div class="command-box inspect">
+                <span class="command">df["column"].plot(kind="hist")</span>
+                <span class="meaning">Histogram for one numeric column.</span>
+              </div>
+              <div class="command-box structure">
+                <span class="command">df.plot.scatter(x="col1", y="col2")</span>
+                <span class="meaning">Scatter plot for the relationship between two numeric columns.</span>
+              </div>
+              <div class="panel resolution">
+                <header><span class="tag">plt</span><span class="type">a second import alias</span></header>
+                <div class="body">
+                  <p>plt is the short nickname given to matplotlib, a separate Python library used for drawing charts. Before plt.show() can be used, matplotlib must be imported with: import matplotlib.pyplot as plt. This line works exactly like import pandas as pd — it loads the library and gives it a nickname. plt.show() tells matplotlib to display the chart that has just been built.</p>
+                </div>
+              </div>
+              <div class="command-box select">
+                <span class="command">plt.show()</span>
+                <span class="meaning">Display the chart in the notebook output.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="note-section" id="choices">
+      <div class="note-eyebrow">
+        <span class="note-num">NOTE 03</span>
+        <h2 class="note-heading">Chart Choice Rule</h2>
+        <span class="note-rule"></span>
+      </div>
+      <div class="stack">
+        <div class="panel resolution">
+          <header><span class="tag">Bar chart</span><span class="type">category comparison</span></header>
+          <div class="body">
+            <p>Use a bar chart when the question is about categories and counts or category totals.</p>
+            <p>Example question: which weather label appears most often?</p>
+          </div>
+        </div>
+        <div class="panel code">
+          <header><span class="tag">Code breakdown</span><span class="type">bar chart</span></header>
+          <div class="body">
+            <pre><span class="part-var">df</span><span class="part-outer">[</span><span class="part-core">"weather"</span><span class="part-outer">]</span><span class="part-inner">.value_counts()</span><span class="part-note">.plot(</span>kind=<span class="part-core">"bar"</span><span class="part-note">)</span></pre>
+          </div>
+        </div>
+        <div class="panel translation">
+          <header><span class="tag">Histogram</span><span class="type">one numeric column</span></header>
+          <div class="body">
+            <p>Use a histogram when the question is about spread or distribution in one numeric column.</p>
+            <p>Example question: are most fares low, medium, or high?</p>
+          </div>
+        </div>
+        <div class="panel code">
+          <header><span class="tag">Code breakdown</span><span class="type">histogram</span></header>
+          <div class="body">
+            <pre><span class="part-var">df</span><span class="part-outer">[</span><span class="part-core">"amount"</span><span class="part-outer">]</span><span class="part-note">.plot(</span>kind=<span class="part-core">"hist"</span><span class="part-note">)</span></pre>
+          </div>
+        </div>
+        <div class="panel resolution">
+          <header><span class="tag">Scatter plot</span><span class="type">two numeric columns</span></header>
+          <div class="body">
+            <p>Use a scatter plot when the question is about whether two numeric columns move together or apart.</p>
+            <p>Example question: do higher score values tend to sit beside lower result values?</p>
+          </div>
+        </div>
+        <div class="panel code">
+          <header><span class="tag">Code breakdown</span><span class="type">scatter plot</span></header>
+          <div class="body">
+            <pre><span class="part-var">df</span><span class="part-note">.plot.scatter(</span>x=<span class="part-core">"score"</span>, y=<span class="part-core">"result"</span><span class="part-note">)</span></pre>
+          </div>
+        </div>
+        <div class="panel rule">
+          <header><span class="tag">Do not force it</span><span class="type">wrong chart, wrong message</span></header>
+          <div class="body">
+            <p>A chart type is not neutral. A bad chart choice makes the pattern harder to read or suggests the wrong kind of comparison.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="note-section" id="reading">
+      <div class="note-eyebrow">
+        <span class="note-num">NOTE 04</span>
+        <h2 class="note-heading">What A Chart Shows And Cannot Show</h2>
+        <span class="note-rule"></span>
+      </div>
+      <div class="stack">
+        <div class="panel rule">
+          <header><span class="tag">Required sentence pair</span><span class="type">show plus limit</span></header>
+          <div class="body">
+            <p>For every chart, write one sentence saying what the chart shows and one sentence saying what the chart cannot tell from that view alone.</p>
+          </div>
+          <div class="plain-english">A bar chart can show which category is largest. It cannot explain why that category is largest.</div>
+        </div>
+        <div class="panel translation">
+          <header><span class="tag">Useful stems</span><span class="type">reader-facing language</span></header>
+          <div class="body legend">
+            <p><strong>Shows:</strong> This chart shows that ___ appears most often.</p>
+            <p><strong>Shows:</strong> This histogram suggests that most values sit in the ___ range.</p>
+            <p><strong>Shows:</strong> This scatter plot suggests a possible relationship between ___ and ___.</p>
+            <p><strong>Cannot show:</strong> This chart does not explain why the pattern exists.</p>
+            <p><strong>Cannot show:</strong> This view alone does not prove cause and effect.</p>
+          </div>
+        </div>
+        <div class="panel translation">
+          <header><span class="tag">Display step</span><span class="type">show the chart</span></header>
+          <div class="body">
+            <p><span class="mono">plt.show()</span> is the plain instruction that tells the notebook to display the current chart output.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="chapter-nav">
+      <a class="chapter-next" href="block_6_statistics_foundations.html">
+        <span class="label">Next Chapter</span>
+        <span class="title">Block 6</span>
+        <span class="arrow">&rarr;</span>
+      </a>
+    </div>
+
+    <p class="footer">Created for the Block 5 visualisation workflow in the Learning_Python project.</p>
+  </main>
+</article>
+</body>
+</html>
