@@ -1,6 +1,20 @@
 TidyWeb's Learn Python Data Preparation
 =======================================
 
+## Read this first
+
+This project has two parts:
+
+- the live HTML site is the reading experience
+- the GitHub repo is the full project package
+
+That means:
+
+- you can read the HTML notes online in the browser
+- the Jupyter notebooks are companion working files and are not meant to run on the live website
+- to use the notebooks properly, download or clone the repo so the notebooks and datasets stay together locally
+- if you are not sure how to clone a GitHub repo, use the live guide here: [Git and GitHub Reference](https://tidyweb.github.io/tidyweb-learn-python-data-preparation/notes/git_and_github/git_and_github_reference.html#commands)
+
 This is the clean Git-facing branch of the `Learn_Python_Data` project.
 
 This project is built around personal preparation for Code Institute's Data Analyst with AI Bootcamp, a 16-week course. It is intended for the time before that course begins, so the learner can arrive already grounded in how Python is used in data analysis.
