@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Git and GitHub Exercise Walkthrough</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#eef1f4;
+  --panel:#fffdfa;
+  --ink:#202124;
+  --muted:#5f6368;
+  --line:#dde2e8;
+  --rail-bg:#17212b;
+  --rail-text:#dce7ef;
+  --rail-muted:#8fa4b5;
+  --navy:#1f4f82;
+  --cyan:#1f7a8c;
+  --yellow:#f6c85f;
+  --green:#4d6b4f;
+  --orange:#d97706;
+  --plum:#7d4655;
+  --code-bg:#111820;
+  --code-bg2:#18222c;
+  --mono-bg:#f4f5f7;
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body { background:var(--bg); color:var(--ink); font-family:'IBM Plex Sans', sans-serif; }
+.frame { width:min(1160px, calc(100vw - 32px)); margin:30px auto 60px; display:grid; grid-template-columns:220px minmax(0,1fr); background:var(--panel); border:1px solid var(--line); box-shadow:0 16px 46px rgba(39,50,60,.18); }
+.rail { background:var(--rail-bg); color:var(--rail-text); padding:32px 22px 40px; position:sticky; top:0; height:100vh; overflow-y:auto; }
+.rail-logo-wrap { display:flex; justify-content:center; align-items:center; margin:0 0 18px; padding:0 0 18px; border-bottom:1px solid rgba(255,255,255,.1); }
+.rail-logo { display:block; width:min(132px, 100%); height:auto; filter:drop-shadow(0 10px 18px rgba(34, 214, 255, .16)); }
+.rail-title { font-family:'Atkinson Hyperlegible', sans-serif; font-size:20px; font-weight:700; color:white; line-height:1.2; margin-bottom:6px; }
+.rail-sub { font-size:12px; color:var(--rail-muted); line-height:1.55; margin-bottom:28px; padding-bottom:20px; border-bottom:1px solid rgba(255,255,255,.1); }
+.token { display:flex; gap:10px; align-items:center; padding:9px 0; border-top:1px solid rgba(255,255,255,.1); font:600 11px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.06em; color:var(--rail-muted); }
+.dot { width:10px; height:10px; border-radius:50%; background:var(--yellow); flex-shrink:0; }
+.dot.cyan { background:var(--cyan); }
+.dot.green { background:var(--green); }
+.dot.orange { background:var(--orange); }
+.rail-nav { margin-top:22px; border-top:1px solid rgba(255,255,255,.1); padding-top:16px; }
+.rail-nav-label { font:600 10px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.08em; color:var(--rail-muted); margin-bottom:10px; }
+.rail-nav a { display:flex; align-items:center; gap:8px; padding:7px 0; font-size:13px; color:var(--rail-text); text-decoration:none; line-height:1.35; border-bottom:1px solid rgba(255,255,255,.06); }
+.rail-nav a:hover { color:white; }
+.rail-nav a .num { font:600 10px 'IBM Plex Mono', monospace; color:var(--rail-muted); flex-shrink:0; width:22px; }
+main { padding:48px 52px 72px; }
+.page-mode { font:700 11px 'IBM Plex Mono', monospace; letter-spacing:.1em; text-transform:uppercase; color:var(--cyan); margin-bottom:10px; }
+.page-title { font-family:'Atkinson Hyperlegible', sans-serif; font-size:36px; font-weight:700; color:var(--navy); line-height:1.1; margin-bottom:14px; }
+.page-sub { font-size:16px; line-height:1.75; color:var(--muted); margin-bottom:48px; padding-bottom:28px; border-bottom:2px solid var(--mono-bg); }
+.note-section { margin-bottom:64px; scroll-margin-top:20px; }
+.note-eyebrow { display:flex; align-items:center; gap:12px; margin-bottom:20px; }
+.note-num { font:600 11px 'IBM Plex Mono', monospace; color:var(--muted); letter-spacing:.06em; }
+.note-heading { font-family:'Atkinson Hyperlegible', sans-serif; font-size:24px; font-weight:700; color:var(--navy); line-height:1.2; }
+.note-rule { flex:1; height:1px; background:var(--line); margin-left:4px; }
+.stack { display:grid; gap:12px; }
+.panel { border:1px solid var(--line); background:#fbfcfd; border-radius:4px; overflow:hidden; }
+.panel header { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; padding:8px 14px; border-bottom:1px solid var(--line); font:600 11px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.08em; }
+.panel header .tag { color:var(--navy); }
+.panel header .sep { color:var(--muted); }
+.panel header .type { color:var(--muted); }
+.panel .body { padding:16px 20px; font-size:16px; line-height:1.8; }
+.panel .body p + p { margin-top:10px; }
+.panel.translation { border-left:4px solid var(--yellow); }
+.panel.rule { border-left:4px solid var(--orange); }
+.panel.resolution { border-left:4px solid var(--cyan); }
+.panel.code { background:var(--code-bg); color:#e8eef4; border-color:#26313c; border-left-color:#26313c; }
+.panel.code header { background:var(--code-bg2); border-color:#26313c; color:#8ea3b5; }
+.panel.code header .tag { color:#c5d8ea; }
+.panel.code .body { padding:0; }
+.panel.code pre { margin:0; padding:18px 22px; font:15px/1.9 'IBM Plex Mono', monospace; white-space:pre-wrap; overflow-wrap:anywhere; }
+.mono { font-family:'IBM Plex Mono', monospace; background:var(--mono-bg); border-radius:4px; padding:.05em .3em; white-space:nowrap; }
+.plain-english { font-style:italic; font-size:15px; color:var(--muted); border-top:1px solid var(--line); padding:14px 20px; line-height:1.7; background:#fbfcfd; }
+.chapter-nav { display:flex; justify-content:flex-end; margin-top:54px; }
+.chapter-next { display:inline-flex; align-items:center; gap:14px; min-width:260px; padding:16px 20px; border-radius:14px; text-decoration:none; background:linear-gradient(135deg, var(--navy), var(--cyan)); color:#fff; box-shadow:0 16px 30px rgba(31,79,130,.22); }
+.chapter-next:hover { filter:brightness(.96); }
+.chapter-next .label { display:block; font:600 11px 'IBM Plex Mono', monospace; letter-spacing:.08em; text-transform:uppercase; color:rgba(255,255,255,.82); }
+.chapter-next .title { display:block; font-family:'Atkinson Hyperlegible', sans-serif; font-size:22px; font-weight:700; line-height:1.1; color:#fff; }
+.chapter-next .arrow { margin-left:auto; font-size:20px; line-height:1; color:#fff; }
+.footer { color:var(--muted); font-size:13px; text-align:center; margin-top:64px; }
+@media (max-width:860px) { .frame { grid-template-columns:1fr; } .rail { display:none; } main { padding:32px 22px 48px; } .page-title { font-size:26px; } .chapter-nav { justify-content:stretch; } .chapter-next { width:100%; justify-content:center; } }
+</style>
+</head>
+<body>
+<article class="frame">
+  <aside class="rail">
+    <div class="rail-logo-wrap">
+      <img class="rail-logo" src="../../assets/tidyweb_logo.png" alt="TidyWeb logo">
+    </div>
+    <div class="rail-title">Git and GitHub Exercise Walkthrough</div>
+    <div class="rail-sub">Local Git first, GitHub second, Pages after that.</div>
+    <div class="token"><span class="dot"></span> Walkthrough</div>
+    <div class="token"><span class="dot cyan"></span> Command</div>
+    <div class="token"><span class="dot orange"></span> What To Look For</div>
+    <div class="token"><span class="dot green"></span> Plain-English Summary</div>
+    <nav class="rail-nav course-nav">
+      <div class="rail-nav-label">Bookshelf Home</div>
+      <a href="../../index.html"><span class="num">00</span><span>Main Shelf</span></a>
+    </nav>
+    <nav class="rail-nav">
+      <div class="rail-nav-label">Sections</div>
+      <a href="#setup"><span class="num">01</span><span>One-Time Setup</span></a>
+      <a href="#local"><span class="num">02</span><span>Local Git Setup</span></a>
+      <a href="#github"><span class="num">03</span><span>Connect to GitHub</span></a>
+      <a href="#pages"><span class="num">04</span><span>GitHub Pages</span></a>
+      <a href="#daily"><span class="num">05</span><span>Daily Workflow</span></a>
+    </nav>
+  </aside>
+  <main>
+    <div class="page-mode">Supplementary Module</div>
+    <h1 class="page-title">Git and GitHub Exercise Walkthrough</h1>
+    <p class="page-sub">This walkthrough covers the standard sequence for putting a project under local Git, connecting it to GitHub, and then publishing a GitHub Pages site. Replace the placeholder path, email, and repository name with the real values for your own project.</p>
+
+    <section class="note-section" id="setup">
+      <div class="note-eyebrow"><span class="note-num">PART 01</span><h2 class="note-heading">One-Time Setup</h2><span class="note-rule"></span></div>
+      <div class="stack">
+        <div class="panel resolution">
+          <header><span class="tag">Before any project</span><span class="sep" aria-hidden="true"> - </span><span class="sep" aria-hidden="true"> - </span><span class="type">machine-level Git identity</span></header>
+          <div class="body">
+            <p>These commands are not project-specific. They are machine-wide Git setup.</p>
+          </div>
+          <div class="plain-english">Run once on the machine, not once per repo.</div>
+        </div>
+        <div class="panel.code">
+          <header><span class="tag">Step 1</span><span class="sep" aria-hidden="true"> - </span><span class="sep" aria-hidden="true"> - </span><span class="type">set your name</span></header>
+          <div class="body"><pre>git config --global user.name "Your Name"</pre></div>
+        </div>
+        <div class="panel translation">
+          <header><span class="tag">What it does</span><span class="sep" aria-hidden="true"> - </span><span class="sep" aria-hidden="true"> - </span><span class="type">commit identity</span></header>
+          <div class="body"><p>Registers the human-readable author name that will appear on every commit you make on this machine.</p><p>This does not have to match your GitHub username. Your commit author name can be your real name even if your GitHub account uses a different handle.</p></div>
+          <div class="plain-english">Use the name you want shown as the author on your commits. No output usually means it worked.</div>
+        </div>
+        <div class="panel.code">
+          <header><span class="tag">Step 2</span><span class="sep" aria-hidden="true"> - </span><span class="sep" aria-hidden="true"> - </span><span class="type">set your email</span></header>
+          <div class="body"><pre>git config --global user.email "your-github-email@example.com"</pre></div>
+        </div>
+        <div class="panel.translation">
+          <header><span class="tag">What it does</span><span class="sep" aria-hidden="true"> - </span><span class="sep" aria-hidden="true"> - </span><span class="type">commit identity</span></header>
+          <div class="body"><p>Registers your email on every commit. Use the same one as your GitHub account.</p></div>
+          <div class="plain-english">Again, no output usually means success.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="note-section" id="local">
+      <div class="note-eyebrow"><span class="note-num">PART 02</span><h2 class="note-heading">Local Git Setup</h2><span class="note-rule"></span></div>
+      <div class="stack">
+        <div class="panel.code">
+          <header><span class="tag">Project path</span><span class="sep" aria-hidden="true"> - </span><span class="sep" aria-hidden="true"> - </span><span class="type">replace with your project folder</span></header>
+          <div class="body"><pre>cd "/path/to/your/project-folder"</pre></div>
+        </div>
+        <div class="panel.code">
+          <header><span class="tag">Start Git</span><span class="sep" aria-hidden="true"> - </span><span class="sep" aria-hidden="true"> - </span><span class="type">local repo only</span></header>
+          <div class="body"><pre>git init</pre></div>
+        </div>
+        <div class="panel.code">
+          <header><span class="tag">Check state</span><span class="sep" aria-hidden="true"> - </span><span class="sep" aria-hidden="true"> - </span><span class="type">current branch and files</span></header>
+          <div class="body"><pre>git status</pre></div>
+        </div>
+        <div class="panel.code">
+          <header><span class="tag">Rename branch</span><span class="sep" aria-hidden="true"> - </span><span class="sep" aria-hidden="true"> - </span><span class="type">modern primary branch name</span></header>
+          <div class="body"><pre>git branch -m main</pre></div>
+        </div>
+        <div class="panel.translation">
+          <header><span class="tag">Beginner note</span><span class="sep" aria-hidden="true"> - </span><span class="sep" aria-hidden="true"> - </span><span class="type">what the -m means</span></header>
+          <div class="body"><p>The word <span class="mono">rename</span> is not typed. Here, <span class="mono">-m</span> is the Git option doing the move/rename.</p></div>
+          <div class="plain-english"><span class="mono">-m</span> is specific to this Git command, not a universal terminal rename command.</div>
+        </div>
+        <div class="panel.code">
+          <header><span class="tag">Create ignore file</span><span class="sep" aria-hidden="true"> - </span><span class="sep" aria-hidden="true"> - </span><span class="type">normal terminal command</span></header>
+          <div class="body"><pre>touch .gitignore</pre></div>
+        </div>
+        <div class="panel.translation">
+          <header><span class="tag">Command distinction</span><span class="sep" aria-hidden="true"> - </span><span class="sep" aria-hidden="true"> - </span><span class="type">terminal vs Git</span></header>
+          <div class="body"><p><span class="mono">touch</span> is a normal terminal/Linux command for creating an empty file. It is not a Git command. Git then reads the file you created.</p></div>
+          <div class="plain-english">Some commands in a Git workflow belong to the shell. Some belong to Git itself.</div>
+        </div>
+        <div class="panel.code">
+          <header><span class="tag">Ignore rules</span><span class="sep" aria-hidden="true"> - </span><span class="sep" aria-hidden="true"> - </span><span class="type">file contents</span></header>
+          <div class="body"><pre>.ipynb_checkpoints/
+__pycache__/
+*.py[cod]
+.pytest_cache/</pre></div>
+        </div>
+        <div class="panel.code">
+          <header><span class="tag">Stage everything</span><span class="sep" aria-hidden="true"> - </span><span class="sep" aria-hidden="true"> - </span><span class="type">first snapshot prep</span></header>
+          <div class="body"><pre>git add .</pre></div>
+        </div>
+        <div class="panel.code">
+          <header><span class="tag">First commit</span><span class="sep" aria-hidden="true"> - </span><span class="sep" aria-hidden="true"> - </span><span class="type">local save point</span></header>
+          <div class="body"><pre>git commit -m "Initial commit"</pre></div>
+        </div>
+        <div class="panel.translation">
+          <header><span class="tag">Boundary</span><span class="sep" aria-hidden="true"> - </span><span class="sep" aria-hidden="true"> - </span><span class="type">what has happened so far</span></header>
+          <div class="body"><p>At this point, version control exists and works locally. Nothing has gone to GitHub yet.</p></div>
+          <div class="plain-english">Git first. GitHub later.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="note-section" id="github">
+      <div class="note-eyebrow"><span class="note-num">PART 03</span><h2 class="note-heading">Connect to GitHub</h2><span class="note-rule"></span></div>
+      <div class="stack">
+        <div class="panel resolution">
+          <header><span class="tag">Create the GitHub repo first</span><span class="sep" aria-hidden="true"> - </span><span class="sep" aria-hidden="true"> - </span><span class="type">empty repo only</span></header>
+          <div class="body">
+            <p>Create the remote repository on GitHub with no README, no .gitignore, and no license at creation time.</p>
+            <p>Choose a repository name that fits your project and GitHub naming conventions.</p>
+          </div>
+          <div class="plain-english">Keep the GitHub repo empty so the first push stays simple.</div>
+        </div>
+        <div class="panel.code">
+          <header><span class="tag">Add the remote</span><span class="sep" aria-hidden="true"> - </span><span class="sep" aria-hidden="true"> - </span><span class="type">connect local to GitHub</span></header>
+          <div class="body"><pre>git remote add origin https://github.com/your-username/your-repository-name.git</pre></div>
+        </div>
+        <div class="panel.code">
+          <header><span class="tag">Verify the remote</span><span class="sep" aria-hidden="true"> - </span><span class="sep" aria-hidden="true"> - </span><span class="type">fetch and push URLs</span></header>
+          <div class="body"><pre>git remote -v</pre></div>
+        </div>
+        <div class="panel.code">
+          <header><span class="tag">First push</span><span class="sep" aria-hidden="true"> - </span><span class="sep" aria-hidden="true"> - </span><span class="type">upload the local history</span></header>
+          <div class="body"><pre>git push -u origin main</pre></div>
+        </div>
+        <div class="panel.translation">
+          <header><span class="tag">What the -u means</span><span class="sep" aria-hidden="true"> - </span><span class="sep" aria-hidden="true"> - </span><span class="type">future pushes become shorter</span></header>
+          <div class="body"><p>The <span class="mono">-u</span> flag tells Git to remember that local <span class="mono">main</span> is partnered with remote <span class="mono">origin/main</span>.</p></div>
+          <div class="plain-english">After this, later pushes can usually be just <span class="mono">git push</span>.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="note-section" id="pages">
+      <div class="note-eyebrow"><span class="note-num">PART 04</span><h2 class="note-heading">GitHub Pages</h2><span class="note-rule"></span></div>
+      <div class="stack">
+        <div class="panel translation">
+          <header><span class="tag">Website publishing</span><span class="sep" aria-hidden="true"> - </span><span class="sep" aria-hidden="true"> - </span><span class="type">GitHub-side setup</span></header>
+          <div class="body">
+            <p>Once the repo was on GitHub, Pages was configured on the website, not in the terminal.</p>
+            <p>Settings → Pages → Deploy from a branch → <span class="mono">main</span> → <span class="mono">/ (root)</span>.</p>
+          </div>
+          <div class="plain-english">Because <span class="mono">index.html</span> is in the repo root, Pages can publish directly from the root folder.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="note-section" id="daily">
+      <div class="note-eyebrow"><span class="note-num">PART 05</span><h2 class="note-heading">Daily Workflow</h2><span class="note-rule"></span></div>
+      <div class="stack">
+        <div class="panel.code">
+          <header><span class="tag">The loop</span><span class="sep" aria-hidden="true"> - </span><span class="sep" aria-hidden="true"> - </span><span class="type">what happens after the first setup</span></header>
+          <div class="body"><pre>git status
+git add .
+git commit -m "describe what changed"
+git push</pre></div>
+        </div>
+        <div class="panel.translation">
+          <header><span class="tag">Meaning</span><span class="sep" aria-hidden="true"> - </span><span class="sep" aria-hidden="true"> - </span><span class="type">status, stage, save, upload</span></header>
+          <div class="body"><p>This is the ongoing maintenance loop once the repo already exists locally and already knows its GitHub partner.</p></div>
+          <div class="plain-english">Check, choose, save, send.</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="chapter-nav">
+      <a class="chapter-next" href="../../index.html">
+        <span class="label">Return to</span>
+        <span class="title">Main Shelf</span>
+        <span class="arrow">&rarr;</span>
+      </a>
+    </div>
+
+    <p class="footer">Created as a reusable Git and GitHub walkthrough for the Learn Python Data Preparation bookshelf.</p>
+  </main>
+</article>
+</body>
+</html>

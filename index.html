@@ -118,7 +118,17 @@ main { padding:48px 52px 72px; }
 }
 .card.visual { border-left-color:var(--cyan); }
 .card.stats { border-left-color:var(--orange); }
-.card sql { border-left-color:var(--plum); }
+.card.sql { border-left-color:var(--plum); }
+.card.git { border-left-color:var(--green); }
+.card.exercise { border-left-color:var(--yellow); }
+.card.visual .btn.primary { background:var(--cyan); border-color:var(--cyan); }
+.card.visual .btn.primary:hover { background:#196877; border-color:#196877; }
+.card.sql .btn.primary { background:var(--plum); border-color:var(--plum); }
+.card.sql .btn.primary:hover { background:#673947; border-color:#673947; }
+.card.git .btn.primary { background:var(--green); border-color:var(--green); }
+.card.git .btn.primary:hover { background:#425c43; border-color:#425c43; }
+.card.exercise .btn.primary { background:var(--yellow); border-color:var(--yellow); color:#202124; }
+.card.exercise .btn.primary:hover { background:#ddb452; border-color:#ddb452; color:#202124; }
 .card .eyebrow { font:600 11px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); }
 .card h3 { font-family:'Atkinson Hyperlegible', sans-serif; color:var(--navy); font-size:24px; line-height:1.2; }
 .card p { font-size:16px; line-height:1.8; color:#3f4954; max-width:72ch; }
@@ -358,20 +368,51 @@ main { padding:48px 52px 72px; }
         <h2 class="note-heading">Reference Shelf</h2>
         <span class="note-rule"></span>
       </div>
-      <div class="stack">
-        <div class="panel translation">
-          <header><span class="tag">Extra references</span><span class="type">side modules and support</span></header>
-          <div class="body">
-            <div class="inline-list">
-              <a href="notes/seaborn_foundations.html">Seaborn Foundations</a>
-              <a href="notes/sql_reference.html">SQL Reference</a>
-              <a href="notes/sql_exercise_list.md">SQL Exercise List</a>
-              <a href="notes/git_and_github/git_and_github_reference.html">Git and GitHub Reference</a>
-              <a href="notes/git_and_github/git_and_github_exercise_walkthrough.md">Git and GitHub Exercise Walkthrough</a>
-            </div>
+      <div class="shelf">
+        <article class="card visual">
+          <div class="eyebrow">Reference</div>
+          <h3>Seaborn Foundations</h3>
+          <p>A charting-side reference covering seaborn versus matplotlib, the main plot types, and the command patterns used throughout the visualisation material.</p>
+          <div class="link-row">
+            <a class="btn primary" href="notes/seaborn_foundations.html">Open Reference</a>
           </div>
-          <div class="plain-english">These support the main learning path rather than replacing it.</div>
-        </div>
+        </article>
+
+        <article class="card sql">
+          <div class="eyebrow">Reference</div>
+          <h3>SQL Foundations</h3>
+          <p>The core SQL mental model, the five statements that matter first, and the command patterns used before moving into browser-based exercises.</p>
+          <div class="link-row">
+            <a class="btn primary" href="notes/sql_reference.html">Open Reference</a>
+          </div>
+        </article>
+
+        <article class="card exercise">
+          <div class="eyebrow">Practice</div>
+          <h3>SQL Exercise List</h3>
+          <p>An ordered SQLZoo practice route matching the course concepts, plus a short failure checklist for the most common beginner SQL errors.</p>
+          <div class="link-row">
+            <a class="btn primary" href="notes/sql_exercise_list.html">Open Exercise List</a>
+          </div>
+        </article>
+
+        <article class="card git">
+          <div class="eyebrow">Reference</div>
+          <h3>Git and GitHub Reference</h3>
+          <p>The core concepts and commands behind local version control, remotes, commits, pushes, and the mental model connecting Git to GitHub.</p>
+          <div class="link-row">
+            <a class="btn primary" href="notes/git_and_github/git_and_github_reference.html">Open Reference</a>
+          </div>
+        </article>
+
+        <article class="card git">
+          <div class="eyebrow">Practice</div>
+          <h3>Git and GitHub Exercise Walkthrough</h3>
+          <p>A step-by-step terminal walkthrough for this exact project, from local Git setup through GitHub connection and push, written in the same webbook style as the rest of the shelf.</p>
+          <div class="link-row">
+            <a class="btn primary" href="notes/git_and_github/git_and_github_exercise_walkthrough.html">Open Walkthrough</a>
+          </div>
+        </article>
       </div>
     </section>
 

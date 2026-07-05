@@ -67,8 +67,9 @@ main { padding:48px 52px 72px; }
 .note-rule { flex:1; height:1px; background:var(--line); margin-left:4px; }
 .stack { display:grid; gap:12px; }
 .panel { border:1px solid var(--line); background:#fbfcfd; border-radius:4px; overflow:hidden; }
-.panel header { display:flex; justify-content:space-between; align-items:center; padding:8px 14px; border-bottom:1px solid var(--line); font:600 11px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.08em; }
+.panel header { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; padding:8px 14px; border-bottom:1px solid var(--line); font:600 11px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.08em; }
 .panel header .tag { color:var(--navy); }
+.panel header .sep { color:var(--muted); }
 .panel header .type { color:var(--muted); }
 .panel .body { padding:16px 20px; font-size:16px; line-height:1.8; }
 .panel .body p + p { margin-top:10px; }
@@ -189,7 +190,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
       </div>
       <div class="stack">
         <div class="panel resolution">
-          <header><span class="tag">Plain English</span><span class="type">from analysis to preparation</span></header>
+          <header><span class="tag">Plain English</span><span class="sep" aria-hidden="true"> - </span><span class="type">from analysis to preparation</span></header>
           <div class="body">
             <p>ETL stands for Extract, Transform, Load. In plain English, it means taking in raw data, improving it into a usable form, and producing a cleaned output that someone can work with next.</p>
             <p>This block is not about finding insights. It is about getting data into a usable state. The learner is being asked to work like the person who prepares the table before analysis begins properly.</p>
@@ -198,7 +199,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
           <div class="plain-english">Block 9 is about preparing trustworthy data, not interpreting it.</div>
         </div>
         <div class="panel rule">
-          <header><span class="tag">Rule</span><span class="type">always keep the raw file intact</span></header>
+          <header><span class="tag">Rule</span><span class="sep" aria-hidden="true"> - </span><span class="type">always keep the raw file intact</span></header>
           <div class="body">
             <p>The original input file must never be overwritten. The learner works from a copy in memory, then exports a new cleaned CSV with a clear name that signals it is the processed version.</p>
           </div>
@@ -215,7 +216,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
       </div>
       <div class="stack">
         <div class="panel translation">
-          <header><span class="tag">The three stages</span><span class="type">extract, transform, load</span></header>
+          <header><span class="tag">The three stages</span><span class="sep" aria-hidden="true"> - </span><span class="type">extract, transform, load</span></header>
           <div class="body">
             <table>
               <thead>
@@ -244,7 +245,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
         </div>
 
         <div class="panel code">
-          <header><span class="tag">Typical moves</span><span class="type">pipeline skeleton</span></header>
+          <header><span class="tag">Typical moves</span><span class="sep" aria-hidden="true"> - </span><span class="type">pipeline skeleton</span></header>
           <div class="body">
 <pre>df = pd.read_csv("raw_file.csv")
 df.info()
@@ -268,7 +269,7 @@ df_clean.to_csv("clean_file.csv", index=False)</pre>
       </div>
       <div class="stack">
         <div class="panel resolution">
-          <header><span class="tag">What the learner must produce</span><span class="type">not just code</span></header>
+          <header><span class="tag">What the learner must produce</span><span class="sep" aria-hidden="true"> - </span><span class="type">not just code</span></header>
           <div class="body">
             <p>Each ETL run should end with three things:</p>
             <p>— a cleaned output CSV saved with a clear name</p>
@@ -278,7 +279,7 @@ df_clean.to_csv("clean_file.csv", index=False)</pre>
         </div>
 
         <div class="panel translation">
-          <header><span class="tag">What the explanation should cover</span><span class="type">minimum reporting standard</span></header>
+          <header><span class="tag">What the explanation should cover</span><span class="sep" aria-hidden="true"> - </span><span class="type">minimum reporting standard</span></header>
           <div class="body">
             <div class="command-grid">
               <div class="command-box">
@@ -312,7 +313,7 @@ df_clean.to_csv("clean_file.csv", index=False)</pre>
       </div>
       <div class="stack">
         <div class="panel resolution">
-          <header><span class="tag">Drill structure</span><span class="type">two passes</span></header>
+          <header><span class="tag">Drill structure</span><span class="sep" aria-hidden="true"> - </span><span class="type">two passes</span></header>
           <div class="body">
             <p>The first ETL run is a steady untimed pass. The learner can think, inspect, and explain carefully. The second ETL run uses a different dataset and is timed.</p>
             <p>The timer is part of the design. It forces the learner to move from recognition into fluency. When the time expires, the learner stops whether or not the job is fully complete.</p>
@@ -320,7 +321,7 @@ df_clean.to_csv("clean_file.csv", index=False)</pre>
         </div>
 
         <div class="panel rule">
-          <header><span class="tag">Rule</span><span class="type">stop when the timer ends</span></header>
+          <header><span class="tag">Rule</span><span class="sep" aria-hidden="true"> - </span><span class="type">stop when the timer ends</span></header>
           <div class="body">
             <p>The point of the timed run is not perfect completion. The point is to reveal which steps are fluent already and which steps still slow the learner down. Partial completion is still useful evidence.</p>
           </div>

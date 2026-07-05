@@ -69,8 +69,9 @@ main { padding:48px 52px 72px; }
 .note-rule { flex:1; height:1px; background:var(--line); margin-left:4px; }
 .stack { display:grid; gap:12px; }
 .panel { border:1px solid var(--line); background:#fbfcfd; border-radius:4px; overflow:hidden; }
-.panel header { display:flex; justify-content:space-between; align-items:center; padding:8px 14px; border-bottom:1px solid var(--line); font:600 11px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.08em; }
+.panel header { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; padding:8px 14px; border-bottom:1px solid var(--line); font:600 11px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.08em; }
 .panel header .tag { color:var(--navy); }
+.panel header .sep { color:var(--muted); }
 .panel header .type { color:var(--muted); }
 .panel .body { padding:16px 20px; font-size:16px; line-height:1.8; }
 .panel .body p + p { margin-top:10px; }
@@ -200,7 +201,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
       </div>
       <div class="stack">
         <div class="panel resolution">
-          <header><span class="tag">Plain English</span><span class="type">from description to evidence</span></header>
+          <header><span class="tag">Plain English</span><span class="sep" aria-hidden="true"> - </span><span class="type">from description to evidence</span></header>
           <div class="body">
             <p>Blocks 1 through 6 mostly ask: what is in the table, how is it shaped, what stands out, and how do two groups compare descriptively?</p>
             <p>Block 7 adds a new question: if two groups look different, is that difference strong enough to count as evidence against the idea that nothing real is going on?</p>
@@ -209,7 +210,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
         </div>
 
         <div class="panel translation">
-          <header><span class="tag">Block 7 sequence</span><span class="type">reasoning order</span></header>
+          <header><span class="tag">Block 7 sequence</span><span class="sep" aria-hidden="true"> - </span><span class="type">reasoning order</span></header>
           <div class="body legend">
             <p><strong>Step 1:</strong> name the two groups and one numeric measure.</p>
             <p><strong>Step 2:</strong> state the null hypothesis and the alternative hypothesis in plain English.</p>
@@ -219,7 +220,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
         </div>
 
         <div class="panel rule">
-          <header><span class="tag">Main rule</span><span class="type">hypothesis before p-value</span></header>
+          <header><span class="tag">Main rule</span><span class="sep" aria-hidden="true"> - </span><span class="type">hypothesis before p-value</span></header>
           <div class="body">
             <p>The null and alternative hypotheses must be stated before any p-value appears. The test result does not invent the question afterward. The question comes first.</p>
           </div>
@@ -236,7 +237,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
       </div>
       <div class="stack">
         <div class="panel resolution">
-          <header><span class="tag">Hypothesis and evidence</span><span class="type">Block 7 core moves</span></header>
+          <header><span class="tag">Hypothesis and evidence</span><span class="sep" aria-hidden="true"> - </span><span class="type">Block 7 core moves</span></header>
           <div class="body">
             <div class="command-grid">
               <div class="command-box">
@@ -285,7 +286,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
       </div>
       <div class="stack">
         <div class="panel resolution">
-          <header><span class="tag">Hypothesis</span><span class="type">two statements, not one</span></header>
+          <header><span class="tag">Hypothesis</span><span class="sep" aria-hidden="true"> - </span><span class="type">two statements, not one</span></header>
           <div class="body">
             <p>A hypothesis test always starts with two competing statements.</p>
             <p>The <strong>null hypothesis</strong> says there is no meaningful difference or effect. The <strong>alternative hypothesis</strong> says there is a meaningful difference or effect.</p>
@@ -293,14 +294,14 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
         </div>
 
         <div class="panel code">
-          <header><span class="tag">Code breakdown</span><span class="type">t-test core line</span></header>
+          <header><span class="tag">Code breakdown</span><span class="sep" aria-hidden="true"> - </span><span class="type">t-test core line</span></header>
           <div class="body">
             <pre><span class="part-var">stats</span><span class="part-outer">.</span><span class="part-inner">ttest_ind</span><span class="part-outer">(</span><span class="part-core">group_a, group_b</span><span class="part-outer">)</span></pre>
           </div>
         </div>
 
         <div class="panel translation">
-          <header><span class="tag">What the test is asking</span><span class="type">inside the black box</span></header>
+          <header><span class="tag">What the test is asking</span><span class="sep" aria-hidden="true"> - </span><span class="type">inside the black box</span></header>
           <div class="body">
             <p>The t-test is not asking whether the two group means are numerically identical. It is asking whether the distance between them looks large enough, relative to the spread of the data, that the no-difference explanation starts to look weak.</p>
           </div>
@@ -308,7 +309,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
         </div>
 
         <div class="panel resolution">
-          <header><span class="tag">What a p-value is</span><span class="type">evidence, not verdict</span></header>
+          <header><span class="tag">What a p-value is</span><span class="sep" aria-hidden="true"> - </span><span class="type">evidence, not verdict</span></header>
           <div class="body">
             <p>A p-value measures how surprising the observed result would be if the null hypothesis were true. A smaller p-value means the result would be less expected under the no-difference story.</p>
             <p>A larger p-value means the result is more compatible with the idea that the apparent difference could have arisen without a real underlying effect.</p>
@@ -316,7 +317,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
         </div>
 
         <div class="panel rule">
-          <header><span class="tag">Rule</span><span class="type">0.05 is a convention</span></header>
+          <header><span class="tag">Rule</span><span class="sep" aria-hidden="true"> - </span><span class="type">0.05 is a convention</span></header>
           <div class="body">
             <p>The threshold <span class="mono">0.05</span> is common, but it is not a law of nature. It is a convention used to organise judgment. It should never be mistaken for a magic border between truth and falsehood.</p>
           </div>
@@ -333,7 +334,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
       </div>
       <div class="stack">
         <div class="panel translation">
-          <header><span class="tag">Two different questions</span><span class="type">statistical vs practical</span></header>
+          <header><span class="tag">Two different questions</span><span class="sep" aria-hidden="true"> - </span><span class="type">statistical vs practical</span></header>
           <div class="body">
             <table>
               <thead>
@@ -358,14 +359,14 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
         </div>
 
         <div class="panel resolution">
-          <header><span class="tag">Why the means still matter</span><span class="type">do not skip effect size</span></header>
+          <header><span class="tag">Why the means still matter</span><span class="sep" aria-hidden="true"> - </span><span class="type">do not skip effect size</span></header>
           <div class="body">
             <p>The p-value is not enough on its own. You still need to inspect the group means and the gap between them. If the difference is tiny, the real-world meaning may still be weak even when the test result looks strong.</p>
           </div>
         </div>
 
         <div class="panel rule">
-          <header><span class="tag">Main caution</span><span class="type">do not let the test do all the thinking</span></header>
+          <header><span class="tag">Main caution</span><span class="sep" aria-hidden="true"> - </span><span class="type">do not let the test do all the thinking</span></header>
           <div class="body">
             <p>Block 7 is not about handing judgment over to scipy. The test result is one piece of evidence. It must be read alongside the size of the difference, the context of the question, and the limits of what the dataset can actually support.</p>
           </div>

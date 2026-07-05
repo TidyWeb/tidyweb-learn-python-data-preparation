@@ -69,8 +69,9 @@ main { padding:48px 52px 72px; }
 .note-rule { flex:1; height:1px; background:var(--line); margin-left:4px; }
 .stack { display:grid; gap:12px; }
 .panel { border:1px solid var(--line); background:#fbfcfd; border-radius:4px; overflow:hidden; }
-.panel header { display:flex; justify-content:space-between; align-items:center; padding:8px 14px; border-bottom:1px solid var(--line); font:600 11px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.08em; }
+.panel header { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; padding:8px 14px; border-bottom:1px solid var(--line); font:600 11px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.08em; }
 .panel header .tag { color:var(--navy); }
+.panel header .sep { color:var(--muted); }
 .panel header .type { color:var(--muted); }
 .panel .body { padding:16px 20px; font-size:16px; line-height:1.8; }
 .panel .body p + p { margin-top:10px; }
@@ -201,7 +202,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
       </div>
       <div class="stack">
         <div class="panel resolution">
-          <header><span class="tag">Plain English</span><span class="type">key performance indicator</span></header>
+          <header><span class="tag">Plain English</span><span class="sep" aria-hidden="true"> - </span><span class="type">key performance indicator</span></header>
           <div class="body">
             <p>A KPI — Key Performance Indicator — is a number that measures progress toward a specific goal.</p>
             <p>Not every column in a dataset is a KPI. A KPI is a number someone cares about for a reason.</p>
@@ -211,7 +212,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
           <div class="plain-english">A KPI without a stated purpose is just a number with a label.</div>
         </div>
         <div class="panel translation">
-          <header><span class="tag">Example</span><span class="type">metric vs KPI</span></header>
+          <header><span class="tag">Example</span><span class="sep" aria-hidden="true"> - </span><span class="type">metric vs KPI</span></header>
           <div class="body">
             <table>
               <thead>
@@ -238,7 +239,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
           </div>
         </div>
         <div class="panel rule">
-          <header><span class="tag">Rule</span><span class="type">three KPIs, three different questions</span></header>
+          <header><span class="tag">Rule</span><span class="sep" aria-hidden="true"> - </span><span class="type">three KPIs, three different questions</span></header>
           <div class="body">
             <p>Each of your three KPIs must answer a different question.</p>
             <p>Do not pick three measures of the same thing.</p>
@@ -258,7 +259,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
       </div>
       <div class="stack">
         <div class="panel resolution">
-          <header><span class="tag">The Selection Criteria</span><span class="type">what makes a good KPI choice</span></header>
+          <header><span class="tag">The Selection Criteria</span><span class="sep" aria-hidden="true"> - </span><span class="type">what makes a good KPI choice</span></header>
           <div class="body">
             <p>A good KPI choice meets three tests:</p>
             <p>— It is arguable. There is a reason to care about this number specifically.</p>
@@ -268,7 +269,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
           </div>
         </div>
         <div class="panel translation">
-          <header><span class="tag">Dataset Guidance</span><span class="type">recommended starting point</span></header>
+          <header><span class="tag">Dataset Guidance</span><span class="sep" aria-hidden="true"> - </span><span class="type">recommended starting point</span></header>
           <div class="body">
             <p><span class="mono">superstore_sales.csv</span> is the strongest dataset for this block.</p>
             <p>It contains Sales, Profit, Quantity, Discount, Category, and Segment — all of which support natural business KPIs.</p>
@@ -291,7 +292,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
       </div>
       <div class="stack">
         <div class="panel resolution">
-          <header><span class="tag">Four Routes</span><span class="type">how data gets shown</span></header>
+          <header><span class="tag">Four Routes</span><span class="sep" aria-hidden="true"> - </span><span class="type">how data gets shown</span></header>
           <div class="body">
             <p>There is no single correct tool for visualising data. The right tool depends on who the audience is, how interactive the output needs to be, and how much time is available.</p>
             <p>This block uses matplotlib because it is already in the stack.</p>
@@ -318,7 +319,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
           <div class="plain-english">Knowing which tool to reach for is as important as knowing how to use it.</div>
         </div>
         <div class="panel resolution">
-          <header><span class="tag">Static Python</span><span class="type">matplotlib and seaborn</span></header>
+          <header><span class="tag">Static Python</span><span class="sep" aria-hidden="true"> - </span><span class="type">matplotlib and seaborn</span></header>
           <div class="body">
             <p>matplotlib is the foundational Python charting library. It produces static images: bar charts, histograms, scatter plots. Precise and flexible, but verbose to style.</p>
             <p>Seaborn sits on top of matplotlib and produces better-looking charts with less code. It is particularly strong for statistical visualisation — distributions, correlation heatmaps, pair plots.</p>
@@ -327,7 +328,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
           <div class="plain-english">The bootcamp uses Seaborn in Module 4. It is the next step after matplotlib.</div>
         </div>
         <div class="panel resolution">
-          <header><span class="tag">Interactive Python</span><span class="type">Plotly and Streamlit</span></header>
+          <header><span class="tag">Interactive Python</span><span class="sep" aria-hidden="true"> - </span><span class="type">Plotly and Streamlit</span></header>
           <div class="body">
             <p>Plotly produces interactive charts — hover tooltips, zoom, filter — that run in a browser.</p>
             <p>The syntax is similar to matplotlib but the output is a live HTML widget, not a static image.</p>
@@ -337,7 +338,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
           <div class="plain-english">The bootcamp names Streamlit explicitly. It is worth knowing what it produces before you encounter it.</div>
         </div>
         <div class="panel resolution">
-          <header><span class="tag">BI Tools</span><span class="type">Power BI and Looker Studio</span></header>
+          <header><span class="tag">BI Tools</span><span class="sep" aria-hidden="true"> - </span><span class="type">Power BI and Looker Studio</span></header>
           <div class="body">
             <p>Power BI (Microsoft) and Looker Studio (Google) are drag-and-drop dashboard tools.</p>
             <p>No code required. Connect a data source, drag fields onto a canvas, publish.</p>
@@ -348,7 +349,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
           <div class="plain-english">Power BI is what most employers mean when they say "dashboard." Know what it is before the bootcamp introduces it.</div>
         </div>
         <div class="panel resolution">
-          <header><span class="tag">AI-Assisted Visualisation</span><span class="type">current and growing</span></header>
+          <header><span class="tag">AI-Assisted Visualisation</span><span class="sep" aria-hidden="true"> - </span><span class="type">current and growing</span></header>
           <div class="body">
             <p>LLM-based tools can now generate charts directly from a data question stated in plain English.</p>
             <p>Julius, Rath, and similar tools accept a CSV and a question and produce an interactive chart without requiring any code from the analyst.</p>
@@ -368,7 +369,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
       </div>
       <div class="stack">
         <div class="panel resolution">
-          <header><span class="tag">What Goes In It</span><span class="type">four required elements</span></header>
+          <header><span class="tag">What Goes In It</span><span class="sep" aria-hidden="true"> - </span><span class="type">four required elements</span></header>
           <div class="body">
             <table>
               <thead>
@@ -400,7 +401,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
           <div class="plain-english">A findings report that only describes the charts is not a findings report. It is a caption sheet.</div>
         </div>
         <div class="panel rule">
-          <header><span class="tag">Rule</span><span class="type">no vague findings</span></header>
+          <header><span class="tag">Rule</span><span class="sep" aria-hidden="true"> - </span><span class="type">no vague findings</span></header>
           <div class="body">
             <p>Every observation in the findings report must be traceable to something visible in the data.</p>
             <p>"Sales were interesting" is not a finding.</p>
@@ -420,7 +421,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
       </div>
       <div class="stack">
         <div class="panel resolution">
-          <header><span class="tag">Structure</span><span class="type">six parts in order</span></header>
+          <header><span class="tag">Structure</span><span class="sep" aria-hidden="true"> - </span><span class="type">six parts in order</span></header>
           <div class="body">
             <table>
               <thead>
@@ -460,7 +461,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
           <div class="plain-english">Six sentences total. Prepare them. Do not read them. Deliver them.</div>
         </div>
         <div class="panel rule">
-          <header><span class="tag">Rule</span><span class="type">no script reading</span></header>
+          <header><span class="tag">Rule</span><span class="sep" aria-hidden="true"> - </span><span class="type">no script reading</span></header>
           <div class="body">
             <p>Prepare the verbal summary in writing first.</p>
             <p>Then put the writing aside and deliver it in your own words.</p>
@@ -470,7 +471,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
           <div class="plain-english">A verbal summary read aloud from a script is not a verbal summary. It is a recitation.</div>
         </div>
         <div class="panel translation">
-          <header><span class="tag">Example Opening</span><span class="type">what it sounds like</span></header>
+          <header><span class="tag">Example Opening</span><span class="sep" aria-hidden="true"> - </span><span class="type">what it sounds like</span></header>
           <div class="body">
             <p>"This dataset covers retail sales across three product categories and three customer segments. I chose three KPIs to understand where the business is making money, where it is losing margin, and whether discounting is helping or hurting."</p>
           </div>

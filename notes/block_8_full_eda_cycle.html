@@ -69,8 +69,9 @@ main { padding:48px 52px 72px; }
 .note-rule { flex:1; height:1px; background:var(--line); margin-left:4px; }
 .stack { display:grid; gap:12px; }
 .panel { border:1px solid var(--line); background:#fbfcfd; border-radius:4px; overflow:hidden; }
-.panel header { display:flex; justify-content:space-between; align-items:center; padding:8px 14px; border-bottom:1px solid var(--line); font:600 11px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.08em; }
+.panel header { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; padding:8px 14px; border-bottom:1px solid var(--line); font:600 11px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.08em; }
 .panel header .tag { color:var(--navy); }
+.panel header .sep { color:var(--muted); }
 .panel header .type { color:var(--muted); }
 .panel .body { padding:16px 20px; font-size:16px; line-height:1.8; }
 .panel .body p + p { margin-top:10px; }
@@ -200,7 +201,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
       </div>
       <div class="stack">
         <div class="panel resolution">
-          <header><span class="tag">Plain English</span><span class="type">performance, not practice</span></header>
+          <header><span class="tag">Plain English</span><span class="sep" aria-hidden="true"> - </span><span class="type">performance, not practice</span></header>
           <div class="body">
             <p>Block 8 is not a teaching block. There are no explanations, no worked examples, and no hints. The learner loads a dataset they have not seen before and runs a full exploratory data analysis from start to findings note using the moves built across Blocks 1 through 5.</p>
             <p>The notebook is working space. It is not the deliverable. The deliverable is a plain-English findings note answering four specific questions.</p>
@@ -209,7 +210,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
           <div class="plain-english">The point is not to produce perfect code. The point is to produce a clear account of what the data shows.</div>
         </div>
         <div class="panel rule">
-          <header><span class="tag">Rule</span><span class="type">no assistance during the block</span></header>
+          <header><span class="tag">Rule</span><span class="sep" aria-hidden="true"> - </span><span class="type">no assistance during the block</span></header>
           <div class="body">
             <p>No reference documents, worked examples, or block notes should be consulted while the EDA is running. This document should be read before starting. Once the dataset is loaded, close the notes and work cold.</p>
           </div>
@@ -226,7 +227,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
       </div>
       <div class="stack">
         <div class="panel translation">
-          <header><span class="tag">Findings Structure</span><span class="type">four required answers</span></header>
+          <header><span class="tag">Findings Structure</span><span class="sep" aria-hidden="true"> - </span><span class="type">four required answers</span></header>
           <div class="body">
             <table>
               <thead>
@@ -268,7 +269,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
       </div>
       <div class="stack">
         <div class="panel resolution">
-          <header><span class="tag">Completion standard</span><span class="type">four criteria</span></header>
+          <header><span class="tag">Completion standard</span><span class="sep" aria-hidden="true"> - </span><span class="type">four criteria</span></header>
           <div class="body">
             <p>The EDA is complete when:</p>
             <p>— the dataset has been loaded and its shape, types, and missingness have been checked</p>
@@ -279,7 +280,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
           </div>
         </div>
         <div class="panel rule">
-          <header><span class="tag">Rule</span><span class="type">findings note is the artifact</span></header>
+          <header><span class="tag">Rule</span><span class="sep" aria-hidden="true"> - </span><span class="type">findings note is the artifact</span></header>
           <div class="body">
             <p>The notebook cells are scratch work. They do not need to be clean or linear. The findings note must be clear, specific, and written in plain English.</p>
             <p>Vague findings such as <span class="mono">the data was interesting</span> do not count. Every observation in the findings note must be traceable to something visible in the data.</p>
@@ -297,14 +298,14 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
       </div>
       <div class="stack">
         <div class="panel resolution">
-          <header><span class="tag">Reminder</span><span class="type">what you already have</span></header>
+          <header><span class="tag">Reminder</span><span class="sep" aria-hidden="true"> - </span><span class="type">what you already have</span></header>
           <div class="body">
             <p>These are the moves built across Blocks 1 through 5. They are listed here as a reminder to read before starting. Do not consult this page once the dataset is loaded.</p>
           </div>
         </div>
 
         <div class="panel resolution">
-          <header><span class="tag">Block 1</span><span class="type">table literacy</span></header>
+          <header><span class="tag">Block 1</span><span class="sep" aria-hidden="true"> - </span><span class="type">table literacy</span></header>
           <div class="body">
             <div class="command-grid">
               <div class="command-box">
@@ -348,7 +349,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
         </div>
 
         <div class="panel resolution">
-          <header><span class="tag">Block 2</span><span class="type">selection and filtering</span></header>
+          <header><span class="tag">Block 2</span><span class="sep" aria-hidden="true"> - </span><span class="type">selection and filtering</span></header>
           <div class="body">
             <div class="command-grid">
               <div class="command-box">
@@ -376,7 +377,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
         </div>
 
         <div class="panel resolution">
-          <header><span class="tag">Block 3</span><span class="type">missing data and cleaning</span></header>
+          <header><span class="tag">Block 3</span><span class="sep" aria-hidden="true"> - </span><span class="type">missing data and cleaning</span></header>
           <div class="body">
             <div class="command-grid">
               <div class="command-box inspect">
@@ -408,7 +409,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
         </div>
 
         <div class="panel resolution">
-          <header><span class="tag">Block 4</span><span class="type">grouping and insight</span></header>
+          <header><span class="tag">Block 4</span><span class="sep" aria-hidden="true"> - </span><span class="type">grouping and insight</span></header>
           <div class="body">
             <div class="command-grid">
               <div class="command-box">
@@ -440,7 +441,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
         </div>
 
         <div class="panel resolution">
-          <header><span class="tag">Block 5</span><span class="type">visualisation</span></header>
+          <header><span class="tag">Block 5</span><span class="sep" aria-hidden="true"> - </span><span class="type">visualisation</span></header>
           <div class="body">
             <div class="command-grid">
               <div class="command-box">
@@ -468,7 +469,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
         </div>
 
         <div class="panel rule">
-          <header><span class="tag">Rule</span><span class="type">after each chart</span></header>
+          <header><span class="tag">Rule</span><span class="sep" aria-hidden="true"> - </span><span class="type">after each chart</span></header>
           <div class="body">
             <p>For every chart produced during the EDA, write one sentence stating what the chart shows and one sentence stating what the chart cannot tell from that view alone. This is not optional. It is part of the Block 5 standard.</p>
           </div>

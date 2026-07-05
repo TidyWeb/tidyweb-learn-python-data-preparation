@@ -394,7 +394,7 @@ th {
       </div>
       <div class="stack">
         <div class="panel resolution">
-          <header><span class="tag">At-a-glance command boxes</span><span class="type">Block 1 core moves</span></header>
+          <header><span class="tag">At-a-glance command boxes</span><span class="sep" aria-hidden="true"> - </span><span class="type">Block 1 core moves</span></header>
           <div class="body">
             <div class="command-grid">
               <div class="command-box">
@@ -437,7 +437,7 @@ th {
           </div>
         </div>
         <div class="panel resolution">
-          <header><span class="tag">What changed</span><span class="type">same foundation, higher layer</span></header>
+          <header><span class="tag">What changed</span><span class="sep" aria-hidden="true"> - </span><span class="type">same foundation, higher layer</span></header>
           <div class="body">
             <p><strong>Python basics</strong> means building the machinery yourself: lists, dictionaries, keys, loops, and indexing.</p>
             <p><strong>pandas</strong> means using a ready-made table tool built on top of Python.</p>
@@ -456,7 +456,7 @@ th {
       </div>
       <div class="stack">
         <div class="panel translation">
-          <header><span class="tag">Python to pandas</span><span class="type">vocabulary bridge</span></header>
+          <header><span class="tag">Python to pandas</span><span class="sep" aria-hidden="true"> - </span><span class="type">vocabulary bridge</span></header>
           <div class="body">
             <table>
               <thead>
@@ -512,80 +512,80 @@ th {
       </div>
       <div class="stack">
         <div class="panel resolution">
-          <header><span class="tag">Command 1</span><span class="type">bring pandas in</span></header>
+          <header><span class="tag">Command 1</span><span class="sep" aria-hidden="true"> - </span><span class="type">bring pandas in</span></header>
           <div class="body">
             <p><span class="mono">import pandas as pd</span> means: bring the pandas library into the notebook and give it the short nickname <span class="mono">pd</span>.</p>
           </div>
         </div>
         <div class="panel code">
-          <header><span class="tag">Code breakdown</span><span class="type">import line</span></header>
+          <header><span class="tag">Code breakdown</span><span class="sep" aria-hidden="true"> - </span><span class="type">import line</span></header>
           <div class="body">
             <pre><span class="part-outer">import</span> <span class="part-inner">pandas</span> <span class="part-core">as pd</span></pre>
           </div>
         </div>
         <div class="panel resolution">
-          <header><span class="tag">Command 2</span><span class="type">load the CSV</span></header>
+          <header><span class="tag">Command 2</span><span class="sep" aria-hidden="true"> - </span><span class="type">load the CSV</span></header>
           <div class="body">
-            <p><span class="mono">df = pd.read_csv("/home/Phil/C&amp;C/Learn_Python_Data/datasets/iris.csv")</span> loads the file and stores the table in <span class="mono">df</span>.</p>
-            <p>The path is inside quotes, and it starts with <span class="mono">/home</span>.</p>
+            <p><span class="mono">df = pd.read_csv("datasets/iris.csv")</span> loads the file and stores the table in <span class="mono">df</span>.</p>
+            <p>The path is inside quotes. Here it uses a project-relative path instead of a machine-specific home-folder path.</p>
           </div>
         </div>
         <div class="panel code">
-          <header><span class="tag">Code breakdown</span><span class="type">load line</span></header>
+          <header><span class="tag">Code breakdown</span><span class="sep" aria-hidden="true"> - </span><span class="type">load line</span></header>
           <div class="body">
-            <pre><span class="part-var">df</span> = <span class="part-outer">pd</span>.<span class="part-inner">read_csv</span>(<span class="part-core">"/home/Phil/C&amp;C/Learn_Python_Data/datasets/iris.csv"</span>)</pre>
+            <pre><span class="part-var">df</span> = <span class="part-outer">pd</span>.<span class="part-inner">read_csv</span>(<span class="part-core">"datasets/iris.csv"</span>)</pre>
           </div>
         </div>
         <div class="panel translation">
-          <header><span class="tag">What each part means</span><span class="type">load line</span></header>
+          <header><span class="tag">What each part means</span><span class="sep" aria-hidden="true"> - </span><span class="type">load line</span></header>
           <div class="body legend">
             <p><span class="part-var">df</span> = the variable that will hold the table</p>
             <p><span class="part-outer">pd</span> = the pandas nickname</p>
             <p><span class="part-inner">read_csv</span> = the pandas tool that reads a CSV file</p>
-            <p><span class="part-core">"/home/Phil/C&amp;C/Learn_Python_Data/datasets/iris.csv"</span> = the full file path written inside quotes</p>
+            <p><span class="part-core">"datasets/iris.csv"</span> = the path to the CSV file written inside quotes</p>
           </div>
         </div>
         <div class="panel resolution">
-          <header><span class="tag">Command 3</span><span class="type">first look</span></header>
+          <header><span class="tag">Command 3</span><span class="sep" aria-hidden="true"> - </span><span class="type">first look</span></header>
           <div class="body">
             <p><span class="mono">df.head()</span> shows the first few rows of the table and the column names across the top.</p>
             <p>Nothing goes inside the brackets for the default version.</p>
           </div>
         </div>
         <div class="panel code">
-          <header><span class="tag">Code breakdown</span><span class="type">first look</span></header>
+          <header><span class="tag">Code breakdown</span><span class="sep" aria-hidden="true"> - </span><span class="type">first look</span></header>
           <div class="body">
             <pre><span class="part-var">df</span>.<span class="part-inner">head</span><span class="part-core">()</span></pre>
           </div>
         </div>
         <div class="panel resolution">
-          <header><span class="tag">Command 4</span><span class="type">table size</span></header>
+          <header><span class="tag">Command 4</span><span class="sep" aria-hidden="true"> - </span><span class="type">table size</span></header>
           <div class="body">
             <p><span class="mono">df.shape</span> tells you the table size in the form <span class="mono">(rows, columns)</span>.</p>
             <p>This one does <strong>not</strong> take brackets here.</p>
           </div>
         </div>
         <div class="panel code">
-          <header><span class="tag">Code breakdown</span><span class="type">table size</span></header>
+          <header><span class="tag">Code breakdown</span><span class="sep" aria-hidden="true"> - </span><span class="type">table size</span></header>
           <div class="body">
             <pre><span class="part-var">df</span>.<span class="part-inner">shape</span></pre>
           </div>
         </div>
         <div class="panel resolution">
-          <header><span class="tag">Command 5</span><span class="type">structure check</span></header>
+          <header><span class="tag">Command 5</span><span class="sep" aria-hidden="true"> - </span><span class="type">structure check</span></header>
           <div class="body">
             <p><span class="mono">df.info()</span> shows column names, non-null counts, and data types.</p>
             <p><span class="mono">dtype</span> means data type. <span class="mono">float64</span> means decimal numbers stored in a specific machine format.</p>
           </div>
         </div>
         <div class="panel code">
-          <header><span class="tag">Code breakdown</span><span class="type">structure check</span></header>
+          <header><span class="tag">Code breakdown</span><span class="sep" aria-hidden="true"> - </span><span class="type">structure check</span></header>
           <div class="body">
             <pre><span class="part-var">df</span>.<span class="part-inner">info</span><span class="part-core">()</span></pre>
           </div>
         </div>
         <div class="panel resolution">
-          <header><span class="tag">Command 6</span><span class="type">summary</span></header>
+          <header><span class="tag">Command 6</span><span class="sep" aria-hidden="true"> - </span><span class="type">summary</span></header>
           <div class="body">
             <p><span class="mono">df.describe(include="all")</span> calculates a built-in summary for the columns.</p>
             <p><span class="mono">include="all"</span> tells pandas to include both numeric and text-style columns in that summary.</p>
@@ -594,13 +594,13 @@ th {
           </div>
         </div>
         <div class="panel code">
-          <header><span class="tag">Code breakdown</span><span class="type">summary</span></header>
+          <header><span class="tag">Code breakdown</span><span class="sep" aria-hidden="true"> - </span><span class="type">summary</span></header>
           <div class="body">
             <pre><span class="part-var">df</span>.<span class="part-inner">describe</span>(<span class="part-core">include="all"</span>)</pre>
           </div>
         </div>
         <div class="panel rule">
-          <header><span class="tag">Dot rule</span><span class="type">how to read it</span></header>
+          <header><span class="tag">Dot rule</span><span class="sep" aria-hidden="true"> - </span><span class="type">how to read it</span></header>
           <div class="body">
             <p>The dot means: reach into this thing and use one of its built-in tools.</p>
             <p>Examples: <span class="mono">pd.read_csv(...)</span>, <span class="mono">df.head()</span>, <span class="mono">df.info()</span>.</p>
@@ -617,19 +617,19 @@ th {
       </div>
       <div class="stack">
         <div class="panel translation">
-          <header><span class="tag">Use the older words when</span><span class="type">beginner Python</span></header>
+          <header><span class="tag">Use the older words when</span><span class="sep" aria-hidden="true"> - </span><span class="type">beginner Python</span></header>
           <div class="body">
             <p>list, dictionary, key, loop</p>
           </div>
         </div>
         <div class="panel translation">
-          <header><span class="tag">Use the newer words when</span><span class="type">pandas</span></header>
+          <header><span class="tag">Use the newer words when</span><span class="sep" aria-hidden="true"> - </span><span class="type">pandas</span></header>
           <div class="body">
             <p>DataFrame, row, column, column name, summary</p>
           </div>
         </div>
         <div class="panel resolution">
-          <header><span class="tag">Safest bridge sentence</span><span class="type">keep this</span></header>
+          <header><span class="tag">Safest bridge sentence</span><span class="sep" aria-hidden="true"> - </span><span class="type">keep this</span></header>
           <div class="body">
             <p><span class="mono">Earlier I was learning how Python stores and handles data. Now I am learning how pandas analyses that data in table form.</span></p>
           </div>

@@ -394,7 +394,7 @@ th {
       </div>
       <div class="stack">
         <div class="panel resolution">
-          <header><span class="tag">Plain English</span><span class="type">split then summarise</span></header>
+          <header><span class="tag">Plain English</span><span class="sep" aria-hidden="true"> - </span><span class="type">split then summarise</span></header>
           <div class="body">
             <p>Grouping means splitting the table into category buckets, then calculating something inside each bucket.</p>
             <p>You are no longer asking only about one row at a time. You are comparing groups such as passenger classes, weather types, or product categories.</p>
@@ -402,7 +402,7 @@ th {
           <div class="plain-english">Group first. Then summarise. Then say what the grouped result shows.</div>
         </div>
         <div class="panel translation">
-          <header><span class="tag">Before and after</span><span class="type">mental move</span></header>
+          <header><span class="tag">Before and after</span><span class="sep" aria-hidden="true"> - </span><span class="type">mental move</span></header>
           <div class="body legend">
             <p><strong>Before:</strong> one command tells you about one column or one filtered slice.</p>
             <p><strong>After:</strong> one command compares several groups at once.</p>
@@ -420,7 +420,7 @@ th {
       </div>
       <div class="stack">
         <div class="panel resolution">
-          <header><span class="tag">Grouping and insight</span><span class="type">Block 4 core moves</span></header>
+          <header><span class="tag">Grouping and insight</span><span class="sep" aria-hidden="true"> - </span><span class="type">Block 4 core moves</span></header>
           <div class="body">
             <div class="command-grid">
               <div class="command-box inspect">
@@ -457,20 +457,20 @@ th {
       </div>
       <div class="stack">
         <div class="panel resolution">
-          <header><span class="tag">Command 1</span><span class="type">sort rows</span></header>
+          <header><span class="tag">Command 1</span><span class="sep" aria-hidden="true"> - </span><span class="type">sort rows</span></header>
           <div class="body">
             <p><span class="mono">df.sort_values("column")</span> reorders rows by the values in one named column.</p>
             <p>This does not calculate a new statistic. It changes the row order so the pattern is easier to inspect.</p>
           </div>
         </div>
         <div class="panel code">
-          <header><span class="tag">Code breakdown</span><span class="type">sorting</span></header>
+          <header><span class="tag">Code breakdown</span><span class="sep" aria-hidden="true"> - </span><span class="type">sorting</span></header>
           <div class="body">
             <pre><span class="part-var">df</span><span class="part-outer">.sort_values(</span><span class="part-core">"sales"</span><span class="part-outer">)</span></pre>
           </div>
         </div>
         <div class="panel translation">
-          <header><span class="tag">What each part means</span><span class="type">sort_values</span></header>
+          <header><span class="tag">What each part means</span><span class="sep" aria-hidden="true"> - </span><span class="type">sort_values</span></header>
           <div class="body legend">
             <p><span class="part-var">df</span> = the table variable.</p>
             <p><span class="part-outer">.sort_values()</span> = the tool that reorders rows.</p>
@@ -479,20 +479,20 @@ th {
         </div>
 
         <div class="panel resolution">
-          <header><span class="tag">Command 2</span><span class="type">count categories</span></header>
+          <header><span class="tag">Command 2</span><span class="sep" aria-hidden="true"> - </span><span class="type">count categories</span></header>
           <div class="body">
             <p><span class="mono">df["column"].value_counts()</span> counts how often each distinct category appears.</p>
             <p>This is often the fastest way to answer questions such as how many passengers were in each class or how many days fall into each weather label.</p>
           </div>
         </div>
         <div class="panel code">
-          <header><span class="tag">Code breakdown</span><span class="type">value counts</span></header>
+          <header><span class="tag">Code breakdown</span><span class="sep" aria-hidden="true"> - </span><span class="type">value counts</span></header>
           <div class="body">
             <pre><span class="part-var">df</span><span class="part-outer">[</span><span class="part-core">"weather"</span><span class="part-outer">]</span><span class="part-inner">.value_counts()</span></pre>
           </div>
         </div>
         <div class="panel translation">
-          <header><span class="tag">What each part means</span><span class="type">category count</span></header>
+          <header><span class="tag">What each part means</span><span class="sep" aria-hidden="true"> - </span><span class="type">category count</span></header>
           <div class="body legend">
             <p><span class="part-var">df["weather"]</span> = select the category column first.</p>
             <p><span class="part-inner">.value_counts()</span> = count each distinct category value.</p>
@@ -500,20 +500,20 @@ th {
         </div>
 
         <div class="panel resolution">
-          <header><span class="tag">Command 3</span><span class="type">group and average</span></header>
+          <header><span class="tag">Command 3</span><span class="sep" aria-hidden="true"> - </span><span class="type">group and average</span></header>
           <div class="body">
             <p><span class="mono">df.groupby("group")["value"].mean()</span> answers a comparison question such as: what is the average fare for each passenger class?</p>
             <p>The group column creates the buckets. The value column tells pandas what to average inside each bucket.</p>
           </div>
         </div>
         <div class="panel code">
-          <header><span class="tag">Code breakdown</span><span class="type">groupby mean</span></header>
+          <header><span class="tag">Code breakdown</span><span class="sep" aria-hidden="true"> - </span><span class="type">groupby mean</span></header>
           <div class="body">
             <pre><span class="part-var">df</span><span class="part-outer">.groupby(</span><span class="part-core">"category"</span><span class="part-outer">)</span><span class="part-inner">[</span><span class="part-core">"value"</span><span class="part-inner">]</span><span class="part-note">.mean()</span></pre>
           </div>
         </div>
         <div class="panel translation">
-          <header><span class="tag">What each part means</span><span class="type">group average</span></header>
+          <header><span class="tag">What each part means</span><span class="sep" aria-hidden="true"> - </span><span class="type">group average</span></header>
           <div class="body legend">
             <p><span class="part-outer">.groupby("category")</span> = split the rows into category groups.</p>
             <p><span class="part-inner">["value"]</span> = choose the column to summarise inside each group.</p>
@@ -522,20 +522,20 @@ th {
         </div>
 
         <div class="panel resolution">
-          <header><span class="tag">Command 4</span><span class="type">group and count</span></header>
+          <header><span class="tag">Command 4</span><span class="sep" aria-hidden="true"> - </span><span class="type">group and count</span></header>
           <div class="body">
             <p><span class="mono">df.groupby("group")["value"].count()</span> counts how many non-missing rows appear inside each group for the chosen value column.</p>
             <p>This is useful when you want to compare group sizes rather than group averages.</p>
           </div>
         </div>
         <div class="panel code">
-          <header><span class="tag">Code breakdown</span><span class="type">groupby count</span></header>
+          <header><span class="tag">Code breakdown</span><span class="sep" aria-hidden="true"> - </span><span class="type">groupby count</span></header>
           <div class="body">
             <pre><span class="part-var">df</span><span class="part-outer">.groupby(</span><span class="part-core">"weather"</span><span class="part-outer">)</span><span class="part-inner">[</span><span class="part-core">"date"</span><span class="part-inner">]</span><span class="part-note">.count()</span></pre>
           </div>
         </div>
         <div class="panel translation">
-          <header><span class="tag">What each part means</span><span class="type">group count</span></header>
+          <header><span class="tag">What each part means</span><span class="sep" aria-hidden="true"> - </span><span class="type">group count</span></header>
           <div class="body legend">
             <p><span class="part-outer">.groupby("weather")</span> = split rows by weather type.</p>
             <p><span class="part-inner">["date"]</span> = choose one column to count.</p>
@@ -544,20 +544,20 @@ th {
         </div>
 
         <div class="panel resolution">
-          <header><span class="tag">Command 5</span><span class="type">several summaries at once</span></header>
+          <header><span class="tag">Command 5</span><span class="sep" aria-hidden="true"> - </span><span class="type">several summaries at once</span></header>
           <div class="body">
             <p><span class="mono">df.groupby("group").agg({...})</span> lets one grouped result show several summary measures at once.</p>
             <p>This is useful when one average alone is too thin and you want count plus average, or average plus maximum, side by side.</p>
           </div>
         </div>
         <div class="panel code">
-          <header><span class="tag">Code breakdown</span><span class="type">agg</span></header>
+          <header><span class="tag">Code breakdown</span><span class="sep" aria-hidden="true"> - </span><span class="type">agg</span></header>
           <div class="body">
             <pre><span class="part-var">df</span><span class="part-outer">.groupby(</span><span class="part-core">"Segment"</span><span class="part-outer">)</span><span class="part-note">.agg(</span>{<span class="part-core">"Sales"</span>: [<span class="part-core">"mean"</span>, <span class="part-core">"max"</span>]}<span class="part-note">)</span></pre>
           </div>
         </div>
         <div class="panel translation">
-          <header><span class="tag">What each part means</span><span class="type">aggregation bundle</span></header>
+          <header><span class="tag">What each part means</span><span class="sep" aria-hidden="true"> - </span><span class="type">aggregation bundle</span></header>
           <div class="body legend">
             <p><span class="part-outer">.groupby("Segment")</span> = make the customer-segment groups.</p>
             <p><span class="part-note">.agg(...)</span> = ask for several summary calculations.</p>
@@ -576,7 +576,7 @@ th {
       </div>
       <div class="stack">
         <div class="panel rule">
-          <header><span class="tag">Required move</span><span class="type">numbers then sentence</span></header>
+          <header><span class="tag">Required move</span><span class="sep" aria-hidden="true"> - </span><span class="type">numbers then sentence</span></header>
           <div class="body">
             <p>Every grouped result must be followed by a plain-English sentence saying what the data shows.</p>
             <p>A grouped table is not the finished thought. The grouped table is the evidence.</p>
@@ -584,7 +584,7 @@ th {
           <div class="plain-english">Bad: "Here is the groupby result." Better: "First-class passengers had the highest average fare in this table."</div>
         </div>
         <div class="panel translation">
-          <header><span class="tag">Useful sentence stems</span><span class="type">reader-facing findings</span></header>
+          <header><span class="tag">Useful sentence stems</span><span class="sep" aria-hidden="true"> - </span><span class="type">reader-facing findings</span></header>
           <div class="body legend">
             <p><strong>Highest/lowest:</strong> The highest average ___ appears in ___.</p>
             <p><strong>Count comparison:</strong> The largest group in this table is ___.</p>
@@ -603,7 +603,7 @@ th {
       </div>
       <div class="stack">
         <div class="panel translation">
-          <header><span class="tag">Block 3 to Block 4</span><span class="type">same table, bigger question</span></header>
+          <header><span class="tag">Block 3 to Block 4</span><span class="sep" aria-hidden="true"> - </span><span class="type">same table, bigger question</span></header>
           <div class="body">
             <table>
               <thead>

@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SQL Exercise List</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#eef1f4;
+  --panel:#fffdfa;
+  --ink:#202124;
+  --muted:#5f6368;
+  --line:#dde2e8;
+  --rail-bg:#17212b;
+  --rail-text:#dce7ef;
+  --rail-muted:#8fa4b5;
+  --navy:#1f4f82;
+  --cyan:#1f7a8c;
+  --yellow:#f6c85f;
+  --green:#4d6b4f;
+  --orange:#d97706;
+  --plum:#7d4655;
+  --mono-bg:#f4f5f7;
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body { background:var(--bg); color:var(--ink); font-family:'IBM Plex Sans', sans-serif; }
+.frame { width:min(1160px, calc(100vw - 32px)); margin:30px auto 60px; display:grid; grid-template-columns:220px minmax(0,1fr); background:var(--panel); border:1px solid var(--line); box-shadow:0 16px 46px rgba(39,50,60,.18); }
+.rail { background:var(--rail-bg); color:var(--rail-text); padding:32px 22px 40px; position:sticky; top:0; height:100vh; overflow-y:auto; }
+.rail-logo-wrap { display:flex; justify-content:center; align-items:center; margin:0 0 18px; padding:0 0 18px; border-bottom:1px solid rgba(255,255,255,.1); }
+.rail-logo { display:block; width:min(132px, 100%); height:auto; filter:drop-shadow(0 10px 18px rgba(34, 214, 255, .16)); }
+.rail-title { font-family:'Atkinson Hyperlegible', sans-serif; font-size:20px; font-weight:700; color:white; line-height:1.2; margin-bottom:6px; }
+.rail-sub { font-size:12px; color:var(--rail-muted); line-height:1.55; margin-bottom:28px; padding-bottom:20px; border-bottom:1px solid rgba(255,255,255,.1); }
+.token { display:flex; gap:10px; align-items:center; padding:9px 0; border-top:1px solid rgba(255,255,255,.1); font:600 11px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.06em; color:var(--rail-muted); }
+.dot { width:10px; height:10px; border-radius:50%; background:var(--yellow); flex-shrink:0; }
+.dot.cyan { background:var(--cyan); }
+.dot.green { background:var(--green); }
+.dot.orange { background:var(--orange); }
+.rail-nav { margin-top:22px; border-top:1px solid rgba(255,255,255,.1); padding-top:16px; }
+.rail-nav-label { font:600 10px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.08em; color:var(--rail-muted); margin-bottom:10px; }
+.rail-nav a { display:flex; align-items:center; gap:8px; padding:7px 0; font-size:13px; color:var(--rail-text); text-decoration:none; line-height:1.35; border-bottom:1px solid rgba(255,255,255,.06); }
+.rail-nav a:hover { color:white; }
+.rail-nav a .num { font:600 10px 'IBM Plex Mono', monospace; color:var(--rail-muted); flex-shrink:0; width:22px; }
+main { padding:48px 52px 72px; }
+.page-mode { font:700 11px 'IBM Plex Mono', monospace; letter-spacing:.1em; text-transform:uppercase; color:var(--cyan); margin-bottom:10px; }
+.page-title { font-family:'Atkinson Hyperlegible', sans-serif; font-size:36px; font-weight:700; color:var(--navy); line-height:1.1; margin-bottom:14px; }
+.page-sub { font-size:16px; line-height:1.75; color:var(--muted); margin-bottom:48px; padding-bottom:28px; border-bottom:2px solid var(--mono-bg); }
+.note-section { margin-bottom:64px; scroll-margin-top:20px; }
+.note-eyebrow { display:flex; align-items:center; gap:12px; margin-bottom:20px; }
+.note-num { font:600 11px 'IBM Plex Mono', monospace; color:var(--muted); letter-spacing:.06em; }
+.note-heading { font-family:'Atkinson Hyperlegible', sans-serif; font-size:24px; font-weight:700; color:var(--navy); line-height:1.2; }
+.note-rule { flex:1; height:1px; background:var(--line); margin-left:4px; }
+.stack { display:grid; gap:12px; }
+.panel { border:1px solid var(--line); background:#fbfcfd; border-radius:4px; overflow:hidden; }
+.panel header { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; padding:8px 14px; border-bottom:1px solid var(--line); font:600 11px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.08em; }
+.panel header .tag { color:var(--navy); }
+.panel header .sep { color:var(--muted); }
+.panel header .type { color:var(--muted); }
+.panel .body { padding:16px 20px; font-size:16px; line-height:1.8; }
+.panel .body p + p { margin-top:10px; }
+.panel.translation { border-left:4px solid var(--yellow); }
+.panel.rule { border-left:4px solid var(--orange); }
+.panel.resolution { border-left:4px solid var(--cyan); }
+.mono { font-family:'IBM Plex Mono', monospace; background:var(--mono-bg); border-radius:4px; padding:.05em .3em; white-space:nowrap; }
+table { width:100%; border-collapse:collapse; font-size:15px; }
+th, td { border:1px solid var(--line); padding:12px 14px; vertical-align:top; text-align:left; }
+th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospace; font-size:12px; text-transform:uppercase; letter-spacing:.05em; }
+.plain-english { font-style:italic; font-size:15px; color:var(--muted); border-top:1px solid var(--line); padding:14px 20px; line-height:1.7; background:#fbfcfd; }
+.chapter-nav { display:flex; justify-content:flex-end; margin-top:54px; }
+.chapter-next { display:inline-flex; align-items:center; gap:14px; min-width:260px; padding:16px 20px; border-radius:14px; text-decoration:none; background:linear-gradient(135deg, var(--navy), var(--cyan)); color:#fff; box-shadow:0 16px 30px rgba(31,79,130,.22); }
+.chapter-next:hover { filter:brightness(.96); }
+.chapter-next .label { display:block; font:600 11px 'IBM Plex Mono', monospace; letter-spacing:.08em; text-transform:uppercase; color:rgba(255,255,255,.82); }
+.chapter-next .title { display:block; font-family:'Atkinson Hyperlegible', sans-serif; font-size:22px; font-weight:700; line-height:1.1; color:#fff; }
+.chapter-next .arrow { margin-left:auto; font-size:20px; line-height:1; color:#fff; }
+.footer { color:var(--muted); font-size:13px; text-align:center; margin-top:64px; }
+@media (max-width:860px) { .frame { grid-template-columns:1fr; } .rail { display:none; } main { padding:32px 22px 48px; } .page-title { font-size:26px; } .chapter-nav { justify-content:stretch; } .chapter-next { width:100%; justify-content:center; } }
+</style>
+</head>
+<body>
+<article class="frame">
+  <aside class="rail">
+    <div class="rail-logo-wrap">
+      <img class="rail-logo" src="../assets/tidyweb_logo.png" alt="TidyWeb logo">
+    </div>
+    <div class="rail-title">SQL Exercise List</div>
+    <div class="rail-sub">Browser-only practice. Ordered on purpose. One SQL concept cluster at a time.</div>
+    <div class="token"><span class="dot"></span> Practice Route</div>
+    <div class="token"><span class="dot cyan"></span> Step</div>
+    <div class="token"><span class="dot orange"></span> Failure Check</div>
+    <div class="token"><span class="dot green"></span> Plain-English Summary</div>
+    <nav class="rail-nav course-nav">
+      <div class="rail-nav-label">Bookshelf Home</div>
+      <a href="../index.html"><span class="num">00</span><span>Main Shelf</span></a>
+    </nav>
+    <nav class="rail-nav">
+      <div class="rail-nav-label">Sections</div>
+      <a href="#route"><span class="num">01</span><span>Exercise Route</span></a>
+      <a href="#failures"><span class="num">02</span><span>When a Query Fails</span></a>
+      <a href="#done"><span class="num">03</span><span>When You Are Done</span></a>
+    </nav>
+  </aside>
+  <main>
+    <div class="page-mode">Supplementary Module</div>
+    <h1 class="page-title">SQL Exercise List</h1>
+    <p class="page-sub">This is the practice route that pairs with the SQL reference. All exercises run in the browser at <span class="mono">sqlzoo.net</span>. No account. No installation. The order matters because each stage introduces one new layer of SQL thinking before the next one appears.</p>
+
+    <section class="note-section" id="route">
+      <div class="note-eyebrow"><span class="note-num">NOTE 01</span><h2 class="note-heading">Exercise Route</h2><span class="note-rule"></span></div>
+      <div class="stack">
+        <div class="panel translation">
+          <header><span class="tag">Practice order</span><span class="sep" aria-hidden="true"> - </span><span class="type">work through these in sequence</span></header>
+          <div class="body">
+            <table>
+              <thead>
+                <tr><th>Step</th><th>SQLZoo URL</th><th>Complete</th><th>What you are practising</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>SELECT basics</td><td><a href="https://sqlzoo.net/wiki/SELECT_basics">SELECT_basics</a></td><td>All questions in the tutorial.</td><td>SELECT, FROM, WHERE with basic conditions.</td></tr>
+                <tr><td>SELECT from World (columns and filtering)</td><td><a href="https://sqlzoo.net/wiki/SELECT_from_WORLD_Tutorial">SELECT_from_WORLD_Tutorial</a></td><td>Questions 1 through 8.</td><td>Selecting specific columns, WHERE with text and numeric conditions.</td></tr>
+                <tr><td>SELECT from World (sorting)</td><td><a href="https://sqlzoo.net/wiki/SELECT_from_WORLD_Tutorial">SELECT_from_WORLD_Tutorial</a></td><td>Question 9.</td><td>ORDER BY ascending and descending.</td></tr>
+                <tr><td>SUM and COUNT</td><td><a href="https://sqlzoo.net/wiki/SUM_and_COUNT">SUM_and_COUNT</a></td><td>All questions in the tutorial.</td><td>COUNT(), SUM(), AVG(), GROUP BY.</td></tr>
+                <tr><td>The JOIN operation</td><td><a href="https://sqlzoo.net/wiki/The_JOIN_operation">The_JOIN_operation</a></td><td>Questions 1 through 6.</td><td>INNER JOIN on a shared column, combining two tables.</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="plain-english">Do these in order. The route is designed to keep the SQL load manageable.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="note-section" id="failures">
+      <div class="note-eyebrow"><span class="note-num">NOTE 02</span><h2 class="note-heading">When a Query Fails</h2><span class="note-rule"></span></div>
+      <div class="stack">
+        <div class="panel rule">
+          <header><span class="tag">First response</span><span class="sep" aria-hidden="true"> - </span><span class="type">read the error message before changing anything</span></header>
+          <div class="body">
+            <p>At this level, SQL errors are almost always one of four things.</p>
+            <table>
+              <thead>
+                <tr><th>Common failure</th><th>What to check</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Wrong column name</td><td>Check the exact spelling against the table shown.</td></tr>
+                <tr><td>Missing single quote around a text value</td><td>Text values need single quotes. Numbers do not.</td></tr>
+                <tr><td>Wrong table name</td><td>Read the SQLZoo page carefully and check the table heading.</td></tr>
+                <tr><td>GROUP BY mismatch</td><td>Check whether a SELECT column is neither grouped nor aggregated.</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="plain-english">Fix the actual error, rerun, move on. Do not thrash around randomly rewriting the whole query.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="note-section" id="done">
+      <div class="note-eyebrow"><span class="note-num">NOTE 03</span><h2 class="note-heading">When You Are Done</h2><span class="note-rule"></span></div>
+      <div class="stack">
+        <div class="panel resolution">
+          <header><span class="tag">Boundary</span><span class="sep" aria-hidden="true"> - </span><span class="type">what completion means here</span></header>
+          <div class="body">
+            <p>You do not need every SQLZoo tutorial. You need the sections listed above because they cover the five concepts the bootcamp uses in Module 5.</p>
+            <p>By the end of this list, you will have written queries covering selection, filtering, sorting, aggregation, grouping, and joining.</p>
+          </div>
+          <div class="plain-english">Finish the listed route, not the entire site.</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="chapter-nav">
+      <a class="chapter-next" href="../index.html">
+        <span class="label">Return to</span>
+        <span class="title">Main Shelf</span>
+        <span class="arrow">&rarr;</span>
+      </a>
+    </div>
+
+    <p class="footer">Created as a supplementary SQL practice route for the Learn Python Data Preparation bookshelf.</p>
+  </main>
+</article>
+</body>
+</html>

@@ -396,7 +396,7 @@ th {
       </div>
       <div class="stack">
         <div class="panel resolution">
-          <header><span class="tag">Plain English</span><span class="type">empty table slots</span></header>
+          <header><span class="tag">Plain English</span><span class="sep" aria-hidden="true"> - </span><span class="type">empty table slots</span></header>
           <div class="body">
             <p>Missing data means a cell in the table has no value. The table has a slot for that value, but nothing was recorded there.</p>
             <p>pandas marks these empty slots with <span class="mono">NaN</span>.</p>
@@ -404,20 +404,20 @@ th {
           <div class="plain-english">A missing value is an empty slot, not a hidden number.</div>
         </div>
         <div class="panel translation">
-          <header><span class="tag">NaN</span><span class="type">not zero</span></header>
+          <header><span class="tag">NaN</span><span class="sep" aria-hidden="true"> - </span><span class="type">not zero</span></header>
           <div class="body">
             <p><span class="mono">NaN</span> means <strong>Not a Number</strong>. It is a placeholder that signals the absence of a value.</p>
             <p><span class="mono">0</span> is a real value. <span class="mono">NaN</span> means nothing was recorded.</p>
           </div>
         </div>
         <div class="panel rule">
-          <header><span class="tag">Why it matters</span><span class="type">analysis risk</span></header>
+          <header><span class="tag">Why it matters</span><span class="sep" aria-hidden="true"> - </span><span class="type">analysis risk</span></header>
           <div class="body">
             <p>Commands that calculate averages, counts, or summaries may produce wrong results or errors if missing values are included without being handled first.</p>
           </div>
         </div>
         <div class="panel resolution">
-          <header><span class="tag">Three analyst choices</span><span class="type">find, remove, fill</span></header>
+          <header><span class="tag">Three analyst choices</span><span class="sep" aria-hidden="true"> - </span><span class="type">find, remove, fill</span></header>
           <div class="body legend">
             <p><strong>1. Find</strong> how many values are missing and where they are.</p>
             <p><strong>2. Remove</strong> rows that contain missing values.</p>
@@ -436,7 +436,7 @@ th {
       </div>
       <div class="stack">
         <div class="panel resolution">
-          <header><span class="tag">Missing data and cleaning</span><span class="type">Block 3 core moves</span></header>
+          <header><span class="tag">Missing data and cleaning</span><span class="sep" aria-hidden="true"> - </span><span class="type">Block 3 core moves</span></header>
           <div class="body">
             <div class="command-grid">
               <div class="command-box">
@@ -481,20 +481,20 @@ th {
       </div>
       <div class="stack">
         <div class="panel resolution">
-          <header><span class="tag">Command 1</span><span class="type">count missing values</span></header>
+          <header><span class="tag">Command 1</span><span class="sep" aria-hidden="true"> - </span><span class="type">count missing values</span></header>
           <div class="body">
             <p><span class="mono">df.isnull().sum()</span> solves the first cleaning question: how many missing values are in each column?</p>
             <p>It performs two separate operations in a chain. First it marks missing cells as <span class="mono">True</span>. Then it counts those <span class="mono">True</span> values column by column.</p>
           </div>
         </div>
         <div class="panel code">
-          <header><span class="tag">Code breakdown</span><span class="type">isnull then sum</span></header>
+          <header><span class="tag">Code breakdown</span><span class="sep" aria-hidden="true"> - </span><span class="type">isnull then sum</span></header>
           <div class="body">
             <pre><span class="part-var">df</span><span class="part-outer">.isnull()</span><span class="part-inner">.sum()</span></pre>
           </div>
         </div>
         <div class="panel translation">
-          <header><span class="tag">What each part means</span><span class="type">missing count</span></header>
+          <header><span class="tag">What each part means</span><span class="sep" aria-hidden="true"> - </span><span class="type">missing count</span></header>
           <div class="body legend">
             <p><span class="part-var">df</span> = the table variable.</p>
             <p><span class="part-outer">.isnull()</span> = a pandas method that tests every cell. It returns <span class="mono">True</span> if the cell is empty and <span class="mono">False</span> if it has a value.</p>
@@ -503,20 +503,20 @@ th {
         </div>
 
         <div class="panel resolution">
-          <header><span class="tag">Command 2</span><span class="type">remove rows with any missing value</span></header>
+          <header><span class="tag">Command 2</span><span class="sep" aria-hidden="true"> - </span><span class="type">remove rows with any missing value</span></header>
           <div class="body">
             <p><span class="mono">df.dropna()</span> removes any row containing at least one missing value.</p>
             <p>The original table is not changed unless you store the result back into a variable.</p>
           </div>
         </div>
         <div class="panel code">
-          <header><span class="tag">Code breakdown</span><span class="type">drop missing rows</span></header>
+          <header><span class="tag">Code breakdown</span><span class="sep" aria-hidden="true"> - </span><span class="type">drop missing rows</span></header>
           <div class="body">
             <pre><span class="part-var">df</span><span class="part-outer">.dropna()</span></pre>
           </div>
         </div>
         <div class="panel translation">
-          <header><span class="tag">What each part means</span><span class="type">dropna</span></header>
+          <header><span class="tag">What each part means</span><span class="sep" aria-hidden="true"> - </span><span class="type">dropna</span></header>
           <div class="body legend">
             <p><span class="part-var">df</span> = the table variable.</p>
             <p><span class="part-outer">.dropna()</span> = a pandas method that removes rows containing missing values.</p>
@@ -524,33 +524,33 @@ th {
           </div>
         </div>
         <div class="panel rule">
-          <header><span class="tag">Careful</span><span class="type">may remove too much</span></header>
+          <header><span class="tag">Careful</span><span class="sep" aria-hidden="true"> - </span><span class="type">may remove too much</span></header>
           <div class="body">
             <p><span class="mono">dropna()</span> without <span class="mono">subset</span> can remove more rows than intended because one missing value anywhere in the row is enough.</p>
           </div>
         </div>
 
         <div class="panel resolution">
-          <header><span class="tag">Command 3</span><span class="type">remove rows missing one column</span></header>
+          <header><span class="tag">Command 3</span><span class="sep" aria-hidden="true"> - </span><span class="type">remove rows missing one column</span></header>
           <div class="body">
             <p><span class="mono">df.dropna(subset=["column"])</span> removes rows only when the named column is missing.</p>
             <p>This is narrower than <span class="mono">df.dropna()</span> because it checks only the column or columns listed in <span class="mono">subset</span>.</p>
           </div>
         </div>
         <div class="panel resolution">
-          <header><span class="tag">Dummy column name</span><span class="type">neutral example</span></header>
+          <header><span class="tag">Dummy column name</span><span class="sep" aria-hidden="true"> - </span><span class="type">neutral example</span></header>
           <div class="body">
             <p>The column name shelf is a dummy placeholder used only to demonstrate the syntax. In your own work, shelf would be replaced with the name of the column you are actually checking for missing values.</p>
           </div>
         </div>
         <div class="panel code">
-          <header><span class="tag">Code breakdown</span><span class="type">subset drop</span></header>
+          <header><span class="tag">Code breakdown</span><span class="sep" aria-hidden="true"> - </span><span class="type">subset drop</span></header>
           <div class="body">
             <pre><span class="part-var">df</span><span class="part-outer">.dropna(</span><span class="part-inner">subset=</span><span class="part-core">["shelf"]</span><span class="part-outer">)</span></pre>
           </div>
         </div>
         <div class="panel translation">
-          <header><span class="tag">What each part means</span><span class="type">subset</span></header>
+          <header><span class="tag">What each part means</span><span class="sep" aria-hidden="true"> - </span><span class="type">subset</span></header>
           <div class="body legend">
             <p><span class="part-var">df</span> = the table variable.</p>
             <p><span class="part-outer">.dropna(...)</span> = the method that removes rows with missing values.</p>
@@ -560,20 +560,20 @@ th {
         </div>
 
         <div class="panel resolution">
-          <header><span class="tag">Command 4</span><span class="type">fill missing values</span></header>
+          <header><span class="tag">Command 4</span><span class="sep" aria-hidden="true"> - </span><span class="type">fill missing values</span></header>
           <div class="body">
             <p><span class="mono">df.fillna(value)</span> replaces every <span class="mono">NaN</span> in the table with the value given inside the brackets.</p>
             <p>The replacement could be a number such as <span class="mono">0</span>, a word such as <span class="mono">"Unknown"</span>, or a calculated value such as a column median.</p>
           </div>
         </div>
         <div class="panel code">
-          <header><span class="tag">Code breakdown</span><span class="type">table-wide fill</span></header>
+          <header><span class="tag">Code breakdown</span><span class="sep" aria-hidden="true"> - </span><span class="type">table-wide fill</span></header>
           <div class="body">
             <pre><span class="part-var">df</span><span class="part-outer">.fillna(</span><span class="part-core">"Unknown"</span><span class="part-outer">)</span></pre>
           </div>
         </div>
         <div class="panel translation">
-          <header><span class="tag">What each part means</span><span class="type">fillna</span></header>
+          <header><span class="tag">What each part means</span><span class="sep" aria-hidden="true"> - </span><span class="type">fillna</span></header>
           <div class="body legend">
             <p><span class="part-var">df</span> = the table variable.</p>
             <p><span class="part-outer">.fillna()</span> = a pandas method that replaces missing values.</p>
@@ -581,27 +581,27 @@ th {
           </div>
         </div>
         <div class="panel rule">
-          <header><span class="tag">Analysis decision</span><span class="type">not just syntax</span></header>
+          <header><span class="tag">Analysis decision</span><span class="sep" aria-hidden="true"> - </span><span class="type">not just syntax</span></header>
           <div class="body">
             <p>Choosing a fill value is an analytical decision. Filling with <span class="mono">0</span> means something different from filling with a median or the word <span class="mono">"Unknown"</span>.</p>
           </div>
         </div>
 
         <div class="panel resolution">
-          <header><span class="tag">Command 5</span><span class="type">make a safe copy</span></header>
+          <header><span class="tag">Command 5</span><span class="sep" aria-hidden="true"> - </span><span class="type">make a safe copy</span></header>
           <div class="body">
             <p><span class="mono">df.copy()</span> creates a completely separate copy of the table stored in a new variable.</p>
             <p>Changes to the copy do not affect the original table.</p>
           </div>
         </div>
         <div class="panel code">
-          <header><span class="tag">Code breakdown</span><span class="type">copy table</span></header>
+          <header><span class="tag">Code breakdown</span><span class="sep" aria-hidden="true"> - </span><span class="type">copy table</span></header>
           <div class="body">
             <pre><span class="part-inner">df_clean</span> <span class="part-note">=</span> <span class="part-var">df</span><span class="part-outer">.copy()</span></pre>
           </div>
         </div>
         <div class="panel translation">
-          <header><span class="tag">What each part means</span><span class="type">copy</span></header>
+          <header><span class="tag">What each part means</span><span class="sep" aria-hidden="true"> - </span><span class="type">copy</span></header>
           <div class="body legend">
             <p><span class="part-inner">df_clean</span> = the new variable name for the working copy.</p>
             <p><span class="part-note">=</span> = stores the result on the right under the name on the left.</p>
@@ -620,20 +620,20 @@ th {
       </div>
       <div class="stack">
         <div class="panel resolution">
-          <header><span class="tag">Method chaining</span><span class="type">one result feeds the next</span></header>
+          <header><span class="tag">Method chaining</span><span class="sep" aria-hidden="true"> - </span><span class="type">one result feeds the next</span></header>
           <div class="body">
             <p>A dot connects one operation to the next. The result of the left operation is passed directly into the right operation without being stored first.</p>
             <p><span class="mono">df.isnull().sum()</span> is a chain of two operations.</p>
           </div>
         </div>
         <div class="panel code">
-          <header><span class="tag">Code breakdown</span><span class="type">chain</span></header>
+          <header><span class="tag">Code breakdown</span><span class="sep" aria-hidden="true"> - </span><span class="type">chain</span></header>
           <div class="body">
             <pre><span class="part-var">df</span><span class="part-outer">.isnull()</span><span class="part-inner">.sum()</span></pre>
           </div>
         </div>
         <div class="panel translation">
-          <header><span class="tag">What each step produces</span><span class="type">left to right</span></header>
+          <header><span class="tag">What each step produces</span><span class="sep" aria-hidden="true"> - </span><span class="type">left to right</span></header>
           <div class="body legend">
             <p><span class="part-var">df</span> = starts with the original table.</p>
             <p><span class="part-outer">df.isnull()</span> = produces a full True/False table.</p>
@@ -651,45 +651,45 @@ th {
       </div>
       <div class="stack">
         <div class="panel rule">
-          <header><span class="tag">Principle</span><span class="type">keep the original</span></header>
+          <header><span class="tag">Principle</span><span class="sep" aria-hidden="true"> - </span><span class="type">keep the original</span></header>
           <div class="body">
             <p>Always make a copy of the original table before cleaning it. Store the cleaned version under a different variable name.</p>
             <p>If cleaning removes rows that turn out to be needed, the original <span class="mono">df</span> is still available.</p>
           </div>
         </div>
         <div class="panel resolution">
-          <header><span class="tag">Line 1</span><span class="type">make the copy</span></header>
+          <header><span class="tag">Line 1</span><span class="sep" aria-hidden="true"> - </span><span class="type">make the copy</span></header>
           <div class="body">
             <p><span class="mono">df_clean = df.copy()</span> makes a separate working copy called <span class="mono">df_clean</span>.</p>
           </div>
         </div>
         <div class="panel code">
-          <header><span class="tag">Code breakdown</span><span class="type">copy first</span></header>
+          <header><span class="tag">Code breakdown</span><span class="sep" aria-hidden="true"> - </span><span class="type">copy first</span></header>
           <div class="body">
             <pre><span class="part-inner">df_clean</span> <span class="part-note">=</span> <span class="part-var">df</span><span class="part-outer">.copy()</span></pre>
           </div>
         </div>
         <div class="panel resolution">
-          <header><span class="tag">Line 2</span><span class="type">clean the copy</span></header>
+          <header><span class="tag">Line 2</span><span class="sep" aria-hidden="true"> - </span><span class="type">clean the copy</span></header>
           <div class="body">
             <p><span class="mono">df_clean = df_clean.dropna(subset=["shelf"])</span> removes rows from the working copy when the <span class="mono">shelf</span> column is missing.</p>
           </div>
         </div>
         <div class="panel code">
-          <header><span class="tag">Code breakdown</span><span class="type">clean copy</span></header>
+          <header><span class="tag">Code breakdown</span><span class="sep" aria-hidden="true"> - </span><span class="type">clean copy</span></header>
           <div class="body">
             <pre><span class="part-inner">df_clean</span> <span class="part-note">=</span> <span class="part-inner">df_clean</span><span class="part-outer">.dropna(</span><span class="part-core">subset=["shelf"]</span><span class="part-outer">)</span></pre>
           </div>
         </div>
         <div class="panel code">
-          <header><span class="tag">Full pattern</span><span class="type">shown last</span></header>
+          <header><span class="tag">Full pattern</span><span class="sep" aria-hidden="true"> - </span><span class="type">shown last</span></header>
           <div class="body">
             <pre><span class="part-inner">df_clean</span> <span class="part-note">=</span> <span class="part-var">df</span><span class="part-outer">.copy()</span>
 <span class="part-inner">df_clean</span> <span class="part-note">=</span> <span class="part-inner">df_clean</span><span class="part-outer">.dropna(</span><span class="part-core">subset=["shelf"]</span><span class="part-outer">)</span></pre>
           </div>
         </div>
         <div class="panel translation">
-          <header><span class="tag">Before and after</span><span class="type">safe cleaning</span></header>
+          <header><span class="tag">Before and after</span><span class="sep" aria-hidden="true"> - </span><span class="type">safe cleaning</span></header>
           <div class="body legend">
             <p><strong>Before:</strong> cleaning applied directly to <span class="mono">df</span> means the original data may be gone from the current session.</p>
             <p><strong>After:</strong> cleaning applied to <span class="mono">df_clean</span> means <span class="mono">df</span> is always available for comparison or fallback.</p>
@@ -706,7 +706,7 @@ th {
       </div>
       <div class="stack">
         <div class="panel translation">
-          <header><span class="tag">Block 2 to Block 3</span><span class="type">same logic, new target</span></header>
+          <header><span class="tag">Block 2 to Block 3</span><span class="sep" aria-hidden="true"> - </span><span class="type">same logic, new target</span></header>
           <div class="body">
             <table>
               <thead>
@@ -737,7 +737,7 @@ th {
           </div>
         </div>
         <div class="panel resolution">
-          <header><span class="tag">Keep this sentence</span><span class="type">mental model</span></header>
+          <header><span class="tag">Keep this sentence</span><span class="sep" aria-hidden="true"> - </span><span class="type">mental model</span></header>
           <div class="body">
             <p><span class="mono">Cleaning is not just fixing data. It is making a careful, reversible decision about what to do with missing values.</span></p>
           </div>
