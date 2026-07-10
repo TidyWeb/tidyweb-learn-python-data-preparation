@@ -48,7 +48,7 @@ What to look for: `user.name` and `user.email` should appear with the values you
 ### Step 4
 
 ```bash
-cd /home/Phil/C&C/Learn_Python_Data
+cd <path-to-your-Learn_Python_Data-folder>
 ```
 
 What it does: moves you into your working project folder.

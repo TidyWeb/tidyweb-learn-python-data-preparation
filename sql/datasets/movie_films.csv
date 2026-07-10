@@ -1,0 +1,13 @@
+film_id,title,director,genre,release_year,runtime_minutes,imdb_rating,box_office_m
+1,The Dark Knight,Christopher Nolan,Action,2008,152,9.0,1006
+2,Arrival,Denis Villeneuve,Science Fiction,2016,116,7.9,203
+3,Spirited Away,Hayao Miyazaki,Animation,2001,125,8.6,395
+4,The Matrix,The Wachowskis,Science Fiction,1999,136,8.7,467
+5,Parasite,Bong Joon-ho,Thriller,2019,132,8.5,262
+6,Mad Max: Fury Road,George Miller,Action,2015,120,8.1,380
+7,The Grand Budapest Hotel,Wes Anderson,Comedy,2014,99,8.1,173
+8,Interstellar,Christopher Nolan,Science Fiction,2014,169,8.7,733
+9,Whiplash,Damien Chazelle,Drama,2014,106,8.5,49
+10,The Godfather,Francis Ford Coppola,Crime,1972,175,9.2,250
+11,Blade Runner 2049,Denis Villeneuve,Science Fiction,2017,164,8.0,268
+12,The Lord of the Rings: The Fellowship of the Ring,Peter Jackson,Fantasy,2001,178,8.9,898

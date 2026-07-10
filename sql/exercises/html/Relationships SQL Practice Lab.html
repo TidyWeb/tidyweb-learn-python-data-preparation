@@ -1,0 +1,831 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Relationships SQL Practice Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f4f1eb;
+  --paper:#fffdfa;
+  --ink:#2d2a26;
+  --muted:#6f675f;
+  --line:#ddd2c7;
+  --plum:#76406c;
+  --copper:#b06a2b;
+  --forest:#47644d;
+  --slate:#17212b;
+  --soft-plum:#f7edf7;
+  --shadow:0 18px 46px rgba(30,42,53,.14);
+  --code:#101821;
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body {
+  background:
+    radial-gradient(circle at top left, rgba(118,64,108,.10), transparent 30%),
+    radial-gradient(circle at top right, rgba(176,106,43,.09), transparent 24%),
+    linear-gradient(180deg, #faf7f2 0%, var(--bg) 100%);
+  color:var(--ink);
+  font-family:'IBM Plex Sans', sans-serif;
+}
+.page {
+  width:min(1280px, calc(100vw - 28px));
+  margin:24px auto 56px;
+  display:grid;
+  grid-template-columns:260px minmax(0, 1fr);
+  border:1px solid var(--line);
+  background:var(--paper);
+  box-shadow:var(--shadow);
+}
+.rail {
+  background:var(--slate);
+  color:#dbe7ef;
+  padding:28px 22px 34px;
+  position:sticky;
+  top:0;
+  height:100vh;
+  overflow-y:auto;
+}
+.rail h1 {
+  font-family:'Atkinson Hyperlegible', sans-serif;
+  font-size:24px;
+  line-height:1.1;
+  margin-bottom:10px;
+  color:#fff;
+}
+.rail p {
+  color:#9eb2c1;
+  font-size:13px;
+  line-height:1.65;
+  margin-bottom:16px;
+}
+.mini-card,
+.rail a,
+.prompt-card,
+.panel,
+.table-wrap,
+.editor-wrap,
+.result-wrap {
+  border-radius:18px;
+}
+.mini-card {
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  padding:13px 14px;
+  margin-bottom:16px;
+}
+.mono,
+.mini-label,
+.rail-nav-title,
+.schema-pill,
+.button,
+textarea,
+pre,
+th {
+  font-family:'IBM Plex Mono', monospace;
+}
+.mini-label,
+.rail-nav-title,
+.schema-pill {
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.mini-label { color:#8fc6d0; margin-bottom:6px; display:block; }
+.mini-card strong { display:block; color:#fff; line-height:1.4; font-size:14px; }
+.rail-nav { margin-top:18px; }
+.rail-nav-title { color:#8ea4b5; margin-bottom:10px; }
+.rail a {
+  display:block;
+  color:#dbe7ef;
+  text-decoration:none;
+  padding:9px 10px;
+  border:1px solid rgba(255,255,255,.06);
+  background:rgba(255,255,255,.03);
+  margin-bottom:10px;
+  line-height:1.35;
+  font-size:13px;
+}
+.rail a:hover { color:#fff; }
+main { padding:38px 44px 72px; }
+.hero {
+  border:1px solid var(--line);
+  background:linear-gradient(135deg, rgba(118,64,108,.08), rgba(176,106,43,.10)), var(--paper);
+  border-radius:26px;
+  padding:32px 32px 26px;
+  margin-bottom:24px;
+}
+.hero .eyebrow {
+  color:var(--plum);
+  font:600 11px 'IBM Plex Mono', monospace;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  margin-bottom:10px;
+}
+.hero h2 {
+  font-family:'Atkinson Hyperlegible', sans-serif;
+  color:var(--plum);
+  font-size:40px;
+  line-height:1.05;
+  margin-bottom:12px;
+}
+.hero p {
+  color:var(--muted);
+  line-height:1.75;
+  max-width:72ch;
+  font-size:16px;
+}
+.hero-grid,
+.top-grid,
+.prompt-grid {
+  display:grid;
+  gap:16px;
+}
+.hero-grid {
+  grid-template-columns:1.1fr .9fr;
+  margin-top:18px;
+}
+.panel {
+  border:1px solid var(--line);
+  background:#fff;
+  padding:18px;
+}
+.panel h3,
+.section-head h3 {
+  font-family:'Atkinson Hyperlegible', sans-serif;
+  color:var(--plum);
+  font-size:22px;
+  margin-bottom:10px;
+}
+.panel p,
+.prompt-card p,
+.section-sub {
+  color:var(--muted);
+  line-height:1.65;
+  font-size:15px;
+}
+.panel ul,
+.prompt-card ul {
+  padding-left:18px;
+  display:grid;
+  gap:8px;
+  line-height:1.55;
+}
+.prompt-card ul {
+  padding-left:0;
+  list-style:none;
+  gap:10px;
+}
+.prompt-item {
+  display:grid;
+  grid-template-columns:20px minmax(0, 1fr);
+  gap:10px;
+  align-items:start;
+  text-wrap:pretty;
+  font-size:14px;
+}
+.prompt-item span:last-child {
+  min-width:0;
+}
+.keep-together {
+  white-space:nowrap;
+}
+.prompt-check {
+  width:18px;
+  height:18px;
+  border:2px solid #c5b9af;
+  border-radius:6px;
+  background:#fff;
+  position:relative;
+  margin-top:1px;
+  transition:transform .18s ease, background-color .18s ease, border-color .18s ease, box-shadow .18s ease;
+}
+.prompt-item.is-complete {
+  color:var(--forest);
+  font-weight:600;
+}
+.prompt-item.is-complete .prompt-check {
+  background:var(--forest);
+  border-color:var(--forest);
+  box-shadow:0 0 0 4px rgba(67,100,77,.14);
+}
+.prompt-item.is-complete .prompt-check::after {
+  content:"";
+  position:absolute;
+  left:4px;
+  top:1px;
+  width:5px;
+  height:9px;
+  border:solid #fff;
+  border-width:0 2px 2px 0;
+  transform:rotate(45deg);
+}
+.prompt-item.just-completed .prompt-check {
+  animation:prompt-ping .45s ease-out;
+}
+@keyframes prompt-ping {
+  0% { transform:scale(1); box-shadow:0 0 0 0 rgba(67,100,77,.32); }
+  55% { transform:scale(1.12); box-shadow:0 0 0 12px rgba(67,100,77,0); }
+  100% { transform:scale(1); box-shadow:0 0 0 4px rgba(67,100,77,.14); }
+}
+.schema-pills {
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:12px;
+}
+.schema-pill {
+  display:inline-block;
+  padding:7px 10px;
+  border-radius:999px;
+  background:var(--soft-plum);
+  color:var(--plum);
+  border:1px solid var(--line);
+}
+.section {
+  margin-top:28px;
+}
+.section-head {
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-bottom:14px;
+}
+.section-head h3 { margin-bottom:0; }
+.rule { flex:1; height:1px; background:var(--line); }
+.top-grid {
+  grid-template-columns:repeat(2, minmax(0, 1fr));
+}
+.table-wrap,
+.editor-wrap,
+.result-wrap {
+  border:1px solid var(--line);
+  background:#fff;
+  overflow:hidden;
+}
+.table-head,
+.editor-head,
+.result-head {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  padding:12px 16px;
+  border-bottom:1px solid var(--line);
+  background:#fbf8f5;
+}
+.table-head strong,
+.editor-head strong,
+.result-head strong {
+  color:var(--plum);
+}
+.table-scroll { overflow:auto; }
+table {
+  width:100%;
+  border-collapse:collapse;
+  min-width:980px;
+}
+th, td {
+  border-bottom:1px solid var(--line);
+  padding:12px 14px;
+  text-align:left;
+}
+th {
+  background:#fbf8f5;
+  color:var(--plum);
+  font-size:12px;
+  letter-spacing:.05em;
+}
+td { font-size:15px; }
+.schema-block {
+  padding:16px;
+  border-top:1px solid var(--line);
+  background:linear-gradient(180deg, #fdfaf7 0%, #faf6f1 100%);
+}
+pre {
+  background:var(--code);
+  color:#e7eef5;
+  padding:16px;
+  border-radius:14px;
+  overflow:auto;
+  font-size:13px;
+  line-height:1.7;
+}
+.prompt-grid { grid-template-columns:repeat(3, minmax(0, 1fr)); }
+.prompt-card {
+  border:1px solid var(--line);
+  background:linear-gradient(180deg, #ffffff 0%, #fcfbfa 100%);
+  padding:16px;
+}
+.prompt-card:nth-child(1) { border-top:6px solid var(--plum); }
+.prompt-card:nth-child(2) { border-top:6px solid var(--copper); }
+.prompt-card:nth-child(3) { border-top:6px solid var(--forest); }
+.prompt-card .prompt-label {
+  color:var(--muted);
+  margin-bottom:8px;
+  display:block;
+  font:600 11px 'IBM Plex Mono', monospace;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.habit-callout {
+  border:1px solid #dbcfc6;
+  border-left:6px solid var(--copper);
+  background:linear-gradient(135deg, #fffaf6 0%, #f8f0e9 100%);
+  padding:16px 18px;
+  margin-bottom:16px;
+  border-radius:18px;
+}
+.habit-callout strong {
+  display:block;
+  margin-bottom:6px;
+  color:var(--plum);
+  font-family:'Atkinson Hyperlegible', sans-serif;
+  font-size:18px;
+}
+.habit-callout p {
+  margin:0;
+  color:var(--ink);
+  font-size:15px;
+  line-height:1.65;
+}
+.habit-callout em {
+  color:var(--copper);
+  font-style:italic;
+}
+.button {
+  appearance:none;
+  border:1px solid var(--line);
+  background:#fff;
+  color:var(--plum);
+  padding:9px 12px;
+  border-radius:12px;
+  cursor:pointer;
+  font-size:12px;
+  font-weight:600;
+}
+.button.primary {
+  background:var(--plum);
+  color:#fff;
+  border-color:var(--plum);
+}
+.button:hover { transform:translateY(-1px); }
+textarea {
+  width:100%;
+  min-height:190px;
+  border:0;
+  padding:18px;
+  resize:vertical;
+  font-size:15px;
+  line-height:1.7;
+  background:var(--code);
+  color:#e8eef4;
+}
+.editor-note,
+.status {
+  padding:12px 16px;
+  border-top:1px solid var(--line);
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.5;
+}
+.status.error {
+  color:#8a2230;
+  background:#fff2f4;
+}
+.status.ok {
+  color:#215f3f;
+  background:#f0fbf4;
+}
+.result-body,
+.empty-state {
+  padding:16px;
+}
+.empty-state { color:var(--muted); }
+.footer {
+  margin-top:20px;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.6;
+}
+@media (max-width: 1060px) {
+  .page { grid-template-columns:1fr; }
+  .rail { display:none; }
+  main { padding:28px 20px 56px; }
+  .hero-grid,
+  .top-grid,
+  .prompt-grid { grid-template-columns:1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .prompt-check {
+    transition:none;
+  }
+  .prompt-item.just-completed .prompt-check {
+    animation:none;
+  }
+}
+</style>
+</head>
+<body>
+<article class="page">
+  <aside class="rail">
+    <h1>Relationships SQL Lab</h1>
+    <p>A two-table lab for connecting records and deciding what should happen when a match is missing.</p>
+
+    <div class="mini-card">
+      <span class="mini-label">Dataset</span>
+      <strong>Two tables: <span class="mono">films</span> and <span class="mono">studios</span></strong>
+    </div>
+
+    <div class="mini-card">
+      <span class="mini-label">Best For</span>
+      <strong><span class="mono">INNER JOIN</span>, <span class="mono">LEFT JOIN</span>, <span class="mono">ON</span>, and <span class="mono">IS NULL</span>.</strong>
+    </div>
+
+    <div class="rail-nav">
+      <div class="rail-nav-title">Jump To</div>
+      <a href="#dataset">Dataset and Schema</a>
+      <a href="#prompts">Practice Prompts</a>
+      <a href="#lab">Live SQL Box</a>
+    </div>
+  </aside>
+
+  <main>
+    <section class="hero">
+      <div class="eyebrow">Practice Lab</div>
+      <h2>Relationships SQL Practice</h2>
+      <p>This is the point where SQL stops being one flat table. The key question is not just how to join: it is whether a film with no studio match should disappear or stay visible with a missing value.</p>
+
+      <div class="hero-grid">
+        <div class="panel">
+          <h3>What This Lab Is For</h3>
+          <ul>
+            <li>Match a film to its studio through the shared <span class="mono">studio_id</span>.</li>
+            <li>See the difference between keeping only matches and keeping every film.</li>
+            <li>Find the rows that do not have a match using <span class="mono">IS NULL</span>.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="dataset">
+      <div class="section-head">
+        <h3>Dataset And Schema</h3>
+        <div class="rule"></div>
+      </div>
+
+      <div class="top-grid">
+        <div class="table-wrap">
+          <div class="table-head">
+            <strong>Visible Data Table: <span class="mono">films</span> <span class="mono">(bridge: studio_id)</span></strong>
+            <span class="section-sub">Keep this in view while you write queries.</span>
+          </div>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>film_id</th><th>title</th><th>genre</th><th>studio_id</th>
+                </tr>
+              </thead>
+              <tbody id="source-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <div class="table-head">
+            <strong>Visible Data Table: <span class="mono">studios</span> <span class="mono">(bridge: studio_id)</span></strong>
+            <span class="section-sub">Match this column to <span class="mono">films.studio_id</span>.</span>
+          </div>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>studio_id</th><th>studio_name</th><th>country</th>
+                </tr>
+              </thead>
+              <tbody id="studios-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="schema-block">
+        <div class="section-head">
+          <h3>SQL Used To Build The Table</h3>
+          <div class="rule"></div>
+        </div>
+        <pre id="schema-sql"></pre>
+      </div>
+
+      <div class="panel" style="margin-top:16px;">
+        <h3>Read This Like A Beginner</h3>
+        <p>If the prompt looks busy, strip it back:</p>
+        <ul>
+          <li>Which column is the bridge between these tables?</li>
+          <li>Should a film with no studio match disappear, or remain visible?</li>
+          <li>If it should remain, am I using <span class="mono">LEFT JOIN</span> from <span class="mono">films</span>?</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section" id="prompts">
+      <div class="section-head">
+        <h3>Practice Prompts</h3>
+        <div class="rule"></div>
+      </div>
+      <div class="prompt-grid">
+        <div class="prompt-card">
+          <span class="prompt-label">Match The Tables</span>
+          <p>Start with rows that match:</p>
+          <ul>
+            <li class="prompt-item" data-prompt-id="inner-title-studio"><span class="prompt-check" aria-hidden="true"></span><span>Show <span class="mono">title</span> and <span class="mono">studio_name</span> for films that have a matching studio.</span></li>
+            <li class="prompt-item" data-prompt-id="inner-genre-country"><span class="prompt-check" aria-hidden="true"></span><span>Show <span class="mono">title</span>, <span class="mono">genre</span>, and the studio’s <span class="mono">country</span> for matching records.</span></li>
+          </ul>
+        </div>
+        <div class="prompt-card">
+          <span class="prompt-label">Keep Missing Matches</span>
+          <p>Now keep every film:</p>
+          <ul>
+            <li class="prompt-item" data-prompt-id="left-title-studio"><span class="prompt-check" aria-hidden="true"></span><span>Show every film’s <span class="mono">title</span> and its <span class="mono">studio_name</span>, keeping films with no studio match.</span></li>
+            <li class="prompt-item" data-prompt-id="left-title-country"><span class="prompt-check" aria-hidden="true"></span><span>Show every film’s <span class="mono">title</span> and studio <span class="mono">country</span>, keeping unmatched films.</span></li>
+          </ul>
+        </div>
+        <div class="prompt-card">
+          <span class="prompt-label">Find The Gap</span>
+          <p>Finally inspect the missing relationship:</p>
+          <ul>
+            <li class="prompt-item" data-prompt-id="missing-studio"><span class="prompt-check" aria-hidden="true"></span><span>Show the <span class="mono">title</span> of films with no matching studio.</span></li>
+            <li class="prompt-item" data-prompt-id="studio-without-film"><span class="prompt-check" aria-hidden="true"></span><span>Show <span class="mono">studio_name</span> for studios that have no film in this dataset.</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="lab">
+      <div class="section-head">
+        <h3>Live SQL Box</h3>
+        <div class="rule"></div>
+      </div>
+
+      <div class="panel" style="margin-bottom:16px;">
+        <h3>Schema At A Glance</h3>
+        <p>Use <span class="mono">films.studio_id</span> and <span class="mono">studios.studio_id</span> as the bridge columns.</p>
+        <div class="schema-pills">
+          <span class="schema-pill">films.title</span><span class="schema-pill">films.genre</span><span class="schema-pill">films.studio_id</span><span class="schema-pill">studios.studio_name</span><span class="schema-pill">studios.country</span>
+        </div>
+      </div>
+
+      <div class="habit-callout">
+        <strong>Good Habit To Build</strong>
+        <p><em>A good habit to get into is to use <span class="mono">SELECT</span> with named columns by default.</em><br>Keep <span class="mono">SELECT *</span> for prompts that explicitly ask for every column and row.</p>
+      </div>
+
+      <div class="editor-wrap">
+        <div class="editor-head">
+          <strong>Write a query against <span class="mono">films</span> and <span class="mono">studios</span></strong>
+          <div class="editor-tools">
+            <button class="button primary" id="run-query" type="button">Run Query</button>
+            <button class="button" id="reset-query" type="button">Reset Query</button>
+            <button class="button" id="reset-db" type="button">Reset Ticks</button>
+          </div>
+        </div>
+        <textarea id="query-input" spellcheck="false">-- Write your query here.
+-- Use films and studios.</textarea>
+        <div class="editor-note">This box is for read queries only. Start from <span class="mono">films</span> when every film must stay visible.</div>
+        <div class="status" id="status-box">SQL engine loading...</div>
+      </div>
+
+      <div class="result-wrap" style="margin-top:16px;">
+        <div class="result-head">
+          <strong>Query Result</strong>
+          <span class="section-sub">Your answer appears here.</span>
+        </div>
+        <div class="result-body" id="result-box">
+          <div class="empty-state">Run a query to see the result table.</div>
+        </div>
+      </div>
+    </section>
+
+    <p class="footer">This lab practises joining <span class="mono">films</span> and <span class="mono">studios</span>, deciding whether unmatched records should remain, and finding the missing relationships.</p>
+  </main>
+</article>
+
+<script src="https://cdn.jsdelivr.net/npm/sql.js@1.10.3/dist/sql-wasm.js"></script>
+<script>
+const rows = [{ film_id: 1, title: "North Star", genre: "Drama", studio_id: 1 }, { film_id: 2, title: "Paper Moon", genre: "Comedy", studio_id: 2 }, { film_id: 3, title: "Signal Fire", genre: "Science Fiction", studio_id: 1 }, { film_id: 4, title: "The Last Orchard", genre: "Drama", studio_id: null }, { film_id: 5, title: "Wild Current", genre: "Adventure", studio_id: 3 }, { film_id: 6, title: "Quiet Hours", genre: "Drama", studio_id: null }];
+const studios = [{ studio_id: 1, studio_name: "Harbour Pictures", country: "UK" }, { studio_id: 2, studio_name: "Sunset Works", country: "USA" }, { studio_id: 3, studio_name: "Northern Light", country: "Canada" }, { studio_id: 4, studio_name: "Riverstone", country: "Ireland" }];
+
+const seedSQL = `CREATE TABLE studios (studio_id INTEGER PRIMARY KEY, studio_name TEXT NOT NULL, country TEXT NOT NULL);
+CREATE TABLE films (
+  film_id INTEGER PRIMARY KEY, title TEXT NOT NULL, genre TEXT NOT NULL, studio_id INTEGER
+);
+INSERT INTO studios VALUES (1, 'Harbour Pictures', 'UK'), (2, 'Sunset Works', 'USA'), (3, 'Northern Light', 'Canada'), (4, 'Riverstone', 'Ireland');
+INSERT INTO films VALUES (1, 'North Star', 'Drama', 1), (2, 'Paper Moon', 'Comedy', 2), (3, 'Signal Fire', 'Science Fiction', 1), (4, 'The Last Orchard', 'Drama', NULL), (5, 'Wild Current', 'Adventure', 3), (6, 'Quiet Hours', 'Drama', NULL);`;
+
+let SQL;
+let db;
+
+const sourceTableBody = document.getElementById("source-table-body");
+const studiosTableBody = document.getElementById("studios-table-body");
+const schemaBlock = document.getElementById("schema-sql");
+const queryInput = document.getElementById("query-input");
+const statusBox = document.getElementById("status-box");
+const resultBox = document.getElementById("result-box");
+const runQueryButton = document.getElementById("run-query");
+const resetQueryButton = document.getElementById("reset-query");
+const resetDbButton = document.getElementById("reset-db");
+const promptItems = new Map(
+  Array.from(document.querySelectorAll(".prompt-item")).map((item) => [item.dataset.promptId, item])
+);
+const completedPromptIds = new Set();
+const promptDefinitions = [
+  { id: "inner-title-studio", label: "Show matching film titles and studios.", sql: "SELECT films.title, studios.studio_name FROM films INNER JOIN studios ON films.studio_id = studios.studio_id;", orderSensitive: false },
+  { id: "inner-genre-country", label: "Show matching film genres and studio countries.", sql: "SELECT films.title, films.genre, studios.country FROM films INNER JOIN studios ON films.studio_id = studios.studio_id;", orderSensitive: false },
+  { id: "left-title-studio", label: "Keep every film with its studio name.", sql: "SELECT films.title, studios.studio_name FROM films LEFT JOIN studios ON films.studio_id = studios.studio_id;", orderSensitive: false },
+  { id: "left-title-country", label: "Keep every film with its studio country.", sql: "SELECT films.title, studios.country FROM films LEFT JOIN studios ON films.studio_id = studios.studio_id;", orderSensitive: false },
+  { id: "missing-studio", label: "Find films without a studio.", sql: "SELECT films.title FROM films LEFT JOIN studios ON films.studio_id = studios.studio_id WHERE studios.studio_id IS NULL;", orderSensitive: false },
+  { id: "studio-without-film", label: "Find studios without a film.", sql: "SELECT studios.studio_name FROM studios LEFT JOIN films ON studios.studio_id = films.studio_id WHERE films.film_id IS NULL;", orderSensitive: false }
+];
+let promptAnswerKey = new Map();
+
+function renderSourceTable() {
+  sourceTableBody.innerHTML = rows.map((row) => `
+    <tr>
+      <td>${row.film_id}</td><td>${row.title}</td><td>${row.genre}</td><td>${row.studio_id === null ? 'NULL' : row.studio_id}</td>
+    </tr>
+  `).join("");
+  studiosTableBody.innerHTML = studios.map((studio) => `
+    <tr>
+      <td>${studio.studio_id}</td><td>${studio.studio_name}</td><td>${studio.country}</td>
+    </tr>
+  `).join("");
+}
+
+function buildDatabase() {
+  db = new SQL.Database();
+  db.run(seedSQL);
+  buildPromptAnswerKey();
+}
+
+function buildPromptAnswerKey() {
+  promptAnswerKey = new Map(
+    promptDefinitions.map((prompt) => [prompt.id, db.exec(prompt.sql)[0]])
+  );
+}
+
+function renderResults(columns, values) {
+  if (!values.length) {
+    resultBox.innerHTML = '<div class="empty-state">Query ran successfully, but it returned no rows.</div>';
+    return;
+  }
+
+  const head = columns.map((column) => `<th>${column}</th>`).join("");
+  const body = values.map((row) => `<tr>${row.map((value) => `<td>${value === null ? "NULL" : value}</td>`).join("")}</tr>`).join("");
+
+  resultBox.innerHTML = `
+    <div class="table-scroll">
+      <table>
+        <thead><tr>${head}</tr></thead>
+        <tbody>${body}</tbody>
+      </table>
+    </div>
+  `;
+}
+
+function setStatus(message, kind) {
+  statusBox.textContent = message;
+  statusBox.className = `status ${kind || ""}`.trim();
+}
+
+function serialiseValues(values, orderSensitive) {
+  const normalised = values.map((row) => row.map((value) => (value === null ? "NULL" : String(value))));
+  if (orderSensitive) {
+    return JSON.stringify(normalised);
+  }
+  return JSON.stringify(
+    [...normalised].sort((left, right) => JSON.stringify(left).localeCompare(JSON.stringify(right)))
+  );
+}
+
+function resultsMatch(actual, expected, orderSensitive) {
+  if (!actual || !expected) {
+    return false;
+  }
+
+  if (actual.columns.length !== expected.columns.length) {
+    return false;
+  }
+
+  if (actual.columns.some((column, index) => column !== expected.columns[index])) {
+    return false;
+  }
+
+  return serialiseValues(actual.values, orderSensitive) === serialiseValues(expected.values, orderSensitive);
+}
+
+function markPromptComplete(promptId) {
+  const promptItem = promptItems.get(promptId);
+  if (!promptItem || completedPromptIds.has(promptId)) {
+    return;
+  }
+
+  completedPromptIds.add(promptId);
+  promptItem.classList.add("is-complete", "just-completed");
+  window.setTimeout(() => {
+    promptItem.classList.remove("just-completed");
+  }, 500);
+}
+
+function completeMatchingPrompts(result) {
+  const matchedPrompts = [];
+
+  promptDefinitions.forEach((prompt) => {
+    if (completedPromptIds.has(prompt.id)) {
+      return;
+    }
+
+    if (resultsMatch(result, promptAnswerKey.get(prompt.id), prompt.orderSensitive)) {
+      markPromptComplete(prompt.id);
+      matchedPrompts.push(prompt.label);
+    }
+  });
+
+  return matchedPrompts;
+}
+
+function runQuery() {
+  const sql = queryInput.value.trim();
+
+  if (!db) {
+    setStatus("Wait for the SQL engine to finish loading.", "error");
+    return;
+  }
+
+  if (!sql) {
+    setStatus("Write a query first.", "error");
+    return;
+  }
+
+  if (!/^select\b/i.test(sql)) {
+    setStatus("This practice page is for SELECT queries only.", "error");
+    return;
+  }
+
+  try {
+    const result = db.exec(sql);
+    if (!result.length) {
+      resultBox.innerHTML = '<div class="empty-state">Query ran successfully, but it returned no visible result table.</div>';
+      setStatus("Query ran successfully.", "ok");
+      return;
+    }
+
+    renderResults(result[0].columns, result[0].values);
+    const matchedPrompts = completeMatchingPrompts(result[0]);
+    if (matchedPrompts.length) {
+      setStatus(`Query ran successfully. ${matchedPrompts.join(" ")} checked off.`, "ok");
+      return;
+    }
+    setStatus(`Query ran successfully. ${result[0].values.length} row(s) returned.`, "ok");
+  } catch (error) {
+    setStatus(error.message, "error");
+  }
+}
+
+function resetQuery() {
+  queryInput.value = `-- Write your query here.
+-- Use films and studios.`;
+  setStatus("Query box reset.", "");
+}
+
+function resetPromptProgress() {
+  completedPromptIds.clear();
+  promptItems.forEach((item) => {
+    item.classList.remove("is-complete", "just-completed");
+  });
+  setStatus("Prompt ticks reset.", "");
+}
+
+renderSourceTable();
+schemaBlock.textContent = seedSQL;
+
+initSqlJs({
+  locateFile: (file) => `https://cdn.jsdelivr.net/npm/sql.js@1.10.3/dist/${file}`
+}).then((sqlJs) => {
+  SQL = sqlJs;
+  buildDatabase();
+  setStatus("SQL engine ready. Write a SELECT query and run it.", "ok");
+}).catch((error) => {
+  setStatus(`SQL engine failed to load: ${error.message}`, "error");
+});
+
+runQueryButton.addEventListener("click", runQuery);
+resetQueryButton.addEventListener("click", resetQuery);
+resetDbButton.addEventListener("click", resetPromptProgress);
+</script>
+<script src="../../shared/site-nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 3 - Joins and Missing Data</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;family=IBM+Plex+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+:root{--paper:#fffdf9;--ink:#20303c;--muted:#5f6f7d;--line:#d8e0e7;--navy:#1d4e89;--cyan:#1e7c8a;--amber:#d48920;--rose:#a55462;--green:#2f6b61;--soft-blue:#edf4ff;--soft-cyan:#eefbfc;--soft-amber:#fff8eb;--soft-rose:#fff1f3;--soft-green:#edf8f4;--code:#101821}*{box-sizing:border-box}body{margin:0;background:#eef4f7;color:var(--ink);font-family:'IBM Plex Sans',sans-serif}.page{max-width:1080px;margin:24px auto 56px;background:var(--paper);border:1px solid var(--line);box-shadow:0 18px 44px rgba(28,41,52,.14)}main{padding:40px 46px 60px}.eyebrow,.label,.step{font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase}.eyebrow{color:var(--cyan);margin-bottom:10px}h1,h2,h3{font-family:'Atkinson Hyperlegible',sans-serif;color:var(--navy)}h1{font-size:42px;line-height:1.05;margin:0 0 14px}h2{font-size:28px;margin:40px 0 14px}h3{font-size:21px;margin:0 0 10px}p,li{font-size:16px;line-height:1.72}p{color:var(--muted);margin:0 0 12px}ul,ol{padding-left:22px;display:grid;gap:8px}.lead{font-size:18px;max-width:78ch}.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.panel{border:1px solid var(--line);border-radius:18px;background:#fff;padding:20px}.panel h2{margin-top:0}.concept{border-left:6px solid var(--navy);background:var(--soft-blue)}.syntax{border-left:6px solid var(--cyan);background:var(--soft-cyan)}.example{border-left:6px solid var(--green);background:var(--soft-green)}.mistake{border-left:6px solid var(--rose);background:var(--soft-rose)}.checkpoint{border-left:6px solid var(--amber);background:var(--soft-amber)}.stack{display:grid;gap:16px}.label{display:block;color:var(--cyan);margin-bottom:8px}.question{font-weight:700;color:var(--ink)}pre{margin:12px 0;background:var(--code);color:#e8eef4;padding:16px 18px;border-radius:14px;overflow:auto;font:14px/1.75 'IBM Plex Mono',monospace}code{font-family:'IBM Plex Mono',monospace;background:#f0f3f6;border-radius:4px;padding:.08em .3em;color:#173f6a}pre code{background:transparent;color:inherit;padding:0}.command{font:700 18px/1.55 'IBM Plex Mono',monospace;color:var(--navy);overflow-wrap:anywhere}.plain{border-top:1px solid var(--line);padding-top:12px;font-style:italic;color:var(--ink)}table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px}th,td{border:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top}th{background:#f3f7fa;color:var(--navy);font:600 12px 'IBM Plex Mono',monospace}.parts td:first-child{width:28%;font:600 13px 'IBM Plex Mono',monospace;color:var(--navy)}.route{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:22px 0}.route div{border:1px solid var(--line);border-radius:14px;background:#fff;padding:14px}.route strong{display:block;color:var(--navy);margin:5px 0}.route span:last-child{font-size:14px;line-height:1.5;color:var(--muted)}.keep{background:#e8f5ef}.lose{background:#fff0f2}.footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}@media(max-width:820px){.grid,.route{grid-template-columns:1fr}main{padding:26px 20px 42px}h1{font-size:32px}}
+.panel,.stack,.grid>*{min-width:0}table{display:block;max-width:100%;overflow-x:auto}
+</style></head>
+<body><div class="page"><main>
+<div class="eyebrow">Chapter 3 · Relationships</div>
+<h1>Joins And Missing Data</h1>
+<p class="lead">Real databases split related facts across tables so the same information does not have to be repeated everywhere. A join reconnects those facts for one answer. The hard part is not typing <code>JOIN</code>; it is identifying the relationship and deciding what should happen when a match is missing.</p>
+
+<div class="route" aria-label="Chapter learning route"><div><span class="step">01</span><strong>Find the relationship</strong><span>Identify the shared identifier and what it represents.</span></div><div><span class="step">02</span><strong>Choose the keeper</strong><span>Decide whether only matches or all left-side records must remain.</span></div><div><span class="step">03</span><strong>Build the join</strong><span>Use <code>ON</code> to state the exact matching rule.</span></div><div><span class="step">04</span><strong>Read missingness</strong><span>Use <code>IS NULL</code> and <code>IS NOT NULL</code>, not ordinary equality.</span></div></div>
+
+<section class="panel concept">
+  <span class="label">The material for this chapter</span>
+  <h2>Two Museum Tables</h2>
+  <p>The museum stores object facts separately from room facts. The value <code>room_id</code> is the bridge. One object has no assigned room yet, which lets us see the difference between join types.</p>
+  <div class="grid">
+    <div><p class="question">museum_objects</p><table><thead><tr><th>object_id</th><th>object_name</th><th>room_id</th></tr></thead><tbody><tr><td>1</td><td>Bronze Compass</td><td>10</td></tr><tr><td>2</td><td>River Map</td><td>20</td></tr><tr><td>3</td><td>Glass Lantern</td><td>10</td></tr><tr><td>4</td><td>Stone Tablet</td><td>NULL</td></tr></tbody></table></div>
+    <div><p class="question">museum_rooms</p><table><thead><tr><th>room_id</th><th>room_name</th><th>floor</th></tr></thead><tbody><tr><td>10</td><td>Navigation</td><td>1</td></tr><tr><td>20</td><td>Local History</td><td>2</td></tr><tr><td>30</td><td>Textiles</td><td>2</td></tr></tbody></table></div>
+  </div>
+</section>
+
+<h2>Why The Data Is Split</h2>
+<div class="grid"><section class="panel"><h3>One fact, one home</h3><p>The floor belongs to a room, not separately to every object. If twenty objects share the Navigation room, storing its floor twenty times creates repetition and twenty places that could become inconsistent.</p></section><section class="panel"><h3>Keys create reliable links</h3><p>A <strong>primary key</strong> uniquely identifies a row in its own table. A <strong>foreign key</strong> stores that identifier in a related table. Here <code>museum_rooms.room_id</code> identifies a room, and <code>museum_objects.room_id</code> points towards it.</p></section></div>
+
+<section class="panel checkpoint" style="margin-top:16px"><h2>The Relationship Sentence</h2><p>Before writing a join, say the link in ordinary language:</p><p class="plain">“Match each museum object to the museum room whose <code>room_id</code> is equal to the object’s <code>room_id</code>.”</p><p>If you cannot say which columns should match and why, you are not ready to write the <code>ON</code> clause.</p></section>
+
+<div class="stack" style="margin-top:16px">
+  <section class="panel concept"><span class="label">Concept 1 · Matching records only</span><h2><code>INNER JOIN</code> Keeps Successful Matches</h2><p>An inner join considers each row from the first table and looks for a row in the joined table that satisfies the <code>ON</code> rule. Only successful pairs reach the result.</p></section>
+  <section class="panel syntax"><span class="label">Command bridge</span><div class="command">FROM museum_objects INNER JOIN museum_rooms ON museum_objects.room_id = museum_rooms.room_id</div><table class="parts"><tbody><tr><td>FROM museum_objects</td><td>Starts from the object records.</td></tr><tr><td>INNER JOIN museum_rooms</td><td>Introduces the second table and says unmatched rows should not survive.</td></tr><tr><td>ON</td><td>Introduces the matching rule. It does not filter by a business question; it explains how the tables relate.</td></tr><tr><td>museum_objects.room_id</td><td>A qualified column name: table name, dot, column name. Qualification removes ambiguity.</td></tr><tr><td>=</td><td>Requires the two identifier values to match.</td></tr><tr><td>museum_rooms.room_id</td><td>The related identifier in the second table.</td></tr></tbody></table></section>
+  <section class="panel example"><span class="label">Worked example · inner join result</span><pre><code>SELECT museum_objects.object_name,
+       museum_rooms.room_name
+FROM museum_objects
+INNER JOIN museum_rooms
+  ON museum_objects.room_id = museum_rooms.room_id;</code></pre><table><thead><tr><th>object_name</th><th>room_name</th></tr></thead><tbody><tr><td>Bronze Compass</td><td>Navigation</td></tr><tr><td>River Map</td><td>Local History</td></tr><tr><td>Glass Lantern</td><td>Navigation</td></tr></tbody></table><p>The Stone Tablet disappears because it has no room identifier to match. The unused Textiles room also disappears because no object points to room 30.</p></section>
+</div>
+
+<section class="panel mistake" style="margin-top:16px"><h2>A Join Does Not Automatically Mean “Everything”</h2><p><strong>Wrong instinct:</strong> “Combining the tables” sounds as though every record from both must appear.</p><p><strong>Correction:</strong> an inner join means the intersection of successful matches. If the question says every object must remain, the join choice must express that requirement.</p></section>
+
+<div class="stack" style="margin-top:16px">
+  <section class="panel concept"><span class="label">Concept 2 · Preserve one side</span><h2><code>LEFT JOIN</code> Keeps Every Row From The Left Table</h2><p>“Left” means the table written before <code>LEFT JOIN</code>. Every row from that table survives. When there is no matching row on the right, SQL supplies <code>NULL</code> for the missing right-side columns.</p></section>
+  <section class="panel example"><span class="label">Worked example · left join result</span><pre><code>SELECT museum_objects.object_name,
+       museum_rooms.room_name
+FROM museum_objects
+LEFT JOIN museum_rooms
+  ON museum_objects.room_id = museum_rooms.room_id;</code></pre><table><thead><tr><th>object_name</th><th>room_name</th></tr></thead><tbody><tr><td>Bronze Compass</td><td>Navigation</td></tr><tr><td>River Map</td><td>Local History</td></tr><tr><td>Glass Lantern</td><td>Navigation</td></tr><tr class="keep"><td>Stone Tablet</td><td>NULL</td></tr></tbody></table><p>The important change is not a new column. It is that the unmatched Stone Tablet remains visible.</p></section>
+</div>
+
+<div class="grid" style="margin-top:16px"><section class="panel"><h2>Inner Join Question</h2><p>Use it when the wording means: “show records that have a related record.” Unmatched rows should not be part of the answer.</p></section><section class="panel"><h2>Left Join Question</h2><p>Use it when the wording means: “show every record from this main table, with related information where available.” The table you must preserve belongs on the left.</p></section></div>
+
+<section class="panel syntax" style="margin-top:16px"><h2>Qualified Column Names And Aliases</h2><p>Both tables contain <code>room_id</code>, so writing only <code>room_id</code> can be ambiguous. The full form is clear but long. A table alias is a temporary short name used only inside this query.</p><pre><code>SELECT o.object_name, r.room_name
+FROM museum_objects AS o
+LEFT JOIN museum_rooms AS r
+  ON o.room_id = r.room_id;</code></pre><table class="parts"><tbody><tr><td>AS o</td><td>Temporarily calls <code>museum_objects</code> by the shorter name <code>o</code>.</td></tr><tr><td>o.object_name</td><td>Means the <code>object_name</code> column from the table currently aliased as <code>o</code>.</td></tr><tr><td>AS r</td><td>Temporarily calls <code>museum_rooms</code> by the shorter name <code>r</code>.</td></tr></tbody></table><p>An alias does not rename the stored table. It only makes this statement easier to read.</p></section>
+
+<div class="stack" style="margin-top:16px">
+  <section class="panel concept"><span class="label">Concept 3 · Missing is not an ordinary value</span><h2><code>NULL</code> Means “No Known Value Here”</h2><p><code>NULL</code> is not zero, an empty text value, the word “NULL”, or automatically an error. It represents absence or unknown information. Because it is not an ordinary value, ordinary comparisons such as <code>= NULL</code> do not ask the right question.</p></section>
+  <section class="panel syntax"><span class="label">Command bridge</span><table class="parts"><tbody><tr><td>IS NULL</td><td>Keep rows where the value is missing.</td></tr><tr><td>IS NOT NULL</td><td>Keep rows where a value is present.</td></tr></tbody></table><pre><code>WHERE room_id IS NULL
+WHERE room_id IS NOT NULL</code></pre></section>
+  <section class="panel example"><span class="label">Worked example · find the missing relationship</span><pre><code>SELECT o.object_name
+FROM museum_objects AS o
+LEFT JOIN museum_rooms AS r
+  ON o.room_id = r.room_id
+WHERE r.room_id IS NULL;</code></pre><table><thead><tr><th>object_name</th></tr></thead><tbody><tr><td>Stone Tablet</td></tr></tbody></table><p>This pattern asks: keep every object, then retain only those for which the joined room side failed to appear.</p></section>
+</div>
+
+<section class="panel mistake" style="margin-top:16px"><h2>Three Join Failures To Recognise</h2><table><thead><tr><th>Failure</th><th>Why it changes the answer</th></tr></thead><tbody><tr><td>The wrong columns are matched.</td><td>The query may run but pair unrelated records, which is more dangerous than a syntax error.</td></tr><tr><td><code>INNER JOIN</code> is used when every left record matters.</td><td>Missing relationships silently disappear, so the answer looks complete while being incomplete.</td></tr><tr><td>A condition on the right table is put in <code>WHERE</code> after a left join.</td><td>If that condition rejects <code>NULL</code>, the unmatched rows can disappear and the result may behave like an inner join.</td></tr></tbody></table></section>
+
+<section class="panel checkpoint" style="margin-top:16px"><span class="label">A reliable join planning routine</span><h2>Five Questions Before Syntax</h2><ol><li>What should one result row represent?</li><li>Which table contains the main records the question is about?</li><li>Which table contains the extra facts?</li><li>Which identifier connects those tables, and does it represent the same thing on both sides?</li><li>Should unmatched main records disappear or remain?</li></ol></section>
+
+<section class="panel checkpoint" style="margin-top:16px"><span class="label">Ready for the Chapter 3 exercises?</span><h2>You Are Ready When You Can Explain These</h2><ul><li>The difference between a primary key and a foreign key in a relationship.</li><li>Why the <code>ON</code> rule is not merely another <code>WHERE</code> filter.</li><li>Which records an inner join removes.</li><li>Why the preserved table must be written on the left of a left join.</li><li>Why <code>IS NULL</code> is correct and <code>= NULL</code> is not.</li><li>How to inspect a small joined result for impossible matches, lost records, and unexpected duplication.</li></ul></section>
+
+<section class="panel" style="margin-top:16px"><h2>Next: Calculate And Summarise</h2><p>Joins widen the information available to each result row. Chapter 4 changes the shape in another direction: expressions calculate new values, while aggregates compress many records into summaries and groups.</p></section>
+<p class="footer">Learning route: SQLBolt Lessons 6–8. The museum data is deliberately separate from the relationship practice dataset.</p>
+</main></div><script src="../../../shared/site-nav.js"></script></body></html>

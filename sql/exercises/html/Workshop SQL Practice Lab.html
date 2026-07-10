@@ -1,0 +1,762 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Workshop SQL Practice Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f2f0f7;
+  --paper:#fffdfc;
+  --ink:#272533;
+  --muted:#6d697a;
+  --line:#ddd7e6;
+  --violet:#5b4aa1;
+  --orange:#c77b2f;
+  --green:#4c7a56;
+  --slate:#17212b;
+  --soft-violet:#f2effd;
+  --shadow:0 18px 46px rgba(30,42,53,.14);
+  --code:#101821;
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body {
+  background:
+    radial-gradient(circle at top left, rgba(91,74,161,.10), transparent 30%),
+    radial-gradient(circle at top right, rgba(199,123,47,.08), transparent 24%),
+    linear-gradient(180deg, #f8f7fb 0%, var(--bg) 100%);
+  color:var(--ink);
+  font-family:'IBM Plex Sans', sans-serif;
+}
+.page {
+  width:min(1280px, calc(100vw - 28px));
+  margin:24px auto 56px;
+  display:grid;
+  grid-template-columns:260px minmax(0, 1fr);
+  border:1px solid var(--line);
+  background:var(--paper);
+  box-shadow:var(--shadow);
+}
+.rail {
+  background:var(--slate);
+  color:#dbe7ef;
+  padding:28px 22px 34px;
+  position:sticky;
+  top:0;
+  height:100vh;
+  overflow-y:auto;
+}
+.rail h1 {
+  font-family:'Atkinson Hyperlegible', sans-serif;
+  font-size:24px;
+  line-height:1.1;
+  margin-bottom:10px;
+  color:#fff;
+}
+.rail p {
+  color:#9eb2c1;
+  font-size:13px;
+  line-height:1.65;
+  margin-bottom:16px;
+}
+.mini-card,
+.rail a,
+.prompt-card,
+.panel,
+.table-wrap,
+.editor-wrap,
+.result-wrap {
+  border-radius:18px;
+}
+.mini-card {
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  padding:13px 14px;
+  margin-bottom:16px;
+}
+.mono,
+.mini-label,
+.rail-nav-title,
+.schema-pill,
+.button,
+textarea,
+pre,
+th {
+  font-family:'IBM Plex Mono', monospace;
+}
+.mini-label,
+.rail-nav-title,
+.schema-pill {
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.mini-label { color:#8fc6d0; margin-bottom:6px; display:block; }
+.mini-card strong { display:block; color:#fff; line-height:1.4; font-size:14px; }
+.rail-nav { margin-top:18px; }
+.rail-nav-title { color:#8ea4b5; margin-bottom:10px; }
+.rail a {
+  display:block;
+  color:#dbe7ef;
+  text-decoration:none;
+  padding:9px 10px;
+  border:1px solid rgba(255,255,255,.06);
+  background:rgba(255,255,255,.03);
+  margin-bottom:10px;
+  line-height:1.35;
+  font-size:13px;
+}
+.rail a:hover { color:#fff; }
+main { padding:38px 44px 72px; }
+.hero {
+  border:1px solid var(--line);
+  background:linear-gradient(135deg, rgba(91,74,161,.08), rgba(199,123,47,.10)), var(--paper);
+  border-radius:26px;
+  padding:32px 32px 26px;
+  margin-bottom:24px;
+}
+.hero .eyebrow {
+  color:var(--violet);
+  font:600 11px 'IBM Plex Mono', monospace;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  margin-bottom:10px;
+}
+.hero h2 {
+  font-family:'Atkinson Hyperlegible', sans-serif;
+  color:var(--violet);
+  font-size:40px;
+  line-height:1.05;
+  margin-bottom:12px;
+}
+.hero p {
+  color:var(--muted);
+  line-height:1.75;
+  max-width:72ch;
+  font-size:16px;
+}
+.hero-grid,
+.top-grid,
+.prompt-grid {
+  display:grid;
+  gap:16px;
+}
+.hero-grid {
+  grid-template-columns:1.1fr .9fr;
+  margin-top:18px;
+}
+.panel {
+  border:1px solid var(--line);
+  background:#fff;
+  padding:18px;
+}
+.panel h3,
+.section-head h3 {
+  font-family:'Atkinson Hyperlegible', sans-serif;
+  color:var(--violet);
+  font-size:22px;
+  margin-bottom:10px;
+}
+.panel p,
+.prompt-card p,
+.section-sub {
+  color:var(--muted);
+  line-height:1.65;
+  font-size:15px;
+}
+.panel ul,
+.prompt-card ul {
+  padding-left:18px;
+  display:grid;
+  gap:8px;
+  line-height:1.55;
+}
+.schema-pills {
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:12px;
+}
+.schema-pill {
+  display:inline-block;
+  padding:7px 10px;
+  border-radius:999px;
+  background:var(--soft-violet);
+  color:var(--violet);
+  border:1px solid var(--line);
+}
+.section {
+  margin-top:28px;
+}
+.section-head {
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-bottom:14px;
+}
+.section-head h3 { margin-bottom:0; }
+.rule { flex:1; height:1px; background:var(--line); }
+.top-grid {
+  grid-template-columns:1fr;
+}
+.table-wrap,
+.editor-wrap,
+.result-wrap {
+  border:1px solid var(--line);
+  background:#fff;
+  overflow:hidden;
+}
+.table-head,
+.editor-head,
+.result-head {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  padding:12px 16px;
+  border-bottom:1px solid var(--line);
+  background:#f8f7fc;
+}
+.table-head strong,
+.editor-head strong,
+.result-head strong {
+  color:var(--violet);
+}
+.table-scroll { overflow:auto; }
+table {
+  width:100%;
+  border-collapse:collapse;
+  min-width:980px;
+}
+th, td {
+  border-bottom:1px solid var(--line);
+  padding:12px 14px;
+  text-align:left;
+}
+th {
+  background:#f8f7fc;
+  color:var(--violet);
+  font-size:12px;
+  letter-spacing:.05em;
+}
+td { font-size:15px; }
+.schema-block {
+  padding:16px;
+  border-top:1px solid var(--line);
+  background:linear-gradient(180deg, #fcfbfe 0%, #f7f5fb 100%);
+}
+pre {
+  background:var(--code);
+  color:#e7eef5;
+  padding:16px;
+  border-radius:14px;
+  overflow:auto;
+  font-size:13px;
+  line-height:1.7;
+}
+.prompt-grid { grid-template-columns:repeat(3, minmax(0, 1fr)); }
+.prompt-card {
+  border:1px solid var(--line);
+  background:linear-gradient(180deg, #ffffff 0%, #fbfbfd 100%);
+  padding:16px;
+}
+.prompt-card:nth-child(1) { border-top:6px solid var(--violet); }
+.prompt-card:nth-child(2) { border-top:6px solid var(--orange); }
+.prompt-card:nth-child(3) { border-top:6px solid var(--green); }
+.prompt-card .prompt-label {
+  color:var(--muted);
+  margin-bottom:8px;
+  display:block;
+  font:600 11px 'IBM Plex Mono', monospace;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.prompt-item {
+  display:grid;
+  grid-template-columns:20px minmax(0, 1fr);
+  gap:10px;
+  align-items:start;
+  padding:10px 0;
+  border-top:1px solid var(--line);
+}
+.prompt-item:first-of-type { border-top:0; }
+.prompt-check {
+  width:18px;
+  height:18px;
+  border:2px solid #c8c0d9;
+  border-radius:6px;
+  background:#fff;
+  position:relative;
+  margin-top:2px;
+}
+.prompt-item.is-complete { color:var(--green); font-weight:600; }
+.prompt-item.is-complete .prompt-check { background:var(--green); border-color:var(--green); }
+.prompt-item.is-complete .prompt-check::after {
+  content:""; position:absolute; left:4px; top:1px; width:5px; height:9px;
+  border:solid #fff; border-width:0 2px 2px 0; transform:rotate(45deg);
+}
+.task-button { margin-top:10px; }
+.task-button.is-active { background:var(--violet); color:#fff; border-color:var(--violet); }
+.button {
+  appearance:none;
+  border:1px solid var(--line);
+  background:#fff;
+  color:var(--violet);
+  padding:9px 12px;
+  border-radius:12px;
+  cursor:pointer;
+  font-size:12px;
+  font-weight:600;
+}
+.button.primary {
+  background:var(--violet);
+  color:#fff;
+  border-color:var(--violet);
+}
+.button:hover { transform:translateY(-1px); }
+textarea {
+  width:100%;
+  min-height:210px;
+  border:0;
+  padding:18px;
+  resize:vertical;
+  font-size:15px;
+  line-height:1.7;
+  background:var(--code);
+  color:#e8eef4;
+}
+.editor-note,
+.status {
+  padding:12px 16px;
+  border-top:1px solid var(--line);
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.5;
+}
+.status.error {
+  color:#8a2230;
+  background:#fff2f4;
+}
+.status.ok {
+  color:#215f3f;
+  background:#f0fbf4;
+}
+.result-body,
+.empty-state {
+  padding:16px;
+}
+.empty-state { color:var(--muted); }
+.footer {
+  margin-top:20px;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.6;
+}
+@media (max-width: 1060px) {
+  .page { grid-template-columns:1fr; }
+  .rail { display:none; }
+  main { padding:28px 20px 56px; }
+  .hero-grid,
+  .top-grid,
+  .prompt-grid { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+<article class="page">
+  <aside class="rail">
+    <h1>Workshop SQL Lab</h1>
+    <p>A one-table playground for data-changing SQL. This is where you can practise <span class="mono">INSERT</span>, <span class="mono">UPDATE</span>, <span class="mono">DELETE</span>, and simple schema changes, then reset the table and go again.</p>
+
+    <div class="mini-card">
+      <span class="mini-label">Dataset</span>
+      <strong>One table only: <span class="mono">equipment</span></strong>
+    </div>
+
+    <div class="mini-card">
+      <span class="mini-label">Best For</span>
+      <strong><span class="mono">INSERT</span>, <span class="mono">UPDATE</span>, <span class="mono">DELETE</span>, <span class="mono">ALTER TABLE</span>, and safe reset practice.</strong>
+    </div>
+
+    <div class="rail-nav">
+      <div class="rail-nav-title">Jump To</div>
+      <a href="#dataset">Dataset and Schema</a>
+      <a href="#prompts">Practice Prompts</a>
+      <a href="#lab">Live SQL Box</a>
+    </div>
+  </aside>
+
+  <main>
+    <section class="hero">
+      <div class="eyebrow">Practice Lab</div>
+      <h2>Workshop SQL Practice</h2>
+      <p>This lab deliberately stops being read-only. The point here is to mutate a simple table, see the effect, and reset when you want a clean slate. That makes the lesson concrete without risking any real data.</p>
+
+      <div class="hero-grid">
+        <div class="panel">
+          <h3>What This Lab Is For</h3>
+          <ul>
+            <li>Add rows with <span class="mono">INSERT INTO</span>.</li>
+            <li>Change existing rows with <span class="mono">UPDATE ... SET ... WHERE ...</span>.</li>
+            <li>Remove rows with <span class="mono">DELETE</span>, then create, alter, and drop safe practice tables.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="dataset">
+      <div class="section-head">
+        <h3>Dataset And Schema</h3>
+        <div class="rule"></div>
+      </div>
+
+      <div class="top-grid">
+        <div class="table-wrap">
+          <div class="table-head">
+            <strong>Visible Data Table: <span class="mono">equipment</span></strong>
+            <span class="section-sub">Reset any time you want the original version back.</span>
+          </div>
+          <div class="table-scroll">
+            <table>
+              <thead id="source-table-head"></thead>
+              <tbody id="source-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="schema-block">
+        <div class="section-head">
+          <h3>SQL Used To Build The Table</h3>
+          <div class="rule"></div>
+        </div>
+        <pre id="schema-sql"></pre>
+      </div>
+
+      <div class="panel" style="margin-top:16px;">
+        <h3>Read This Like A Beginner</h3>
+        <p>When you write changing queries, slow down:</p>
+        <ul>
+          <li>For <span class="mono">UPDATE</span> and <span class="mono">DELETE</span>, decide the <span class="mono">WHERE</span> first.</li>
+          <li>After a change, run a <span class="mono">SELECT</span> to confirm what happened.</li>
+          <li>If you break the table, use Reset Database and start over.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section" id="prompts">
+      <div class="section-head">
+        <h3>Practice Prompts</h3>
+        <div class="rule"></div>
+      </div>
+      <p class="section-sub" style="margin-bottom:14px;">Choose one fixed task. Starting it restores the clean starting state needed for that task; your other ticks remain checked.</p>
+      <div class="prompt-grid">
+        <div class="prompt-card">
+          <span class="prompt-label">Insert</span>
+          <div class="prompt-item" data-prompt-id="insert-equipment"><span class="prompt-check" aria-hidden="true"></span><span>Insert this complete row: <span class="mono">item_id 9</span>, <span class="mono">Panasonic S5II</span>, <span class="mono">Camera</span>, zone <span class="mono">A4</span>, <span class="mono">Excellent</span>, rate <span class="mono">68</span>, rented <span class="mono">0</span> times, service due in <span class="mono">30</span> days, active <span class="mono">Y</span>.</span></div>
+          <button class="button task-button" type="button" data-task-id="insert-equipment">Start this task</button>
+        </div>
+        <div class="prompt-card">
+          <span class="prompt-label">Update</span>
+          <div class="prompt-item" data-prompt-id="update-camera-rate"><span class="prompt-check" aria-hidden="true"></span><span>Increase <span class="mono">hourly_rate</span> by <span class="mono">10</span> for every row where <span class="mono">category = 'Camera'</span>.</span></div>
+          <button class="button task-button" type="button" data-task-id="update-camera-rate">Start this task</button>
+        </div>
+        <div class="prompt-card">
+          <span class="prompt-label">Update</span>
+          <div class="prompt-item" data-prompt-id="update-service-days"><span class="prompt-check" aria-hidden="true"></span><span>Set <span class="mono">service_due_days</span> to <span class="mono">0</span> for every row where it is currently <span class="mono">4</span> or fewer.</span></div>
+          <button class="button task-button" type="button" data-task-id="update-service-days">Start this task</button>
+        </div>
+        <div class="prompt-card">
+          <span class="prompt-label">Delete</span>
+          <div class="prompt-item" data-prompt-id="delete-nanlite"><span class="prompt-check" aria-hidden="true"></span><span>Delete only the row where <span class="mono">item_id = 6</span> and <span class="mono">item_name = 'Nanlite Tube Kit'</span>.</span></div>
+          <button class="button task-button" type="button" data-task-id="delete-nanlite">Start this task</button>
+        </div>
+        <div class="prompt-card">
+          <span class="prompt-label">Alter Table</span>
+          <div class="prompt-item" data-prompt-id="alter-supplier"><span class="prompt-check" aria-hidden="true"></span><span>Add a text column named <span class="mono">supplier_name</span> to <span class="mono">equipment</span>.</span></div>
+          <button class="button task-button" type="button" data-task-id="alter-supplier">Start this task</button>
+        </div>
+        <div class="prompt-card">
+          <span class="prompt-label">Create Table</span>
+          <div class="prompt-item" data-prompt-id="create-maintenance-log"><span class="prompt-check" aria-hidden="true"></span><span>Create <span class="mono">maintenance_log</span> with exactly: <span class="mono">log_id INTEGER PRIMARY KEY</span>, <span class="mono">item_id INTEGER NOT NULL</span>, and <span class="mono">note TEXT NOT NULL</span>.</span></div>
+          <button class="button task-button" type="button" data-task-id="create-maintenance-log">Start this task</button>
+        </div>
+        <div class="prompt-card">
+          <span class="prompt-label">Drop Table</span>
+          <div class="prompt-item" data-prompt-id="drop-obsolete-import"><span class="prompt-check" aria-hidden="true"></span><span>Remove the pre-seeded disposable table named <span class="mono">obsolete_import</span>. Do not change <span class="mono">equipment</span>.</span></div>
+          <button class="button task-button" type="button" data-task-id="drop-obsolete-import">Start this task</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="lab">
+      <div class="section-head">
+        <h3>Live SQL Box</h3>
+        <div class="rule"></div>
+      </div>
+
+      <div class="panel" style="margin-bottom:16px;">
+        <h3>Schema At A Glance</h3>
+        <p>The only table in this lab is <span class="mono">equipment</span>. You can run read queries and write queries here.</p>
+        <div class="schema-pills">
+          <span class="schema-pill">item_id</span>
+          <span class="schema-pill">item_name</span>
+          <span class="schema-pill">category</span>
+          <span class="schema-pill">location_zone</span>
+          <span class="schema-pill">condition_level</span>
+          <span class="schema-pill">hourly_rate</span>
+          <span class="schema-pill">times_rented</span>
+          <span class="schema-pill">service_due_days</span>
+          <span class="schema-pill">active_flag</span>
+        </div>
+      </div>
+
+      <div class="editor-wrap">
+        <div class="editor-head">
+          <strong>Write a query against <span class="mono">equipment</span></strong>
+          <div class="editor-tools">
+            <button class="button primary" id="run-query" type="button">Run Query</button>
+            <button class="button" id="reset-query" type="button">Reset Query</button>
+            <button class="button" id="reset-db" type="button">Reset Database</button>
+          </div>
+        </div>
+        <textarea id="query-input" spellcheck="false">-- Choose a task, then write one SQL statement here.</textarea>
+        <div class="editor-note">Each task checks the resulting data or schema, not the exact words you type. <span class="mono">Reset Database</span> restores the original workshop table and schema.</div>
+        <div class="status" id="status-box">SQL engine loading...</div>
+      </div>
+
+      <div class="result-wrap" style="margin-top:16px;">
+        <div class="result-head">
+          <strong>Query Result</strong>
+          <span class="section-sub">Your answer appears here.</span>
+        </div>
+        <div class="result-body" id="result-box">
+          <div class="empty-state">Run a query to see the result table.</div>
+        </div>
+      </div>
+    </section>
+
+    <p class="footer">This is the deliberate write-lab. Each fixed task begins from its own clean state, and its tick checks what changed in the database rather than the wording of your SQL.</p>
+  </main>
+</article>
+
+<script src="https://cdn.jsdelivr.net/npm/sql.js@1.10.3/dist/sql-wasm.js"></script>
+<script>
+const rows = [
+  { item_id: 1, item_name: "Aputure 300D", category: "Lighting", location_zone: "A1", condition_level: "Good", hourly_rate: 42, times_rented: 18, service_due_days: 12, active_flag: "Y" },
+  { item_id: 2, item_name: "Sony FX3", category: "Camera", location_zone: "A2", condition_level: "Excellent", hourly_rate: 95, times_rented: 23, service_due_days: 4, active_flag: "Y" },
+  { item_id: 3, item_name: "Sachtler Tripod", category: "Support", location_zone: "B1", condition_level: "Good", hourly_rate: 28, times_rented: 16, service_due_days: 27, active_flag: "Y" },
+  { item_id: 4, item_name: "Rode NTG5", category: "Audio", location_zone: "B2", condition_level: "Fair", hourly_rate: 19, times_rented: 9, service_due_days: 2, active_flag: "Y" },
+  { item_id: 5, item_name: "DJI RS 4", category: "Stabiliser", location_zone: "C1", condition_level: "Excellent", hourly_rate: 34, times_rented: 14, service_due_days: 18, active_flag: "Y" },
+  { item_id: 6, item_name: "Nanlite Tube Kit", category: "Lighting", location_zone: "C2", condition_level: "Good", hourly_rate: 26, times_rented: 11, service_due_days: 6, active_flag: "N" },
+  { item_id: 7, item_name: "Canon C70", category: "Camera", location_zone: "A3", condition_level: "Fair", hourly_rate: 82, times_rented: 20, service_due_days: 1, active_flag: "Y" },
+  { item_id: 8, item_name: "Zoom F6", category: "Audio", location_zone: "B3", condition_level: "Good", hourly_rate: 24, times_rented: 13, service_due_days: 35, active_flag: "Y" }
+];
+
+const seedSQL = `CREATE TABLE equipment (
+  item_id INTEGER PRIMARY KEY,
+  item_name TEXT NOT NULL,
+  category TEXT NOT NULL,
+  location_zone TEXT NOT NULL,
+  condition_level TEXT NOT NULL,
+  hourly_rate INTEGER NOT NULL,
+  times_rented INTEGER NOT NULL,
+  service_due_days INTEGER NOT NULL,
+  active_flag TEXT NOT NULL
+);
+
+INSERT INTO equipment (item_id, item_name, category, location_zone, condition_level, hourly_rate, times_rented, service_due_days, active_flag) VALUES
+  (1, 'Aputure 300D', 'Lighting', 'A1', 'Good', 42, 18, 12, 'Y'),
+  (2, 'Sony FX3', 'Camera', 'A2', 'Excellent', 95, 23, 4, 'Y'),
+  (3, 'Sachtler Tripod', 'Support', 'B1', 'Good', 28, 16, 27, 'Y'),
+  (4, 'Rode NTG5', 'Audio', 'B2', 'Fair', 19, 9, 2, 'Y'),
+  (5, 'DJI RS 4', 'Stabiliser', 'C1', 'Excellent', 34, 14, 18, 'Y'),
+  (6, 'Nanlite Tube Kit', 'Lighting', 'C2', 'Good', 26, 11, 6, 'N'),
+  (7, 'Canon C70', 'Camera', 'A3', 'Fair', 82, 20, 1, 'Y'),
+  (8, 'Zoom F6', 'Audio', 'B3', 'Good', 24, 13, 35, 'Y');`;
+
+let SQL;
+let db;
+let activeTaskId = null;
+
+const sourceTableBody = document.getElementById("source-table-body");
+const sourceTableHead = document.getElementById("source-table-head");
+const schemaBlock = document.getElementById("schema-sql");
+const queryInput = document.getElementById("query-input");
+const statusBox = document.getElementById("status-box");
+const resultBox = document.getElementById("result-box");
+const runQueryButton = document.getElementById("run-query");
+const resetQueryButton = document.getElementById("reset-query");
+const resetDbButton = document.getElementById("reset-db");
+const starterQuery = "-- Choose a task, then write one SQL statement here.";
+const promptItems = new Map(Array.from(document.querySelectorAll(".prompt-item")).map((item) => [item.dataset.promptId, item]));
+const taskButtons = new Map(Array.from(document.querySelectorAll("[data-task-id]")).map((button) => [button.dataset.taskId, button]));
+const completedTaskIds = new Set();
+const workshopTasks = [
+  { id: "insert-equipment", canonicalSQL: "INSERT INTO equipment (item_id, item_name, category, location_zone, condition_level, hourly_rate, times_rented, service_due_days, active_flag) VALUES (9, 'Panasonic S5II', 'Camera', 'A4', 'Excellent', 68, 0, 30, 'Y');" },
+  { id: "update-camera-rate", canonicalSQL: "UPDATE equipment SET hourly_rate = hourly_rate + 10 WHERE category = 'Camera';" },
+  { id: "update-service-days", canonicalSQL: "UPDATE equipment SET service_due_days = 0 WHERE service_due_days <= 4;" },
+  { id: "delete-nanlite", canonicalSQL: "DELETE FROM equipment WHERE item_id = 6 AND item_name = 'Nanlite Tube Kit';" },
+  { id: "alter-supplier", canonicalSQL: "ALTER TABLE equipment ADD supplier_name TEXT;" },
+  { id: "create-maintenance-log", canonicalSQL: "CREATE TABLE maintenance_log (log_id INTEGER PRIMARY KEY, item_id INTEGER NOT NULL, note TEXT NOT NULL);" },
+  { id: "drop-obsolete-import", setupSQL: "CREATE TABLE obsolete_import (import_id INTEGER PRIMARY KEY, raw_note TEXT);", canonicalSQL: "DROP TABLE obsolete_import;" }
+];
+const taskById = new Map(workshopTasks.map((task) => [task.id, task]));
+const taskSnapshots = new Map();
+
+function renderSourceTable() {
+  if (!db) return;
+  const result = db.exec("SELECT * FROM equipment ORDER BY item_id;")[0];
+  if (!result) return;
+  sourceTableHead.innerHTML = `<tr>${result.columns.map((column) => `<th>${column}</th>`).join("")}</tr>`;
+  sourceTableBody.innerHTML = result.values.map((row) => `<tr>${row.map((value) => `<td>${value === null ? "NULL" : value}</td>`).join("")}</tr>`).join("");
+}
+
+function buildDatabase(task) {
+  if (db) db.close();
+  db = new SQL.Database();
+  db.run(seedSQL);
+  if (task && task.setupSQL) db.run(task.setupSQL);
+  renderSourceTable();
+  schemaBlock.textContent = `${seedSQL}${task && task.setupSQL ? `\n\n-- Starting state for this task\n${task.setupSQL}` : ""}`;
+}
+
+function renderResults(columns, values) {
+  if (!values.length) {
+    resultBox.innerHTML = '<div class="empty-state">Query ran successfully, but it returned no rows.</div>';
+    return;
+  }
+
+  const head = columns.map((column) => `<th>${column}</th>`).join("");
+  const body = values.map((row) => `<tr>${row.map((value) => `<td>${value === null ? "NULL" : value}</td>`).join("")}</tr>`).join("");
+
+  resultBox.innerHTML = `
+    <div class="table-scroll">
+      <table>
+        <thead><tr>${head}</tr></thead>
+        <tbody>${body}</tbody>
+      </table>
+    </div>
+  `;
+}
+
+function setStatus(message, kind) {
+  statusBox.textContent = message;
+  statusBox.className = `status ${kind || ""}`.trim();
+}
+
+function isReadQuery(sql) {
+  return /^(select|pragma)\b/i.test(sql);
+}
+
+function normaliseResult(result) {
+  return result ? {
+    columns: result.columns,
+    values: result.values.map((row) => row.map((value) => value === null ? null : String(value)))
+  } : { columns: [], values: [] };
+}
+
+function databaseSnapshot(database) {
+  const equipment = normaliseResult(database.exec("SELECT * FROM equipment ORDER BY item_id;")[0]);
+  const tables = normaliseResult(database.exec("SELECT name FROM sqlite_master WHERE type = 'table' AND name NOT LIKE 'sqlite_%' ORDER BY name;")[0]);
+  const schema = tables.values.map(([name]) => [name, normaliseResult(database.exec(`PRAGMA table_info(${name});`)[0])]);
+  return JSON.stringify({ equipment, tables, schema });
+}
+
+function buildTaskSnapshots() {
+  workshopTasks.forEach((task) => {
+    const expected = new SQL.Database();
+    expected.run(seedSQL);
+    if (task.setupSQL) expected.run(task.setupSQL);
+    expected.run(task.canonicalSQL);
+    taskSnapshots.set(task.id, databaseSnapshot(expected));
+    expected.close();
+  });
+}
+
+function markTaskComplete(taskId) {
+  if (completedTaskIds.has(taskId)) return;
+  completedTaskIds.add(taskId);
+  promptItems.get(taskId)?.classList.add("is-complete");
+}
+
+function startTask(taskId) {
+  const task = taskById.get(taskId);
+  if (!task) return;
+  activeTaskId = taskId;
+  buildDatabase(task);
+  queryInput.value = starterQuery;
+  taskButtons.forEach((button, id) => button.classList.toggle("is-active", id === taskId));
+  resultBox.innerHTML = '<div class="empty-state">Task state loaded. Write the statement that produces the stated outcome.</div>';
+  setStatus("Task state loaded. The tick checks the resulting data or schema.", "ok");
+}
+
+function checkActiveTask() {
+  if (!activeTaskId || completedTaskIds.has(activeTaskId)) return false;
+  if (databaseSnapshot(db) !== taskSnapshots.get(activeTaskId)) return false;
+  markTaskComplete(activeTaskId);
+  setStatus("Task complete. The resulting data or schema matches the stated outcome.", "ok");
+  return true;
+}
+
+function runQuery() {
+  const sql = queryInput.value.trim();
+
+  if (!sql) {
+    setStatus("Write a query first.", "error");
+    return;
+  }
+
+  try {
+    const result = db.exec(sql);
+    renderSourceTable();
+    if (checkActiveTask()) return;
+    if (!result.length) {
+      resultBox.innerHTML = '<div class="empty-state">Query ran successfully. If you changed data, run a SELECT or PRAGMA query to inspect the new state.</div>';
+      setStatus(activeTaskId ? "Statement ran, but the active task has not reached its stated outcome yet." : (isReadQuery(sql) ? "Query ran successfully." : "Write query ran successfully."), "ok");
+      return;
+    }
+
+    renderResults(result[0].columns, result[0].values);
+    setStatus(activeTaskId ? "Query ran, but the active task has not reached its stated outcome yet." : `Query ran successfully. ${result[0].values.length} row(s) returned.`, "ok");
+  } catch (error) {
+    setStatus(error.message, "error");
+  }
+}
+
+function resetQuery() {
+  queryInput.value = starterQuery;
+  setStatus("Query box reset.", "");
+}
+
+function resetDatabase() {
+  activeTaskId = null;
+  buildDatabase();
+  taskButtons.forEach((button) => button.classList.remove("is-active"));
+  setStatus("Database reset to the original workshop dataset.", "ok");
+  resultBox.innerHTML = '<div class="empty-state">Database reset. Run a query to see results again.</div>';
+}
+
+initSqlJs({
+  locateFile: (file) => `https://cdn.jsdelivr.net/npm/sql.js@1.10.3/dist/${file}`
+}).then((sqlJs) => {
+  SQL = sqlJs;
+  buildTaskSnapshots();
+  buildDatabase();
+  setStatus("SQL engine ready. Read and write queries are enabled in this lab.", "ok");
+}).catch((error) => {
+  setStatus(`SQL engine failed to load: ${error.message}`, "error");
+});
+
+runQueryButton.addEventListener("click", runQuery);
+resetQueryButton.addEventListener("click", resetQuery);
+resetDbButton.addEventListener("click", resetDatabase);
+taskButtons.forEach((button, taskId) => button.addEventListener("click", () => startTask(taskId)));
+</script>
+<script src="../../shared/site-nav.js"></script>
+</body>
+</html>

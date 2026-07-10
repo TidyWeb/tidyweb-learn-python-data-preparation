@@ -30,22 +30,6 @@
 body { background:var(--bg); color:var(--ink); font-family:'IBM Plex Sans', sans-serif; }
 .frame { width:min(1160px, calc(100vw - 32px)); margin:30px auto 60px; display:grid; grid-template-columns:220px minmax(0,1fr); background:var(--panel); border:1px solid var(--line); box-shadow:0 16px 46px rgba(39,50,60,.18); }
 .rail { background:var(--rail-bg); color:var(--rail-text); padding:32px 22px 40px; position:sticky; top:0; height:100vh; overflow-y:auto; }
-
-.rail-logo-wrap {
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  margin: 0 0 18px;
-  padding: 0 0 18px;
-  border-bottom: 1px solid rgba(255,255,255,.1);
-}
-.rail-logo {
-  display:block;
-  width: min(132px, 100%);
-  height: auto;
-  filter: drop-shadow(0 10px 18px rgba(34, 214, 255, .16));
-}
-
 .rail-title { font-family:'Atkinson Hyperlegible', sans-serif; font-size:20px; font-weight:700; color:white; line-height:1.2; margin-bottom:6px; }
 .rail-sub { font-size:12px; color:var(--rail-muted); line-height:1.55; margin-bottom:28px; padding-bottom:20px; border-bottom:1px solid rgba(255,255,255,.1); }
 .token { display:flex; gap:10px; align-items:center; padding:9px 0; border-top:1px solid rgba(255,255,255,.1); font:600 11px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.06em; color:var(--rail-muted); }
@@ -69,9 +53,8 @@ main { padding:48px 52px 72px; }
 .note-rule { flex:1; height:1px; background:var(--line); margin-left:4px; }
 .stack { display:grid; gap:12px; }
 .panel { border:1px solid var(--line); background:#fbfcfd; border-radius:4px; overflow:hidden; }
-.panel header { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; padding:8px 14px; border-bottom:1px solid var(--line); font:600 11px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.08em; }
+.panel header { display:flex; justify-content:space-between; align-items:center; padding:8px 14px; border-bottom:1px solid var(--line); font:600 11px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.08em; }
 .panel header .tag { color:var(--navy); }
-.panel header .sep { color:var(--muted); }
 .panel header .type { color:var(--muted); }
 .panel .body { padding:16px 20px; font-size:16px; line-height:1.8; }
 .panel .body p + p { margin-top:10px; }
@@ -104,49 +87,6 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
 .legend p { line-height:1.7; }
 .plain-english { font-style:italic; font-size:15px; color:var(--muted); border-top:1px solid var(--line); padding:14px 20px; line-height:1.7; background:#fbfcfd; }
 .footer { color:var(--muted); font-size:13px; text-align:center; margin-top:64px; }
-
-.chapter-nav {
-  margin-top: 42px;
-  padding-top: 22px;
-  border-top: 2px solid var(--mono-bg);
-  display: flex;
-  justify-content: flex-end;
-}
-.chapter-next {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 20px;
-  border-radius: 999px;
-  text-decoration: none;
-  background: var(--navy);
-  color: #fff;
-  box-shadow: 0 10px 20px rgba(31,79,130,.18);
-  border: 1px solid var(--navy);
-}
-.chapter-next:hover { filter: brightness(.96); }
-.chapter-next .label {
-  font: 600 11px 'IBM Plex Mono', monospace;
-  text-transform: uppercase;
-  letter-spacing: .08em;
-  color: #d8e7ff;
-}
-.chapter-next .title {
-  font-family: 'Atkinson Hyperlegible', sans-serif;
-  font-size: 18px;
-  line-height: 1.2;
-  color: #fff;
-}
-.chapter-next .arrow {
-  font-size: 20px;
-  line-height: 1;
-  color: #fff;
-}
-@media (max-width:860px) {
-  .chapter-nav { justify-content: stretch; }
-  .chapter-next { width: 100%; justify-content: center; }
-}
-
 @media (max-width:860px) { .frame { grid-template-columns:1fr; } .rail { display:none; } main { padding:32px 22px 48px; } .page-title { font-size:26px; } .command-grid { grid-template-columns:1fr; } .command-box .command { font-size:18px; } }
 </style>
 </head>
@@ -162,26 +102,9 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
     <div class="token"><span class="dot cyan"></span> Command Meaning</div>
     <div class="token"><span class="dot green"></span> Code Breakdown</div>
     <div class="token"><span class="dot orange"></span> Rule</div>
-        <nav class="rail-nav course-nav">
-      <div class="rail-nav-label">Bookshelf Home</div>
-      <a href="../index.html"><span class="num">00</span><span>Main Shelf</span></a>
-    </nav>
-    <nav class="rail-nav course-nav">
-      <div class="rail-nav-label">Course Chapters</div>
-      <a href="data_analysis_field_overview.html"><span class="num">01</span><span>Field Overview</span></a>
-      <a href="block_1_table_literacy_bridge.html"><span class="num">02</span><span>Block 1</span></a>
-      <a href="block_2_selection_and_filtering.html"><span class="num">03</span><span>Block 2</span></a>
-      <a href="block_3_missing_data_and_cleaning.html"><span class="num">04</span><span>Block 3</span></a>
-      <a href="block_4_grouping_and_insight.html"><span class="num">05</span><span>Block 4</span></a>
-      <a href="block_5_visualisation.html"><span class="num">06</span><span>Block 5</span></a>
-      <a href="block_6_statistics_foundations.html"><span class="num">07</span><span>Block 6</span></a>
-      <a href="block_7_hypothesis_and_evidence.html" class="active"><span class="num">08</span><span>Block 7</span></a>
-      <a href="block_8_full_eda_cycle.html"><span class="num">09</span><span>Block 8</span></a>
-      <a href="block_9_etl_drill.html"><span class="num">10</span><span>Block 9</span></a>
-      <a href="block_10_dashboard_and_presentation.html"><span class="num">11</span><span>Block 10</span></a>
-    </nav>
     <nav class="rail-nav">
-      <div class="rail-nav-label">This Chapter</div>
+      <div class="rail-nav-label">Sections</div>
+      <a href="#notebook-sequence"><span class="num">00</span><span>Notebook Match</span></a>
       <a href="#what"><span class="num">01</span><span>What This Block Adds</span></a>
       <a href="#commands"><span class="num">02</span><span>Command Boxes</span></a>
       <a href="#evidence"><span class="num">03</span><span>How The Logic Works</span></a>
@@ -193,6 +116,62 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
     <h1 class="page-title">Block 7 Hypothesis and Evidence</h1>
     <p class="page-sub">Block 7 is where the course moves from describing what the data contains into testing whether an observed difference is likely to be real or likely to be chance. The goal is not to turn statistics into a black box. The goal is to understand the order of reasoning: frame the question, state the null and alternative hypotheses, run the test, then interpret the result carefully.</p>
 
+    <section class="note-section" id="notebook-sequence">
+      <div class="note-eyebrow">
+        <span class="note-num">NOTE 00</span>
+        <h2 class="note-heading">How This Guide Matches The Notebook</h2>
+        <span class="note-rule"></span>
+      </div>
+      <div class="stack">
+        <div class="panel resolution">
+          <header><span class="tag">Notebook source</span><span class="type">actual working order</span></header>
+          <div class="body">
+            <p>This guide follows <span class="mono">Block 7 - Hypothesis and Evidence</span>. The learner should meet the setup first, then the worked example, then the concept sequence below.</p>
+            <p>Lesson dataset: <span class="mono">superstore_sales.csv</span>, supplied in the <span class="mono">datasets</span> folder. If the supplied folder layout is kept, the example path is <span class="mono">../../datasets/superstore_sales.csv</span>. If the files are moved, point the path at wherever that CSV has been saved.</p>
+            <p>Worked example dataset: <span class="mono">built in dummy exam-score table</span>.</p>
+          </div>
+        </div>
+        <div class="panel translation">
+          <header><span class="tag">Setup cells</span><span class="type">run before the lesson questions</span></header>
+          <div class="body legend">
+            <p><span class="mono">import pandas as pd</span></p>
+<p><span class="mono">import matplotlib.pyplot as plt</span></p>
+<p><span class="mono">from scipy import stats</span></p>
+<p><span class="mono">dataset_path = &quot;../../datasets/superstore_sales.csv&quot;</span></p>
+<p><span class="mono">df = pd.read_csv(dataset_path)</span></p>
+<p><span class="mono">create dummy_df from two exam-score groups</span></p>
+          </div>
+        </div>
+        <div class="panel translation">
+          <header><span class="tag">Concept sequence</span><span class="type">same order as the notebook</span></header>
+          <div class="body">
+            <table>
+              <thead><tr><th>Step</th><th>Notebook concept</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>What a hypothesis is</td></tr>
+<tr><td>2</td><td>Framing a testable question from data</td></tr>
+<tr><td>3</td><td>Sequencing rule - hypotheses before tests</td></tr>
+<tr><td>4</td><td>What a p-value is</td></tr>
+<tr><td>5</td><td>Running a t-test</td></tr>
+<tr><td>6</td><td>Statistical significance vs practical importance</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="panel code">
+          <header><span class="tag">Core commands</span><span class="type">notebook order</span></header>
+          <div class="body">
+            <pre>state the null and alternative hypotheses
+split dummy_df into group_a and group_b
+compare the group means
+stats.ttest_ind(group_a, group_b)
+read result.pvalue as evidence, not a verdict
+compare statistical result with practical size of difference</pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="note-section" id="what">
       <div class="note-eyebrow">
         <span class="note-num">NOTE 01</span>
@@ -201,7 +180,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
       </div>
       <div class="stack">
         <div class="panel resolution">
-          <header><span class="tag">Plain English</span><span class="sep" aria-hidden="true"> - </span><span class="type">from description to evidence</span></header>
+          <header><span class="tag">Plain English</span><span class="type">from description to evidence</span></header>
           <div class="body">
             <p>Blocks 1 through 6 mostly ask: what is in the table, how is it shaped, what stands out, and how do two groups compare descriptively?</p>
             <p>Block 7 adds a new question: if two groups look different, is that difference strong enough to count as evidence against the idea that nothing real is going on?</p>
@@ -210,7 +189,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
         </div>
 
         <div class="panel translation">
-          <header><span class="tag">Block 7 sequence</span><span class="sep" aria-hidden="true"> - </span><span class="type">reasoning order</span></header>
+          <header><span class="tag">Block 7 sequence</span><span class="type">reasoning order</span></header>
           <div class="body legend">
             <p><strong>Step 1:</strong> name the two groups and one numeric measure.</p>
             <p><strong>Step 2:</strong> state the null hypothesis and the alternative hypothesis in plain English.</p>
@@ -220,7 +199,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
         </div>
 
         <div class="panel rule">
-          <header><span class="tag">Main rule</span><span class="sep" aria-hidden="true"> - </span><span class="type">hypothesis before p-value</span></header>
+          <header><span class="tag">Main rule</span><span class="type">hypothesis before p-value</span></header>
           <div class="body">
             <p>The null and alternative hypotheses must be stated before any p-value appears. The test result does not invent the question afterward. The question comes first.</p>
           </div>
@@ -237,7 +216,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
       </div>
       <div class="stack">
         <div class="panel resolution">
-          <header><span class="tag">Hypothesis and evidence</span><span class="sep" aria-hidden="true"> - </span><span class="type">Block 7 core moves</span></header>
+          <header><span class="tag">Hypothesis and evidence</span><span class="type">Block 7 core moves</span></header>
           <div class="body">
             <div class="command-grid">
               <div class="command-box">
@@ -286,7 +265,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
       </div>
       <div class="stack">
         <div class="panel resolution">
-          <header><span class="tag">Hypothesis</span><span class="sep" aria-hidden="true"> - </span><span class="type">two statements, not one</span></header>
+          <header><span class="tag">Hypothesis</span><span class="type">two statements, not one</span></header>
           <div class="body">
             <p>A hypothesis test always starts with two competing statements.</p>
             <p>The <strong>null hypothesis</strong> says there is no meaningful difference or effect. The <strong>alternative hypothesis</strong> says there is a meaningful difference or effect.</p>
@@ -294,14 +273,14 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
         </div>
 
         <div class="panel code">
-          <header><span class="tag">Code breakdown</span><span class="sep" aria-hidden="true"> - </span><span class="type">t-test core line</span></header>
+          <header><span class="tag">Code breakdown</span><span class="type">t-test core line</span></header>
           <div class="body">
             <pre><span class="part-var">stats</span><span class="part-outer">.</span><span class="part-inner">ttest_ind</span><span class="part-outer">(</span><span class="part-core">group_a, group_b</span><span class="part-outer">)</span></pre>
           </div>
         </div>
 
         <div class="panel translation">
-          <header><span class="tag">What the test is asking</span><span class="sep" aria-hidden="true"> - </span><span class="type">inside the black box</span></header>
+          <header><span class="tag">What the test is asking</span><span class="type">inside the black box</span></header>
           <div class="body">
             <p>The t-test is not asking whether the two group means are numerically identical. It is asking whether the distance between them looks large enough, relative to the spread of the data, that the no-difference explanation starts to look weak.</p>
           </div>
@@ -309,7 +288,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
         </div>
 
         <div class="panel resolution">
-          <header><span class="tag">What a p-value is</span><span class="sep" aria-hidden="true"> - </span><span class="type">evidence, not verdict</span></header>
+          <header><span class="tag">What a p-value is</span><span class="type">evidence, not verdict</span></header>
           <div class="body">
             <p>A p-value measures how surprising the observed result would be if the null hypothesis were true. A smaller p-value means the result would be less expected under the no-difference story.</p>
             <p>A larger p-value means the result is more compatible with the idea that the apparent difference could have arisen without a real underlying effect.</p>
@@ -317,7 +296,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
         </div>
 
         <div class="panel rule">
-          <header><span class="tag">Rule</span><span class="sep" aria-hidden="true"> - </span><span class="type">0.05 is a convention</span></header>
+          <header><span class="tag">Rule</span><span class="type">0.05 is a convention</span></header>
           <div class="body">
             <p>The threshold <span class="mono">0.05</span> is common, but it is not a law of nature. It is a convention used to organise judgment. It should never be mistaken for a magic border between truth and falsehood.</p>
           </div>
@@ -334,7 +313,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
       </div>
       <div class="stack">
         <div class="panel translation">
-          <header><span class="tag">Two different questions</span><span class="sep" aria-hidden="true"> - </span><span class="type">statistical vs practical</span></header>
+          <header><span class="tag">Two different questions</span><span class="type">statistical vs practical</span></header>
           <div class="body">
             <table>
               <thead>
@@ -359,14 +338,14 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
         </div>
 
         <div class="panel resolution">
-          <header><span class="tag">Why the means still matter</span><span class="sep" aria-hidden="true"> - </span><span class="type">do not skip effect size</span></header>
+          <header><span class="tag">Why the means still matter</span><span class="type">do not skip effect size</span></header>
           <div class="body">
             <p>The p-value is not enough on its own. You still need to inspect the group means and the gap between them. If the difference is tiny, the real-world meaning may still be weak even when the test result looks strong.</p>
           </div>
         </div>
 
         <div class="panel rule">
-          <header><span class="tag">Main caution</span><span class="sep" aria-hidden="true"> - </span><span class="type">do not let the test do all the thinking</span></header>
+          <header><span class="tag">Main caution</span><span class="type">do not let the test do all the thinking</span></header>
           <div class="body">
             <p>Block 7 is not about handing judgment over to scipy. The test result is one piece of evidence. It must be read alongside the size of the difference, the context of the question, and the limits of what the dataset can actually support.</p>
           </div>
@@ -374,14 +353,6 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
         </div>
       </div>
     </section>
-
-    <div class="chapter-nav">
-      <a class="chapter-next" href="block_8_full_eda_cycle.html">
-        <span class="label">Next Chapter</span>
-        <span class="title">Block 8</span>
-        <span class="arrow">&rarr;</span>
-      </a>
-    </div>
 
     <p class="footer">Created for the Block 7 hypothesis and evidence workflow in the Learning_Python project.</p>
   </main>

@@ -1,0 +1,876 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Retail SQL Practice Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f4f1eb;
+  --paper:#fffdfa;
+  --ink:#2d2a26;
+  --muted:#6f675f;
+  --line:#ddd2c7;
+  --plum:#76406c;
+  --copper:#b06a2b;
+  --forest:#47644d;
+  --slate:#17212b;
+  --soft-plum:#f7edf7;
+  --shadow:0 18px 46px rgba(30,42,53,.14);
+  --code:#101821;
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body {
+  background:
+    radial-gradient(circle at top left, rgba(118,64,108,.10), transparent 30%),
+    radial-gradient(circle at top right, rgba(176,106,43,.09), transparent 24%),
+    linear-gradient(180deg, #faf7f2 0%, var(--bg) 100%);
+  color:var(--ink);
+  font-family:'IBM Plex Sans', sans-serif;
+}
+.page {
+  width:min(1280px, calc(100vw - 28px));
+  margin:24px auto 56px;
+  display:grid;
+  grid-template-columns:260px minmax(0, 1fr);
+  border:1px solid var(--line);
+  background:var(--paper);
+  box-shadow:var(--shadow);
+}
+.rail {
+  background:var(--slate);
+  color:#dbe7ef;
+  padding:28px 22px 34px;
+  position:sticky;
+  top:0;
+  height:100vh;
+  overflow-y:auto;
+}
+.rail h1 {
+  font-family:'Atkinson Hyperlegible', sans-serif;
+  font-size:24px;
+  line-height:1.1;
+  margin-bottom:10px;
+  color:#fff;
+}
+.rail p {
+  color:#9eb2c1;
+  font-size:13px;
+  line-height:1.65;
+  margin-bottom:16px;
+}
+.mini-card,
+.rail a,
+.prompt-card,
+.panel,
+.table-wrap,
+.editor-wrap,
+.result-wrap {
+  border-radius:18px;
+}
+.mini-card {
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  padding:13px 14px;
+  margin-bottom:16px;
+}
+.mono,
+.mini-label,
+.rail-nav-title,
+.schema-pill,
+.button,
+textarea,
+pre,
+th {
+  font-family:'IBM Plex Mono', monospace;
+}
+.mini-label,
+.rail-nav-title,
+.schema-pill {
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.mini-label { color:#8fc6d0; margin-bottom:6px; display:block; }
+.mini-card strong { display:block; color:#fff; line-height:1.4; font-size:14px; }
+.rail-nav { margin-top:18px; }
+.rail-nav-title { color:#8ea4b5; margin-bottom:10px; }
+.rail a {
+  display:block;
+  color:#dbe7ef;
+  text-decoration:none;
+  padding:9px 10px;
+  border:1px solid rgba(255,255,255,.06);
+  background:rgba(255,255,255,.03);
+  margin-bottom:10px;
+  line-height:1.35;
+  font-size:13px;
+}
+.rail a:hover { color:#fff; }
+main { padding:38px 44px 72px; }
+.hero {
+  border:1px solid var(--line);
+  background:linear-gradient(135deg, rgba(118,64,108,.08), rgba(176,106,43,.10)), var(--paper);
+  border-radius:26px;
+  padding:32px 32px 26px;
+  margin-bottom:24px;
+}
+.hero .eyebrow {
+  color:var(--plum);
+  font:600 11px 'IBM Plex Mono', monospace;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  margin-bottom:10px;
+}
+.hero h2 {
+  font-family:'Atkinson Hyperlegible', sans-serif;
+  color:var(--plum);
+  font-size:40px;
+  line-height:1.05;
+  margin-bottom:12px;
+}
+.hero p {
+  color:var(--muted);
+  line-height:1.75;
+  max-width:72ch;
+  font-size:16px;
+}
+.hero-grid,
+.top-grid,
+.prompt-grid {
+  display:grid;
+  gap:16px;
+}
+.hero-grid {
+  grid-template-columns:1.1fr .9fr;
+  margin-top:18px;
+}
+.panel {
+  border:1px solid var(--line);
+  background:#fff;
+  padding:18px;
+}
+.panel h3,
+.section-head h3 {
+  font-family:'Atkinson Hyperlegible', sans-serif;
+  color:var(--plum);
+  font-size:22px;
+  margin-bottom:10px;
+}
+.panel p,
+.prompt-card p,
+.section-sub {
+  color:var(--muted);
+  line-height:1.65;
+  font-size:15px;
+}
+.panel ul,
+.prompt-card ul {
+  padding-left:18px;
+  display:grid;
+  gap:8px;
+  line-height:1.55;
+}
+.prompt-card ul {
+  padding-left:0;
+  list-style:none;
+  gap:10px;
+}
+.prompt-item {
+  display:grid;
+  grid-template-columns:20px minmax(0, 1fr);
+  gap:10px;
+  align-items:start;
+  text-wrap:pretty;
+  font-size:14px;
+}
+.prompt-item span:last-child {
+  min-width:0;
+}
+.keep-together {
+  white-space:nowrap;
+}
+.prompt-check {
+  width:18px;
+  height:18px;
+  border:2px solid #c5b9af;
+  border-radius:6px;
+  background:#fff;
+  position:relative;
+  margin-top:1px;
+  transition:transform .18s ease, background-color .18s ease, border-color .18s ease, box-shadow .18s ease;
+}
+.prompt-item.is-complete {
+  color:var(--forest);
+  font-weight:600;
+}
+.prompt-item.is-complete .prompt-check {
+  background:var(--forest);
+  border-color:var(--forest);
+  box-shadow:0 0 0 4px rgba(67,100,77,.14);
+}
+.prompt-item.is-complete .prompt-check::after {
+  content:"";
+  position:absolute;
+  left:4px;
+  top:1px;
+  width:5px;
+  height:9px;
+  border:solid #fff;
+  border-width:0 2px 2px 0;
+  transform:rotate(45deg);
+}
+.prompt-item.just-completed .prompt-check {
+  animation:prompt-ping .45s ease-out;
+}
+@keyframes prompt-ping {
+  0% { transform:scale(1); box-shadow:0 0 0 0 rgba(67,100,77,.32); }
+  55% { transform:scale(1.12); box-shadow:0 0 0 12px rgba(67,100,77,0); }
+  100% { transform:scale(1); box-shadow:0 0 0 4px rgba(67,100,77,.14); }
+}
+.schema-pills {
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:12px;
+}
+.schema-pill {
+  display:inline-block;
+  padding:7px 10px;
+  border-radius:999px;
+  background:var(--soft-plum);
+  color:var(--plum);
+  border:1px solid var(--line);
+}
+.section {
+  margin-top:28px;
+}
+.section-head {
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-bottom:14px;
+}
+.section-head h3 { margin-bottom:0; }
+.rule { flex:1; height:1px; background:var(--line); }
+.top-grid {
+  grid-template-columns:1fr;
+}
+.table-wrap,
+.editor-wrap,
+.result-wrap {
+  border:1px solid var(--line);
+  background:#fff;
+  overflow:hidden;
+}
+.table-head,
+.editor-head,
+.result-head {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  padding:12px 16px;
+  border-bottom:1px solid var(--line);
+  background:#fbf8f5;
+}
+.table-head strong,
+.editor-head strong,
+.result-head strong {
+  color:var(--plum);
+}
+.table-scroll { overflow:auto; }
+table {
+  width:100%;
+  border-collapse:collapse;
+  min-width:980px;
+}
+th, td {
+  border-bottom:1px solid var(--line);
+  padding:12px 14px;
+  text-align:left;
+}
+th {
+  background:#fbf8f5;
+  color:var(--plum);
+  font-size:12px;
+  letter-spacing:.05em;
+}
+td { font-size:15px; }
+.schema-block {
+  padding:16px;
+  border-top:1px solid var(--line);
+  background:linear-gradient(180deg, #fdfaf7 0%, #faf6f1 100%);
+}
+pre {
+  background:var(--code);
+  color:#e7eef5;
+  padding:16px;
+  border-radius:14px;
+  overflow:auto;
+  font-size:13px;
+  line-height:1.7;
+}
+.prompt-grid { grid-template-columns:repeat(3, minmax(0, 1fr)); }
+.prompt-card {
+  border:1px solid var(--line);
+  background:linear-gradient(180deg, #ffffff 0%, #fcfbfa 100%);
+  padding:16px;
+}
+.prompt-card:nth-child(1) { border-top:6px solid var(--plum); }
+.prompt-card:nth-child(2) { border-top:6px solid var(--copper); }
+.prompt-card:nth-child(3) { border-top:6px solid var(--forest); }
+.prompt-card .prompt-label {
+  color:var(--muted);
+  margin-bottom:8px;
+  display:block;
+  font:600 11px 'IBM Plex Mono', monospace;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.habit-callout {
+  border:1px solid #dbcfc6;
+  border-left:6px solid var(--copper);
+  background:linear-gradient(135deg, #fffaf6 0%, #f8f0e9 100%);
+  padding:16px 18px;
+  margin-bottom:16px;
+  border-radius:18px;
+}
+.habit-callout strong {
+  display:block;
+  margin-bottom:6px;
+  color:var(--plum);
+  font-family:'Atkinson Hyperlegible', sans-serif;
+  font-size:18px;
+}
+.habit-callout p {
+  margin:0;
+  color:var(--ink);
+  font-size:15px;
+  line-height:1.65;
+}
+.habit-callout em {
+  color:var(--copper);
+  font-style:italic;
+}
+.button {
+  appearance:none;
+  border:1px solid var(--line);
+  background:#fff;
+  color:var(--plum);
+  padding:9px 12px;
+  border-radius:12px;
+  cursor:pointer;
+  font-size:12px;
+  font-weight:600;
+}
+.button.primary {
+  background:var(--plum);
+  color:#fff;
+  border-color:var(--plum);
+}
+.button:hover { transform:translateY(-1px); }
+textarea {
+  width:100%;
+  min-height:190px;
+  border:0;
+  padding:18px;
+  resize:vertical;
+  font-size:15px;
+  line-height:1.7;
+  background:var(--code);
+  color:#e8eef4;
+}
+.editor-note,
+.status {
+  padding:12px 16px;
+  border-top:1px solid var(--line);
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.5;
+}
+.status.error {
+  color:#8a2230;
+  background:#fff2f4;
+}
+.status.ok {
+  color:#215f3f;
+  background:#f0fbf4;
+}
+.result-body,
+.empty-state {
+  padding:16px;
+}
+.empty-state { color:var(--muted); }
+.footer {
+  margin-top:20px;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.6;
+}
+@media (max-width: 1060px) {
+  .page { grid-template-columns:1fr; }
+  .rail { display:none; }
+  main { padding:28px 20px 56px; }
+  .hero-grid,
+  .top-grid,
+  .prompt-grid { grid-template-columns:1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .prompt-check {
+    transition:none;
+  }
+  .prompt-item.just-completed .prompt-check {
+    animation:none;
+  }
+}
+</style>
+</head>
+<body>
+<article class="page">
+  <aside class="rail">
+    <h1>Retail SQL Lab</h1>
+    <p>A single-table lab for moving beyond filters into sums, averages, grouped thinking, and post-group filtering.</p>
+
+    <div class="mini-card">
+      <span class="mini-label">Dataset</span>
+      <strong>One table only: <span class="mono">sales</span></strong>
+    </div>
+
+    <div class="mini-card">
+      <span class="mini-label">Best For</span>
+      <strong><span class="mono">AS</span>, calculated columns, <span class="mono">COUNT</span>, <span class="mono">SUM</span>, <span class="mono">AVG</span>, <span class="mono">GROUP BY</span>, and <span class="mono">HAVING</span>.</strong>
+    </div>
+
+    <div class="rail-nav">
+      <div class="rail-nav-title">Jump To</div>
+      <a href="#dataset">Dataset and Schema</a>
+      <a href="#prompts">Practice Prompts</a>
+      <a href="#lab">Live SQL Box</a>
+    </div>
+  </aside>
+
+  <main>
+    <section class="hero">
+      <div class="eyebrow">Practice Lab</div>
+      <h2>Retail SQL Practice</h2>
+      <p>This invented retail dataset is built for the middle stretch of SQL: using one table that has enough columns to make grouping and calculation feel real without adding join complexity. You can work on summaries, aliases, and the difference between row filters and grouped-result filters.</p>
+
+      <div class="hero-grid">
+        <div class="panel">
+          <h3>What This Lab Is For</h3>
+          <ul>
+            <li>Build calculated columns such as revenue and discount value.</li>
+            <li>Group by region, department, channel, or staff member.</li>
+            <li>Filter grouped results with <span class="mono">HAVING</span> after the grouping step.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="dataset">
+      <div class="section-head">
+        <h3>Dataset And Schema</h3>
+        <div class="rule"></div>
+      </div>
+
+      <div class="top-grid">
+        <div class="table-wrap">
+          <div class="table-head">
+            <strong>Visible Data Table: <span class="mono">sales</span></strong>
+            <span class="section-sub">Keep this in view while you write queries.</span>
+          </div>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>sale_id</th>
+                  <th>sale_date</th>
+                  <th>region</th>
+                  <th>department</th>
+                  <th>channel</th>
+                  <th>staff_name</th>
+                  <th>units_sold</th>
+                  <th>unit_price</th>
+                  <th>discount_pct</th>
+                  <th>returned_units</th>
+                </tr>
+              </thead>
+              <tbody id="source-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="schema-block">
+        <div class="section-head">
+          <h3>SQL Used To Build The Table</h3>
+          <div class="rule"></div>
+        </div>
+        <pre id="schema-sql"></pre>
+      </div>
+
+      <div class="panel" style="margin-top:16px;">
+        <h3>Read This Like A Beginner</h3>
+        <p>If the prompt looks busy, strip it back:</p>
+        <ul>
+          <li>Am I still looking at rows, or am I now summarising groups?</li>
+          <li>If I calculate something, what name do I want to give it with <span class="mono">AS</span>?</li>
+          <li>If I only want some groups, should that filter happen with <span class="mono">HAVING</span>?</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section" id="prompts">
+      <div class="section-head">
+        <h3>Practice Prompts</h3>
+        <div class="rule"></div>
+      </div>
+      <div class="prompt-grid">
+        <div class="prompt-card">
+          <span class="prompt-label">Calculated Columns</span>
+          <p>Start by making new values from old columns:</p>
+          <ul>
+            <li class="prompt-item" data-prompt-id="calc-revenue"><span class="prompt-check" aria-hidden="true"></span><span>Show <span class="mono">sale_id</span> and calculate <span class="mono">units_sold * unit_price</span>. Name the calculated column <span class="mono">revenue</span>.</span></li>
+            <li class="prompt-item" data-prompt-id="calc-discount"><span class="prompt-check" aria-hidden="true"></span><span>Show <span class="mono">sale_id</span> and calculate <span class="mono">(units_sold * unit_price) * (discount_pct / 100)</span>. Name the calculated column <span class="mono">discount_amount</span>.</span></li>
+            <li class="prompt-item" data-prompt-id="calc-net-units"><span class="prompt-check" aria-hidden="true"></span><span>Show <span class="mono">sale_id</span> and calculate <span class="mono">units_sold - returned_units</span>. Name the calculated column <span class="mono">net_sold_units</span>.</span></li>
+          </ul>
+        </div>
+        <div class="prompt-card">
+          <span class="prompt-label">Group And Summarise</span>
+          <p>Then summarise the table:</p>
+          <ul>
+            <li class="prompt-item" data-prompt-id="group-count-department"><span class="prompt-check" aria-hidden="true"></span><span>Display <span class="mono">department</span> and count its rows. Name the count column <span class="mono">row_count</span>.</span></li>
+            <li class="prompt-item" data-prompt-id="group-units-by-region"><span class="prompt-check" aria-hidden="true"></span><span>Display <span class="mono">region</span> and total units sold by region. Name the total column <span class="mono">total_units_sold</span>.</span></li>
+            <li class="prompt-item" data-prompt-id="group-avg-price-by-channel"><span class="prompt-check" aria-hidden="true"></span><span>Display <span class="mono">channel</span> and average unit price by channel. Name the average column <span class="mono">average_unit_price</span>.</span></li>
+            <li class="prompt-item" data-prompt-id="group-revenue-by-staff"><span class="prompt-check" aria-hidden="true"></span><span>Display <span class="mono">staff_name</span> and total revenue by staff member. Name the total column <span class="mono">total_revenue</span>.</span></li>
+          </ul>
+        </div>
+        <div class="prompt-card">
+          <span class="prompt-label">Having</span>
+          <p>Finally filter grouped answers:</p>
+          <ul>
+            <li class="prompt-item" data-prompt-id="having-region-units"><span class="prompt-check" aria-hidden="true"></span><span>Display <span class="mono">region</span> and total units sold, named <span class="mono">total_units_sold</span>, but show only regions whose total is above 40.</span></li>
+            <li class="prompt-item" data-prompt-id="having-department-avg"><span class="prompt-check" aria-hidden="true"></span><span>Display <span class="mono">department</span> and average unit price, named <span class="mono">average_unit_price</span>, but show only departments whose average is above 90.</span></li>
+            <li class="prompt-item" data-prompt-id="having-staff-revenue"><span class="prompt-check" aria-hidden="true"></span><span>Display <span class="mono">staff_name</span> and total revenue, named <span class="mono">total_revenue</span>, but show only staff members whose total is above 3000.</span></li>
+            <li class="prompt-item" data-prompt-id="synth-online-region-units"><span class="prompt-check" aria-hidden="true"></span><span>For Online sales only, display <span class="mono">region</span> and total units sold, named <span class="mono">total_units_sold</span>. Keep only regions with at least 18 online units, highest total first.</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="lab">
+      <div class="section-head">
+        <h3>Live SQL Box</h3>
+        <div class="rule"></div>
+      </div>
+
+      <div class="panel" style="margin-bottom:16px;">
+        <h3>Schema At A Glance</h3>
+        <p>The only table in this lab is <span class="mono">sales</span>. Keep these column names in view while you write your answer.</p>
+        <div class="schema-pills">
+          <span class="schema-pill">sale_id</span>
+          <span class="schema-pill">sale_date</span>
+          <span class="schema-pill">region</span>
+          <span class="schema-pill">department</span>
+          <span class="schema-pill">channel</span>
+          <span class="schema-pill">staff_name</span>
+          <span class="schema-pill">units_sold</span>
+          <span class="schema-pill">unit_price</span>
+          <span class="schema-pill">discount_pct</span>
+          <span class="schema-pill">returned_units</span>
+        </div>
+      </div>
+
+      <div class="habit-callout">
+        <strong>Good Habit To Build</strong>
+        <p><em>A good habit to get into is to use <span class="mono">SELECT</span> with named columns by default.</em><br>Keep <span class="mono">SELECT *</span> for prompts that explicitly ask for every column and row.</p>
+      </div>
+
+      <div class="editor-wrap">
+        <div class="editor-head">
+          <strong>Write a query against <span class="mono">sales</span></strong>
+          <div class="editor-tools">
+            <button class="button primary" id="run-query" type="button">Run Query</button>
+            <button class="button" id="reset-query" type="button">Reset Query</button>
+            <button class="button" id="reset-db" type="button">Reset Ticks</button>
+          </div>
+        </div>
+        <textarea id="query-input" spellcheck="false">-- Write your SELECT query here.</textarea>
+        <div class="editor-note">This box is for read queries only. If you are calculating, name the result with <span class="mono">AS</span> so the output table reads clearly.</div>
+        <div class="status" id="status-box">SQL engine loading...</div>
+      </div>
+
+      <div class="result-wrap" style="margin-top:16px;">
+        <div class="result-head">
+          <strong>Query Result</strong>
+          <span class="section-sub">Your answer appears here.</span>
+        </div>
+        <div class="result-body" id="result-box">
+          <div class="empty-state">Run a query to see the result table.</div>
+        </div>
+      </div>
+    </section>
+
+    <p class="footer">This lab is the bridge from early filtering into grouped thinking. It stays flat, stays visible, and gives you enough columns to make summary work meaningful.</p>
+  </main>
+</article>
+
+<script src="https://cdn.jsdelivr.net/npm/sql.js@1.10.3/dist/sql-wasm.js"></script>
+<script>
+const rows = [
+  { sale_id: 1, sale_date: "2026-03-02", region: "North", department: "Audio", channel: "Online", staff_name: "Lena", units_sold: 12, unit_price: 89, discount_pct: 5, returned_units: 1 },
+  { sale_id: 2, sale_date: "2026-03-03", region: "North", department: "Cameras", channel: "Store", staff_name: "Marcus", units_sold: 4, unit_price: 420, discount_pct: 10, returned_units: 0 },
+  { sale_id: 3, sale_date: "2026-03-03", region: "South", department: "Audio", channel: "Store", staff_name: "Priya", units_sold: 8, unit_price: 95, discount_pct: 0, returned_units: 0 },
+  { sale_id: 4, sale_date: "2026-03-04", region: "East", department: "Wearables", channel: "Online", staff_name: "Jon", units_sold: 15, unit_price: 55, discount_pct: 8, returned_units: 2 },
+  { sale_id: 5, sale_date: "2026-03-04", region: "West", department: "Cameras", channel: "Online", staff_name: "Lena", units_sold: 3, unit_price: 510, discount_pct: 12, returned_units: 0 },
+  { sale_id: 6, sale_date: "2026-03-05", region: "South", department: "Computing", channel: "Store", staff_name: "Marcus", units_sold: 5, unit_price: 760, discount_pct: 7, returned_units: 1 },
+  { sale_id: 7, sale_date: "2026-03-05", region: "East", department: "Audio", channel: "Store", staff_name: "Priya", units_sold: 11, unit_price: 120, discount_pct: 4, returned_units: 1 },
+  { sale_id: 8, sale_date: "2026-03-06", region: "West", department: "Wearables", channel: "Online", staff_name: "Jon", units_sold: 14, unit_price: 62, discount_pct: 6, returned_units: 2 },
+  { sale_id: 9, sale_date: "2026-03-06", region: "North", department: "Computing", channel: "Online", staff_name: "Lena", units_sold: 6, unit_price: 840, discount_pct: 9, returned_units: 1 },
+  { sale_id: 10, sale_date: "2026-03-07", region: "South", department: "Cameras", channel: "Store", staff_name: "Marcus", units_sold: 2, unit_price: 680, discount_pct: 5, returned_units: 0 },
+  { sale_id: 11, sale_date: "2026-03-07", region: "East", department: "Computing", channel: "Online", staff_name: "Priya", units_sold: 7, unit_price: 920, discount_pct: 11, returned_units: 1 },
+  { sale_id: 12, sale_date: "2026-03-08", region: "West", department: "Audio", channel: "Store", staff_name: "Jon", units_sold: 9, unit_price: 110, discount_pct: 3, returned_units: 0 }
+];
+
+const seedSQL = `CREATE TABLE sales (
+  sale_id INTEGER PRIMARY KEY,
+  sale_date TEXT NOT NULL,
+  region TEXT NOT NULL,
+  department TEXT NOT NULL,
+  channel TEXT NOT NULL,
+  staff_name TEXT NOT NULL,
+  units_sold INTEGER NOT NULL,
+  unit_price INTEGER NOT NULL,
+  discount_pct INTEGER NOT NULL,
+  returned_units INTEGER NOT NULL
+);
+
+INSERT INTO sales (sale_id, sale_date, region, department, channel, staff_name, units_sold, unit_price, discount_pct, returned_units) VALUES
+  (1, '2026-03-02', 'North', 'Audio', 'Online', 'Lena', 12, 89, 5, 1),
+  (2, '2026-03-03', 'North', 'Cameras', 'Store', 'Marcus', 4, 420, 10, 0),
+  (3, '2026-03-03', 'South', 'Audio', 'Store', 'Priya', 8, 95, 0, 0),
+  (4, '2026-03-04', 'East', 'Wearables', 'Online', 'Jon', 15, 55, 8, 2),
+  (5, '2026-03-04', 'West', 'Cameras', 'Online', 'Lena', 3, 510, 12, 0),
+  (6, '2026-03-05', 'South', 'Computing', 'Store', 'Marcus', 5, 760, 7, 1),
+  (7, '2026-03-05', 'East', 'Audio', 'Store', 'Priya', 11, 120, 4, 1),
+  (8, '2026-03-06', 'West', 'Wearables', 'Online', 'Jon', 14, 62, 6, 2),
+  (9, '2026-03-06', 'North', 'Computing', 'Online', 'Lena', 6, 840, 9, 1),
+  (10, '2026-03-07', 'South', 'Cameras', 'Store', 'Marcus', 2, 680, 5, 0),
+  (11, '2026-03-07', 'East', 'Computing', 'Online', 'Priya', 7, 920, 11, 1),
+  (12, '2026-03-08', 'West', 'Audio', 'Store', 'Jon', 9, 110, 3, 0);`;
+
+let SQL;
+let db;
+
+const sourceTableBody = document.getElementById("source-table-body");
+const schemaBlock = document.getElementById("schema-sql");
+const queryInput = document.getElementById("query-input");
+const statusBox = document.getElementById("status-box");
+const resultBox = document.getElementById("result-box");
+const runQueryButton = document.getElementById("run-query");
+const resetQueryButton = document.getElementById("reset-query");
+const resetDbButton = document.getElementById("reset-db");
+const promptItems = new Map(
+  Array.from(document.querySelectorAll(".prompt-item")).map((item) => [item.dataset.promptId, item])
+);
+const completedPromptIds = new Set();
+const promptDefinitions = [
+  { id: "calc-revenue", label: "Show sale_id and a calculated revenue column.", sql: "SELECT sale_id, units_sold * unit_price AS revenue FROM sales;", orderSensitive: false },
+  { id: "calc-discount", label: "Show a discount amount column.", sql: "SELECT sale_id, (units_sold * unit_price) * (discount_pct / 100.0) AS discount_amount FROM sales;", orderSensitive: false },
+  { id: "calc-net-units", label: "Show a net sold units column.", sql: "SELECT sale_id, units_sold - returned_units AS net_sold_units FROM sales;", orderSensitive: false },
+  { id: "group-count-department", label: "Count how many rows each department has.", sql: "SELECT department, COUNT(*) AS row_count FROM sales GROUP BY department;", orderSensitive: false },
+  { id: "group-units-by-region", label: "Show total units sold by region.", sql: "SELECT region, SUM(units_sold) AS total_units_sold FROM sales GROUP BY region;", orderSensitive: false },
+  { id: "group-avg-price-by-channel", label: "Show average unit price by channel.", sql: "SELECT channel, AVG(unit_price) AS average_unit_price FROM sales GROUP BY channel;", orderSensitive: false },
+  { id: "group-revenue-by-staff", label: "Show total revenue by staff member.", sql: "SELECT staff_name, SUM(units_sold * unit_price) AS total_revenue FROM sales GROUP BY staff_name;", orderSensitive: false },
+  { id: "having-region-units", label: "Show only regions whose total units sold is above 40.", sql: "SELECT region, SUM(units_sold) AS total_units_sold FROM sales GROUP BY region HAVING SUM(units_sold) > 40;", orderSensitive: false },
+  { id: "having-department-avg", label: "Show only departments with average unit price above 90.", sql: "SELECT department, AVG(unit_price) AS average_unit_price FROM sales GROUP BY department HAVING AVG(unit_price) > 90;", orderSensitive: false },
+  { id: "having-staff-revenue", label: "Show only staff members whose total revenue is above 3000.", sql: "SELECT staff_name, SUM(units_sold * unit_price) AS total_revenue FROM sales GROUP BY staff_name HAVING SUM(units_sold * unit_price) > 3000;", orderSensitive: false },
+  { id: "synth-online-region-units", label: "Rank regions with at least 18 online units.", sql: "SELECT region, SUM(units_sold) AS total_units_sold FROM sales WHERE channel = 'Online' GROUP BY region HAVING SUM(units_sold) >= 18 ORDER BY total_units_sold DESC;", orderSensitive: true }
+];
+let promptAnswerKey = new Map();
+
+function renderSourceTable() {
+  sourceTableBody.innerHTML = rows.map((row) => `
+    <tr>
+      <td>${row.sale_id}</td>
+      <td>${row.sale_date}</td>
+      <td>${row.region}</td>
+      <td>${row.department}</td>
+      <td>${row.channel}</td>
+      <td>${row.staff_name}</td>
+      <td>${row.units_sold}</td>
+      <td>${row.unit_price}</td>
+      <td>${row.discount_pct}</td>
+      <td>${row.returned_units}</td>
+    </tr>
+  `).join("");
+}
+
+function buildDatabase() {
+  db = new SQL.Database();
+  db.run(seedSQL);
+  buildPromptAnswerKey();
+}
+
+function buildPromptAnswerKey() {
+  promptAnswerKey = new Map(
+    promptDefinitions.map((prompt) => [prompt.id, db.exec(prompt.sql)[0]])
+  );
+}
+
+function renderResults(columns, values) {
+  if (!values.length) {
+    resultBox.innerHTML = '<div class="empty-state">Query ran successfully, but it returned no rows.</div>';
+    return;
+  }
+
+  const head = columns.map((column) => `<th>${column}</th>`).join("");
+  const body = values.map((row) => `<tr>${row.map((value) => `<td>${value === null ? "NULL" : value}</td>`).join("")}</tr>`).join("");
+
+  resultBox.innerHTML = `
+    <div class="table-scroll">
+      <table>
+        <thead><tr>${head}</tr></thead>
+        <tbody>${body}</tbody>
+      </table>
+    </div>
+  `;
+}
+
+function setStatus(message, kind) {
+  statusBox.textContent = message;
+  statusBox.className = `status ${kind || ""}`.trim();
+}
+
+function serialiseValues(values, orderSensitive) {
+  const normalised = values.map((row) => row.map((value) => (value === null ? "NULL" : String(value))));
+  if (orderSensitive) {
+    return JSON.stringify(normalised);
+  }
+  return JSON.stringify(
+    [...normalised].sort((left, right) => JSON.stringify(left).localeCompare(JSON.stringify(right)))
+  );
+}
+
+function resultsMatch(actual, expected, orderSensitive) {
+  if (!actual || !expected) {
+    return false;
+  }
+
+  if (actual.columns.length !== expected.columns.length) {
+    return false;
+  }
+
+  if (actual.columns.some((column, index) => column !== expected.columns[index])) {
+    return false;
+  }
+
+  return serialiseValues(actual.values, orderSensitive) === serialiseValues(expected.values, orderSensitive);
+}
+
+function markPromptComplete(promptId) {
+  const promptItem = promptItems.get(promptId);
+  if (!promptItem || completedPromptIds.has(promptId)) {
+    return;
+  }
+
+  completedPromptIds.add(promptId);
+  promptItem.classList.add("is-complete", "just-completed");
+  window.setTimeout(() => {
+    promptItem.classList.remove("just-completed");
+  }, 500);
+}
+
+function completeMatchingPrompts(result) {
+  const matchedPrompts = [];
+
+  promptDefinitions.forEach((prompt) => {
+    if (completedPromptIds.has(prompt.id)) {
+      return;
+    }
+
+    if (resultsMatch(result, promptAnswerKey.get(prompt.id), prompt.orderSensitive)) {
+      markPromptComplete(prompt.id);
+      matchedPrompts.push(prompt.label);
+    }
+  });
+
+  return matchedPrompts;
+}
+
+function runQuery() {
+  const sql = queryInput.value.trim();
+
+  if (!db) {
+    setStatus("Wait for the SQL engine to finish loading.", "error");
+    return;
+  }
+
+  if (!sql) {
+    setStatus("Write a query first.", "error");
+    return;
+  }
+
+  if (!/^select\b/i.test(sql)) {
+    setStatus("This practice page is for SELECT queries only.", "error");
+    return;
+  }
+
+  try {
+    const result = db.exec(sql);
+    if (!result.length) {
+      resultBox.innerHTML = '<div class="empty-state">Query ran successfully, but it returned no visible result table.</div>';
+      setStatus("Query ran successfully.", "ok");
+      return;
+    }
+
+    renderResults(result[0].columns, result[0].values);
+    const matchedPrompts = completeMatchingPrompts(result[0]);
+    if (matchedPrompts.length) {
+      setStatus(`Query ran successfully. ${matchedPrompts.join(" ")} checked off.`, "ok");
+      return;
+    }
+    setStatus("Query ran successfully, but it did not match a prompt yet. Check the requested columns, column names or aliases, filters, and sort order.", "");
+  } catch (error) {
+    setStatus(error.message, "error");
+  }
+}
+
+function resetQuery() {
+  queryInput.value = "-- Write your SELECT query here.";
+  setStatus("Query box reset.", "");
+}
+
+function resetPromptProgress() {
+  completedPromptIds.clear();
+  promptItems.forEach((item) => {
+    item.classList.remove("is-complete", "just-completed");
+  });
+  setStatus("Prompt ticks reset.", "");
+}
+
+renderSourceTable();
+schemaBlock.textContent = seedSQL;
+
+initSqlJs({
+  locateFile: (file) => `https://cdn.jsdelivr.net/npm/sql.js@1.10.3/dist/${file}`
+}).then((sqlJs) => {
+  SQL = sqlJs;
+  buildDatabase();
+  setStatus("SQL engine ready. Write a SELECT query and run it.", "ok");
+}).catch((error) => {
+  setStatus(`SQL engine failed to load: ${error.message}`, "error");
+});
+
+runQueryButton.addEventListener("click", runQuery);
+resetQueryButton.addEventListener("click", resetQuery);
+resetDbButton.addEventListener("click", resetPromptProgress);
+</script>
+<script src="../../shared/site-nav.js"></script>
+</body>
+</html>

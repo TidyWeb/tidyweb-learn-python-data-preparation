@@ -30,22 +30,6 @@
 body { background:var(--bg); color:var(--ink); font-family:'IBM Plex Sans', sans-serif; }
 .frame { width:min(1160px, calc(100vw - 32px)); margin:30px auto 60px; display:grid; grid-template-columns:220px minmax(0,1fr); background:var(--panel); border:1px solid var(--line); box-shadow:0 16px 46px rgba(39,50,60,.18); }
 .rail { background:var(--rail-bg); color:var(--rail-text); padding:32px 22px 40px; position:sticky; top:0; height:100vh; overflow-y:auto; }
-
-.rail-logo-wrap {
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  margin: 0 0 18px;
-  padding: 0 0 18px;
-  border-bottom: 1px solid rgba(255,255,255,.1);
-}
-.rail-logo {
-  display:block;
-  width: min(132px, 100%);
-  height: auto;
-  filter: drop-shadow(0 10px 18px rgba(34, 214, 255, .16));
-}
-
 .rail-title { font-family:'Atkinson Hyperlegible', sans-serif; font-size:20px; font-weight:700; color:white; line-height:1.2; margin-bottom:6px; }
 .rail-sub { font-size:12px; color:var(--rail-muted); line-height:1.55; margin-bottom:28px; padding-bottom:20px; border-bottom:1px solid rgba(255,255,255,.1); }
 .token { display:flex; gap:10px; align-items:center; padding:9px 0; border-top:1px solid rgba(255,255,255,.1); font:600 11px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.06em; color:var(--rail-muted); }
@@ -69,9 +53,8 @@ main { padding:48px 52px 72px; }
 .note-rule { flex:1; height:1px; background:var(--line); margin-left:4px; }
 .stack { display:grid; gap:12px; }
 .panel { border:1px solid var(--line); background:#fbfcfd; border-radius:4px; overflow:hidden; }
-.panel header { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; padding:8px 14px; border-bottom:1px solid var(--line); font:600 11px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.08em; }
+.panel header { display:flex; justify-content:space-between; align-items:center; padding:8px 14px; border-bottom:1px solid var(--line); font:600 11px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.08em; }
 .panel header .tag { color:var(--navy); }
-.panel header .sep { color:var(--muted); }
 .panel header .type { color:var(--muted); }
 .panel .body { padding:16px 20px; font-size:16px; line-height:1.8; }
 .panel .body p + p { margin-top:10px; }
@@ -104,49 +87,6 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
 .legend p { line-height:1.7; }
 .plain-english { font-style:italic; font-size:15px; color:var(--muted); border-top:1px solid var(--line); padding:14px 20px; line-height:1.7; background:#fbfcfd; }
 .footer { color:var(--muted); font-size:13px; text-align:center; margin-top:64px; }
-
-.chapter-nav {
-  margin-top: 42px;
-  padding-top: 22px;
-  border-top: 2px solid var(--mono-bg);
-  display: flex;
-  justify-content: flex-end;
-}
-.chapter-next {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 20px;
-  border-radius: 999px;
-  text-decoration: none;
-  background: var(--navy);
-  color: #fff;
-  box-shadow: 0 10px 20px rgba(31,79,130,.18);
-  border: 1px solid var(--navy);
-}
-.chapter-next:hover { filter: brightness(.96); }
-.chapter-next .label {
-  font: 600 11px 'IBM Plex Mono', monospace;
-  text-transform: uppercase;
-  letter-spacing: .08em;
-  color: #d8e7ff;
-}
-.chapter-next .title {
-  font-family: 'Atkinson Hyperlegible', sans-serif;
-  font-size: 18px;
-  line-height: 1.2;
-  color: #fff;
-}
-.chapter-next .arrow {
-  font-size: 20px;
-  line-height: 1;
-  color: #fff;
-}
-@media (max-width:860px) {
-  .chapter-nav { justify-content: stretch; }
-  .chapter-next { width: 100%; justify-content: center; }
-}
-
 @media (max-width:860px) { .frame { grid-template-columns:1fr; } .rail { display:none; } main { padding:32px 22px 48px; } .page-title { font-size:26px; } .command-grid { grid-template-columns:1fr; } .command-box .command { font-size:18px; } }
 </style>
 </head>
@@ -162,26 +102,9 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
     <div class="token"><span class="dot cyan"></span> Definition Or Task</div>
     <div class="token"><span class="dot orange"></span> Rule</div>
     <div class="token"><span class="dot green"></span> Plain-English Summary</div>
-        <nav class="rail-nav course-nav">
-      <div class="rail-nav-label">Bookshelf Home</div>
-      <a href="../index.html"><span class="num">00</span><span>Main Shelf</span></a>
-    </nav>
-    <nav class="rail-nav course-nav">
-      <div class="rail-nav-label">Course Chapters</div>
-      <a href="data_analysis_field_overview.html"><span class="num">01</span><span>Field Overview</span></a>
-      <a href="block_1_table_literacy_bridge.html"><span class="num">02</span><span>Block 1</span></a>
-      <a href="block_2_selection_and_filtering.html"><span class="num">03</span><span>Block 2</span></a>
-      <a href="block_3_missing_data_and_cleaning.html"><span class="num">04</span><span>Block 3</span></a>
-      <a href="block_4_grouping_and_insight.html"><span class="num">05</span><span>Block 4</span></a>
-      <a href="block_5_visualisation.html"><span class="num">06</span><span>Block 5</span></a>
-      <a href="block_6_statistics_foundations.html"><span class="num">07</span><span>Block 6</span></a>
-      <a href="block_7_hypothesis_and_evidence.html"><span class="num">08</span><span>Block 7</span></a>
-      <a href="block_8_full_eda_cycle.html" class="active"><span class="num">09</span><span>Block 8</span></a>
-      <a href="block_9_etl_drill.html"><span class="num">10</span><span>Block 9</span></a>
-      <a href="block_10_dashboard_and_presentation.html"><span class="num">11</span><span>Block 10</span></a>
-    </nav>
     <nav class="rail-nav">
-      <div class="rail-nav-label">This Chapter</div>
+      <div class="rail-nav-label">Sections</div>
+      <a href="#notebook-sequence"><span class="num">00</span><span>Notebook Match</span></a>
       <a href="#what"><span class="num">01</span><span>What This Block Is</span></a>
       <a href="#questions"><span class="num">02</span><span>The Four Questions</span></a>
       <a href="#done"><span class="num">03</span><span>What Counts As Done</span></a>
@@ -193,6 +116,53 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
     <h1 class="page-title">Block 8 — Full EDA Cycle</h1>
     <p class="page-sub">Block 8 has no teaching cells, no worked examples, and no prompting. The learner loads an unseen dataset and runs a complete exploratory data analysis using every move from Blocks 1 through 5 without assistance. The artifact is the findings note, not the notebook. This document describes the task, the four questions the findings must answer, and the core moves available to use.</p>
 
+    <section class="note-section" id="notebook-sequence">
+      <div class="note-eyebrow">
+        <span class="note-num">NOTE 00</span>
+        <h2 class="note-heading">How This Guide Matches The Notebook</h2>
+        <span class="note-rule"></span>
+      </div>
+      <div class="stack">
+        <div class="panel resolution">
+          <header><span class="tag">Notebook source</span><span class="type">actual working order</span></header>
+          <div class="body">
+            <p>This guide follows <span class="mono">Block 8 - Full EDA Cycle</span>. The learner should meet the setup first, then the worked example, then the concept sequence below.</p>
+            <p>Lesson dataset: <span class="mono">titanic.csv</span>, supplied in the <span class="mono">datasets</span> folder. If the supplied folder layout is kept, the example path is <span class="mono">../../datasets/titanic.csv</span>. If the files are moved, point the path at wherever that CSV has been saved.</p>
+            <p>Worked example dataset: <span class="mono">none - this is an independent EDA block</span>.</p>
+          </div>
+        </div>
+        <div class="panel translation">
+          <header><span class="tag">Setup cells</span><span class="type">run before the lesson questions</span></header>
+          <div class="body legend">
+            <p><span class="mono">import pandas as pd</span></p>
+<p><span class="mono">import matplotlib.pyplot as plt</span></p>
+<p><span class="mono">df = pd.read_csv(&quot;../../datasets/titanic.csv&quot;)</span></p>
+          </div>
+        </div>
+        <div class="panel translation">
+          <header><span class="tag">Concept sequence</span><span class="type">same order as the notebook</span></header>
+          <div class="body">
+            <table>
+              <thead><tr><th>Step</th><th>Notebook concept</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>Completion standard</td></tr>
+<tr><td>2</td><td>Your EDA</td></tr>
+<tr><td>3</td><td>Findings note</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="panel code">
+          <header><span class="tag">Core commands</span><span class="type">notebook order</span></header>
+          <div class="body">
+            <pre>load the dataset
+run inspection, filtering, cleaning checks, grouping, and visualisation independently
+write findings in plain English</pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="note-section" id="what">
       <div class="note-eyebrow">
         <span class="note-num">NOTE 01</span>
@@ -201,7 +171,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
       </div>
       <div class="stack">
         <div class="panel resolution">
-          <header><span class="tag">Plain English</span><span class="sep" aria-hidden="true"> - </span><span class="type">performance, not practice</span></header>
+          <header><span class="tag">Plain English</span><span class="type">performance, not practice</span></header>
           <div class="body">
             <p>Block 8 is not a teaching block. There are no explanations, no worked examples, and no hints. The learner loads a dataset they have not seen before and runs a full exploratory data analysis from start to findings note using the moves built across Blocks 1 through 5.</p>
             <p>The notebook is working space. It is not the deliverable. The deliverable is a plain-English findings note answering four specific questions.</p>
@@ -210,7 +180,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
           <div class="plain-english">The point is not to produce perfect code. The point is to produce a clear account of what the data shows.</div>
         </div>
         <div class="panel rule">
-          <header><span class="tag">Rule</span><span class="sep" aria-hidden="true"> - </span><span class="type">no assistance during the block</span></header>
+          <header><span class="tag">Rule</span><span class="type">no assistance during the block</span></header>
           <div class="body">
             <p>No reference documents, worked examples, or block notes should be consulted while the EDA is running. This document should be read before starting. Once the dataset is loaded, close the notes and work cold.</p>
           </div>
@@ -227,7 +197,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
       </div>
       <div class="stack">
         <div class="panel translation">
-          <header><span class="tag">Findings Structure</span><span class="sep" aria-hidden="true"> - </span><span class="type">four required answers</span></header>
+          <header><span class="tag">Findings Structure</span><span class="type">four required answers</span></header>
           <div class="body">
             <table>
               <thead>
@@ -269,7 +239,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
       </div>
       <div class="stack">
         <div class="panel resolution">
-          <header><span class="tag">Completion standard</span><span class="sep" aria-hidden="true"> - </span><span class="type">four criteria</span></header>
+          <header><span class="tag">Completion standard</span><span class="type">four criteria</span></header>
           <div class="body">
             <p>The EDA is complete when:</p>
             <p>— the dataset has been loaded and its shape, types, and missingness have been checked</p>
@@ -280,7 +250,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
           </div>
         </div>
         <div class="panel rule">
-          <header><span class="tag">Rule</span><span class="sep" aria-hidden="true"> - </span><span class="type">findings note is the artifact</span></header>
+          <header><span class="tag">Rule</span><span class="type">findings note is the artifact</span></header>
           <div class="body">
             <p>The notebook cells are scratch work. They do not need to be clean or linear. The findings note must be clear, specific, and written in plain English.</p>
             <p>Vague findings such as <span class="mono">the data was interesting</span> do not count. Every observation in the findings note must be traceable to something visible in the data.</p>
@@ -298,14 +268,14 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
       </div>
       <div class="stack">
         <div class="panel resolution">
-          <header><span class="tag">Reminder</span><span class="sep" aria-hidden="true"> - </span><span class="type">what you already have</span></header>
+          <header><span class="tag">Reminder</span><span class="type">what you already have</span></header>
           <div class="body">
             <p>These are the moves built across Blocks 1 through 5. They are listed here as a reminder to read before starting. Do not consult this page once the dataset is loaded.</p>
           </div>
         </div>
 
         <div class="panel resolution">
-          <header><span class="tag">Block 1</span><span class="sep" aria-hidden="true"> - </span><span class="type">table literacy</span></header>
+          <header><span class="tag">Block 1</span><span class="type">table literacy</span></header>
           <div class="body">
             <div class="command-grid">
               <div class="command-box">
@@ -349,7 +319,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
         </div>
 
         <div class="panel resolution">
-          <header><span class="tag">Block 2</span><span class="sep" aria-hidden="true"> - </span><span class="type">selection and filtering</span></header>
+          <header><span class="tag">Block 2</span><span class="type">selection and filtering</span></header>
           <div class="body">
             <div class="command-grid">
               <div class="command-box">
@@ -377,7 +347,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
         </div>
 
         <div class="panel resolution">
-          <header><span class="tag">Block 3</span><span class="sep" aria-hidden="true"> - </span><span class="type">missing data and cleaning</span></header>
+          <header><span class="tag">Block 3</span><span class="type">missing data and cleaning</span></header>
           <div class="body">
             <div class="command-grid">
               <div class="command-box inspect">
@@ -409,7 +379,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
         </div>
 
         <div class="panel resolution">
-          <header><span class="tag">Block 4</span><span class="sep" aria-hidden="true"> - </span><span class="type">grouping and insight</span></header>
+          <header><span class="tag">Block 4</span><span class="type">grouping and insight</span></header>
           <div class="body">
             <div class="command-grid">
               <div class="command-box">
@@ -441,7 +411,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
         </div>
 
         <div class="panel resolution">
-          <header><span class="tag">Block 5</span><span class="sep" aria-hidden="true"> - </span><span class="type">visualisation</span></header>
+          <header><span class="tag">Block 5</span><span class="type">visualisation</span></header>
           <div class="body">
             <div class="command-grid">
               <div class="command-box">
@@ -469,32 +439,13 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
         </div>
 
         <div class="panel rule">
-          <header><span class="tag">Rule</span><span class="sep" aria-hidden="true"> - </span><span class="type">after each chart</span></header>
+          <header><span class="tag">Rule</span><span class="type">after each chart</span></header>
           <div class="body">
             <p>For every chart produced during the EDA, write one sentence stating what the chart shows and one sentence stating what the chart cannot tell from that view alone. This is not optional. It is part of the Block 5 standard.</p>
           </div>
         </div>
       </div>
     </section>
-
-    <div class="chapter-nav">
-      <a class="chapter-next" href="block_9_etl_drill.html">
-        <span class="label">Next Chapter</span>
-        <span class="title">Block 9</span>
-        <span class="arrow">&rarr;</span>
-      </a>
-    </div>
-
-    <p class="footer">Created for the Block 8 full EDA cycle in the Learning_Python project.</p>
-  </main>
-</article>
-</body>
-</html>
-        <span class="label">Next Chapter</span>
-        <span class="title">Block 10</span>
-        <span class="arrow">&rarr;</span>
-      </a>
-    </div>
 
     <p class="footer">Created for the Block 8 full EDA cycle in the Learning_Python project.</p>
   </main>

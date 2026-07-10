@@ -30,20 +30,6 @@
 body { background:var(--bg); color:var(--ink); font-family:'IBM Plex Sans', sans-serif; }
 .frame { width:min(1160px, calc(100vw - 32px)); margin:30px auto 60px; display:grid; grid-template-columns:220px minmax(0,1fr); background:var(--panel); border:1px solid var(--line); box-shadow:0 16px 46px rgba(39,50,60,.18); }
 .rail { background:var(--rail-bg); color:var(--rail-text); padding:32px 22px 40px; position:sticky; top:0; height:100vh; overflow-y:auto; }
-.rail-logo-wrap {
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  margin:0 0 18px;
-  padding:0 0 18px;
-  border-bottom:1px solid rgba(255,255,255,.1);
-}
-.rail-logo {
-  display:block;
-  width:min(132px, 100%);
-  height:auto;
-  filter:drop-shadow(0 10px 18px rgba(34, 214, 255, .16));
-}
 .rail-title { font-family:'Atkinson Hyperlegible', sans-serif; font-size:20px; font-weight:700; color:white; line-height:1.2; margin-bottom:6px; }
 .rail-sub { font-size:12px; color:var(--rail-muted); line-height:1.55; margin-bottom:28px; padding-bottom:20px; border-bottom:1px solid rgba(255,255,255,.1); }
 .token { display:flex; gap:10px; align-items:center; padding:9px 0; border-top:1px solid rgba(255,255,255,.1); font:600 11px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.06em; color:var(--rail-muted); }
@@ -67,9 +53,8 @@ main { padding:48px 52px 72px; }
 .note-rule { flex:1; height:1px; background:var(--line); margin-left:4px; }
 .stack { display:grid; gap:12px; }
 .panel { border:1px solid var(--line); background:#fbfcfd; border-radius:4px; overflow:hidden; }
-.panel header { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; padding:8px 14px; border-bottom:1px solid var(--line); font:600 11px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.08em; }
+.panel header { display:flex; justify-content:space-between; align-items:center; padding:8px 14px; border-bottom:1px solid var(--line); font:600 11px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.08em; }
 .panel header .tag { color:var(--navy); }
-.panel header .sep { color:var(--muted); }
 .panel header .type { color:var(--muted); }
 .panel .body { padding:16px 20px; font-size:16px; line-height:1.8; }
 .panel .body p + p { margin-top:10px; }
@@ -89,53 +74,19 @@ main { padding:48px 52px 72px; }
 .command-box.structure { border-left-color:var(--green); }
 .command-box.select { border-left-color:var(--plum); }
 .command-box.count { border-left-color:var(--yellow); }
+.part-outer { color:#d97706; font-weight:600; }
+.part-inner { color:#1f4f82; font-weight:600; }
+.part-core { color:#4d6b4f; font-weight:600; }
+.part-var { color:#d8e7ff; }
+.part-note { color:#9ed18c; }
 .mono { font-family:'IBM Plex Mono', monospace; background:var(--mono-bg); border-radius:4px; padding:.05em .3em; white-space:nowrap; }
 table { width:100%; border-collapse:collapse; font-size:15px; }
 th, td { border:1px solid var(--line); padding:12px 14px; vertical-align:top; text-align:left; }
 th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospace; font-size:12px; text-transform:uppercase; letter-spacing:.05em; }
+.legend { display:grid; gap:8px; font-size:15px; }
+.legend p { line-height:1.7; }
 .plain-english { font-style:italic; font-size:15px; color:var(--muted); border-top:1px solid var(--line); padding:14px 20px; line-height:1.7; background:#fbfcfd; }
 .footer { color:var(--muted); font-size:13px; text-align:center; margin-top:64px; }
-.chapter-nav {
-  margin-top:42px;
-  padding-top:22px;
-  border-top:2px solid var(--mono-bg);
-  display:flex;
-  justify-content:flex-end;
-}
-.chapter-next {
-  display:inline-flex;
-  align-items:center;
-  gap:12px;
-  padding:14px 20px;
-  border-radius:999px;
-  text-decoration:none;
-  background:var(--navy);
-  color:#fff;
-  box-shadow:0 10px 20px rgba(31,79,130,.18);
-  border:1px solid var(--navy);
-}
-.chapter-next:hover { filter:brightness(.96); }
-.chapter-next .label {
-  font:600 11px 'IBM Plex Mono', monospace;
-  text-transform:uppercase;
-  letter-spacing:.08em;
-  color:#d8e7ff;
-}
-.chapter-next .title {
-  font-family:'Atkinson Hyperlegible', sans-serif;
-  font-size:18px;
-  line-height:1.2;
-  color:#fff;
-}
-.chapter-next .arrow {
-  font-size:20px;
-  line-height:1;
-  color:#fff;
-}
-@media (max-width:860px) {
-  .chapter-nav { justify-content:stretch; }
-  .chapter-next { width:100%; justify-content:center; }
-}
 @media (max-width:860px) { .frame { grid-template-columns:1fr; } .rail { display:none; } main { padding:32px 22px 48px; } .page-title { font-size:26px; } .command-grid { grid-template-columns:1fr; } .command-box .command { font-size:18px; } }
 </style>
 </head>
@@ -146,199 +97,96 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
       <img class="rail-logo" src="../assets/tidyweb_logo.png" alt="TidyWeb logo">
     </div>
     <div class="rail-title">Block 9 ETL Drill</div>
-    <div class="rail-sub">Load, clean, transform, save, explain. The drill runs twice, and the second pass is timed so the learner has to perform the pipeline under pressure.</div>
+    <div class="rail-sub">A notebook companion for extracting, cleaning, transforming, masking, saving, and explaining a cleaned dataset.</div>
     <div class="token"><span class="dot"></span> Translation</div>
-    <div class="token"><span class="dot cyan"></span> Definition Or Task</div>
+    <div class="token"><span class="dot cyan"></span> Notebook Match</div>
     <div class="token"><span class="dot orange"></span> Rule</div>
     <div class="token"><span class="dot green"></span> Plain-English Summary</div>
-    <nav class="rail-nav course-nav">
-      <div class="rail-nav-label">Bookshelf Home</div>
-      <a href="../index.html"><span class="num">00</span><span>Main Shelf</span></a>
-    </nav>
-    <nav class="rail-nav course-nav">
-      <div class="rail-nav-label">Course Chapters</div>
-      <a href="data_analysis_field_overview.html"><span class="num">01</span><span>Field Overview</span></a>
-      <a href="block_1_table_literacy_bridge.html"><span class="num">02</span><span>Block 1</span></a>
-      <a href="block_2_selection_and_filtering.html"><span class="num">03</span><span>Block 2</span></a>
-      <a href="block_3_missing_data_and_cleaning.html"><span class="num">04</span><span>Block 3</span></a>
-      <a href="block_4_grouping_and_insight.html"><span class="num">05</span><span>Block 4</span></a>
-      <a href="block_5_visualisation.html"><span class="num">06</span><span>Block 5</span></a>
-      <a href="block_6_statistics_foundations.html"><span class="num">07</span><span>Block 6</span></a>
-      <a href="block_7_hypothesis_and_evidence.html"><span class="num">08</span><span>Block 7</span></a>
-      <a href="block_8_full_eda_cycle.html"><span class="num">09</span><span>Block 8</span></a>
-      <a href="block_9_etl_drill.html" class="active"><span class="num">10</span><span>Block 9</span></a>
-      <a href="block_10_dashboard_and_presentation.html"><span class="num">11</span><span>Block 10</span></a>
-    </nav>
     <nav class="rail-nav">
-      <div class="rail-nav-label">This Chapter</div>
-      <a href="#what"><span class="num">01</span><span>What This Block Is</span></a>
-      <a href="#pipeline"><span class="num">02</span><span>The ETL Pipeline</span></a>
-      <a href="#outputs"><span class="num">03</span><span>Required Outputs</span></a>
-      <a href="#timing"><span class="num">04</span><span>The Timed Second Run</span></a>
+      <div class="rail-nav-label">Sections</div>
+      <a href="#notebook-sequence"><span class="num">00</span><span>Notebook Match</span></a>
+      <a href="#etl"><span class="num">01</span><span>ETL Pattern</span></a>
+      <a href="#explain"><span class="num">02</span><span>Explain The Work</span></a>
     </nav>
   </aside>
   <main>
-    <div class="page-mode">Pipeline Drill</div>
-    <h1 class="page-title">Block 9 — ETL Drill</h1>
-    <p class="page-sub">Block 9 is where the learner rehearses the full ETL rhythm in a tighter, more operational way. The task is not open-ended exploration. The task is to load a raw dataset, clean it, transform it into a better working form, save the cleaned result, and explain what was changed and why. The drill is run twice, and the second run is timed.</p>
+    <div class="page-mode">Notebook Companion</div>
+    <h1 class="page-title">Block 9 - ETL Drill</h1>
+    <p class="page-sub">Block 9 turns the earlier cleaning moves into an ETL workflow: extract the data, transform it safely, then load the cleaned result. The notebook runs the pattern first on a dummy stock table and then repeats it as a timed drill on Seattle weather data.</p>
 
-    <section class="note-section" id="what">
+    <section class="note-section" id="notebook-sequence">
       <div class="note-eyebrow">
-        <span class="note-num">NOTE 01</span>
-        <h2 class="note-heading">What This Block Is</h2>
+        <span class="note-num">NOTE 00</span>
+        <h2 class="note-heading">How This Guide Matches The Notebook</h2>
         <span class="note-rule"></span>
       </div>
       <div class="stack">
         <div class="panel resolution">
-          <header><span class="tag">Plain English</span><span class="sep" aria-hidden="true"> - </span><span class="type">from analysis to preparation</span></header>
+          <header><span class="tag">Notebook source</span><span class="type">actual working order</span></header>
           <div class="body">
-            <p>ETL stands for Extract, Transform, Load. In plain English, it means taking in raw data, improving it into a usable form, and producing a cleaned output that someone can work with next.</p>
-            <p>This block is not about finding insights. It is about getting data into a usable state. The learner is being asked to work like the person who prepares the table before analysis begins properly.</p>
-            <p>That means the quality of the process matters: preserving the original, naming the cleaned output clearly, and being able to explain each change made to the data.</p>
+            <p>This guide follows <span class="mono">Block 9 - ETL Drill</span>. The learner should meet the setup first, then the worked example, then the concept sequence below.</p>
+            <p>Lesson datasets: <span class="mono">dirty_data.csv</span> and <span class="mono">seattle_weather.csv</span>, supplied in the <span class="mono">datasets</span> folder. If the supplied folder layout is kept, use paths such as <span class="mono">../../datasets/dirty_data.csv</span> and <span class="mono">../../datasets/seattle_weather.csv</span>. If the files are moved, point each path at wherever that CSV has been saved.</p>
+            <p>Worked example dataset: <span class="mono">built in dummy stock table</span>.</p>
           </div>
-          <div class="plain-english">Block 9 is about preparing trustworthy data, not interpreting it.</div>
         </div>
-        <div class="panel rule">
-          <header><span class="tag">Rule</span><span class="sep" aria-hidden="true"> - </span><span class="type">always keep the raw file intact</span></header>
-          <div class="body">
-            <p>The original input file must never be overwritten. The learner works from a copy in memory, then exports a new cleaned CSV with a clear name that signals it is the processed version.</p>
-          </div>
-          <div class="plain-english">Raw in. Clean out. Never destroy the source.</div>
-        </div>
-      </div>
-    </section>
-
-    <section class="note-section" id="pipeline">
-      <div class="note-eyebrow">
-        <span class="note-num">NOTE 02</span>
-        <h2 class="note-heading">The ETL Pipeline</h2>
-        <span class="note-rule"></span>
-      </div>
-      <div class="stack">
         <div class="panel translation">
-          <header><span class="tag">The three stages</span><span class="sep" aria-hidden="true"> - </span><span class="type">extract, transform, load</span></header>
+          <header><span class="tag">Setup cells</span><span class="type">run before the lesson questions</span></header>
+          <div class="body legend">
+            <p><span class="mono">import pandas as pd</span></p>
+<p><span class="mono">import matplotlib.pyplot as plt</span></p>
+<p><span class="mono">df = pd.read_csv(&quot;../../datasets/dirty_data.csv&quot;)</span></p>
+<p><span class="mono">df2 = pd.read_csv(&quot;../../datasets/seattle_weather.csv&quot;)</span></p>
+<p><span class="mono">create dummy_df from a stock inventory table</span></p>
+          </div>
+        </div>
+        <div class="panel translation">
+          <header><span class="tag">Concept sequence</span><span class="type">same order as the notebook</span></header>
           <div class="body">
             <table>
-              <thead>
-                <tr>
-                  <th>Stage</th>
-                  <th>What happens here</th>
-                </tr>
-              </thead>
+              <thead><tr><th>Step</th><th>Notebook concept</th></tr></thead>
               <tbody>
-                <tr>
-                  <td><strong>Extract</strong></td>
-                  <td>Read the raw CSV, inspect the columns, inspect missingness, inspect types, and establish what the table appears to contain.</td>
-                </tr>
-                <tr>
-                  <td><strong>Transform</strong></td>
-                  <td>Clean missing values, fix types where needed, standardise values, remove or isolate broken rows, and create any columns needed to make the data usable.</td>
-                </tr>
-                <tr>
-                  <td><strong>Load</strong></td>
-                  <td>Write the cleaned dataframe back out as a new CSV so the result can be reused later without repeating every cleaning step.</td>
-                </tr>
+                <tr><td>1</td><td>Run 1 - ETL drill on dirty_data.csv</td></tr>
+<tr><td>2</td><td>Extract</td></tr>
+<tr><td>3</td><td>Handle missing values</td></tr>
+<tr><td>4</td><td>Identify outliers</td></tr>
+<tr><td>5</td><td>Transform</td></tr>
+<tr><td>6</td><td>Data masking</td></tr>
+<tr><td>7</td><td>Load</td></tr>
+<tr><td>8</td><td>Explain</td></tr>
+<tr><td>9</td><td>Run 2 - timed ETL drill on seattle_weather.csv</td></tr>
               </tbody>
             </table>
           </div>
-          <div class="plain-english">Extract is inspection. Transform is repair. Load is saving the usable result.</div>
         </div>
-
         <div class="panel code">
-          <header><span class="tag">Typical moves</span><span class="sep" aria-hidden="true"> - </span><span class="type">pipeline skeleton</span></header>
+          <header><span class="tag">Core commands</span><span class="type">notebook order</span></header>
           <div class="body">
-<pre>df = pd.read_csv("raw_file.csv")
-df.info()
-df.isnull().sum()
-
-df_clean = df.copy()
-
-# clean or transform here
-
-df_clean.to_csv("clean_file.csv", index=False)</pre>
+            <pre>inspect the extracted table with print, info, and missing-value counts
+fill or drop missing values deliberately
+use describe and a box plot to inspect outliers
+rename columns and create a low_stock flag
+mask damaged-condition values as flagged for review
+save the cleaned dummy table with to_csv
+load seattle_weather.csv into df2
+save the cleaned weather result to ../../datasets/seattle_weather_clean.csv</pre>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="note-section" id="outputs">
-      <div class="note-eyebrow">
-        <span class="note-num">NOTE 03</span>
-        <h2 class="note-heading">Required Outputs</h2>
-        <span class="note-rule"></span>
-      </div>
+    <section class="note-section" id="etl">
+      <div class="note-eyebrow"><span class="note-num">NOTE 01</span><h2 class="note-heading">The ETL Pattern</h2><span class="note-rule"></span></div>
       <div class="stack">
-        <div class="panel resolution">
-          <header><span class="tag">What the learner must produce</span><span class="sep" aria-hidden="true"> - </span><span class="type">not just code</span></header>
-          <div class="body">
-            <p>Each ETL run should end with three things:</p>
-            <p>— a cleaned output CSV saved with a clear name</p>
-            <p>— a notebook record showing the cleaning and transformation steps</p>
-            <p>— a short explanation of what changed and why those changes were justified</p>
-          </div>
-        </div>
-
-        <div class="panel translation">
-          <header><span class="tag">What the explanation should cover</span><span class="sep" aria-hidden="true"> - </span><span class="type">minimum reporting standard</span></header>
-          <div class="body">
-            <div class="command-grid">
-              <div class="command-box">
-                <span class="command">What was wrong?</span>
-                <span class="meaning">Name the problem clearly: missing values, bad types, inconsistent labels, impossible values, duplicate rows, or unusable formatting.</span>
-              </div>
-              <div class="command-box inspect">
-                <span class="command">What did you do?</span>
-                <span class="meaning">State the specific action: fill, drop, convert, rename, split, combine, recode, or export.</span>
-              </div>
-              <div class="command-box structure">
-                <span class="command">Why that move?</span>
-                <span class="meaning">Explain why the chosen fix makes sense for this table rather than just saying it worked.</span>
-              </div>
-              <div class="command-box count">
-                <span class="command">What changed?</span>
-                <span class="meaning">Show the result in concrete terms: row count, null count, data type, or a visible before-and-after comparison.</span>
-              </div>
-            </div>
-          </div>
-          <div class="plain-english">The learner has to justify the cleaning, not just perform it.</div>
-        </div>
+        <div class="panel resolution"><header><span class="tag">Plain English</span><span class="type">extract transform load</span></header><div class="body"><p>Extract means get the data into the notebook. Transform means clean, reshape, rename, mask, or add columns. Load means save the cleaned result somewhere useful.</p></div><div class="plain-english">ETL is not a new kind of pandas command. It is an order of work.</div></div>
       </div>
     </section>
-
-    <section class="note-section" id="timing">
-      <div class="note-eyebrow">
-        <span class="note-num">NOTE 04</span>
-        <h2 class="note-heading">The Timed Second Run</h2>
-        <span class="note-rule"></span>
-      </div>
+    <section class="note-section" id="explain">
+      <div class="note-eyebrow"><span class="note-num">NOTE 02</span><h2 class="note-heading">Explain The Work</h2><span class="note-rule"></span></div>
       <div class="stack">
-        <div class="panel resolution">
-          <header><span class="tag">Drill structure</span><span class="sep" aria-hidden="true"> - </span><span class="type">two passes</span></header>
-          <div class="body">
-            <p>The first ETL run is a steady untimed pass. The learner can think, inspect, and explain carefully. The second ETL run uses a different dataset and is timed.</p>
-            <p>The timer is part of the design. It forces the learner to move from recognition into fluency. When the time expires, the learner stops whether or not the job is fully complete.</p>
-          </div>
-        </div>
-
-        <div class="panel rule">
-          <header><span class="tag">Rule</span><span class="sep" aria-hidden="true"> - </span><span class="type">stop when the timer ends</span></header>
-          <div class="body">
-            <p>The point of the timed run is not perfect completion. The point is to reveal which steps are fluent already and which steps still slow the learner down. Partial completion is still useful evidence.</p>
-          </div>
-          <div class="plain-english">The timer is measuring fluency, not punishing incompletion.</div>
-        </div>
+        <div class="panel translation"><header><span class="tag">Final check</span><span class="type">what the learner must say</span></header><div class="body"><p>After saving the cleaned file, the learner should state what was extracted, what was changed, why those changes were made, and where the cleaned output was saved.</p></div></div>
       </div>
     </section>
-
-    <div class="chapter-nav">
-      <a class="chapter-next" href="block_10_dashboard_and_presentation.html">
-        <span class="label">Next Chapter</span>
-        <span class="title">Block 10</span>
-        <span class="arrow">&rarr;</span>
-      </a>
-    </div>
-
-    <p class="footer">Created for the Block 9 ETL drill in the Learning_Python project.</p>
+    <p class="footer">Created for the Block 9 ETL drill workflow in the Learning_Python project.</p>
   </main>
 </article>
 </body>

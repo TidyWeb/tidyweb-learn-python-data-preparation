@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Block 2 Filtering Cheat Sheet</title>
+<style>
+  :root {
+    --bg: #f5f7fb;
+    --panel: #ffffff;
+    --ink: #18202a;
+    --muted: #55606d;
+    --line: #d7dee7;
+    --blue: #1d4ed8;
+    --blue-soft: #e8f0ff;
+    --orange: #b45309;
+    --code: #0f172a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 24px;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.45;
+  }
+  .sheet {
+    max-width: 980px;
+    margin: 0 auto;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    padding: 28px 32px 36px;
+  }
+  .brand {
+    display:flex;
+    align-items:center;
+    gap:16px;
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    border-bottom: 2px solid var(--line);
+  }
+  .brand img {
+    width: 110px;
+    height: auto;
+    display:block;
+  }
+  .brand-copy {
+    min-width: 0;
+  }
+  .brand-kicker {
+    margin: 0 0 4px;
+    color: var(--muted);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+  }
+  h1, h2, h3 { margin: 0; }
+  h1 {
+    font-size: 30px;
+    color: var(--blue);
+    margin-bottom: 8px;
+  }
+  .deck {
+    color: var(--muted);
+    font-size: 15px;
+    margin-bottom: 22px;
+    padding-bottom: 18px;
+    border-bottom: 2px solid var(--line);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+  }
+  .section {
+    border: 1px solid var(--line);
+    padding: 16px 18px;
+    break-inside: avoid;
+  }
+  .section h2 {
+    font-size: 18px;
+    color: var(--blue);
+    margin-bottom: 10px;
+  }
+  .section h3 {
+    font-size: 15px;
+    color: var(--orange);
+    margin: 16px 0 8px;
+  }
+  p {
+    margin: 0 0 10px;
+    font-size: 14px;
+  }
+  ul {
+    margin: 0 0 10px 18px;
+    padding: 0;
+  }
+  li {
+    margin: 0 0 6px;
+    font-size: 14px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 0 12px;
+    font-size: 14px;
+  }
+  th, td {
+    border: 1px solid var(--line);
+    padding: 8px 10px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    background: var(--blue-soft);
+    color: var(--blue);
+  }
+  .code {
+    margin: 8px 0 10px;
+    padding: 10px 12px;
+    background: #f8fafc;
+    border-left: 4px solid var(--blue);
+    color: var(--code);
+    font-family: "Courier New", Courier, monospace;
+    font-size: 13px;
+    line-height: 1.45;
+    white-space: pre-wrap;
+  }
+  .micro {
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .warning {
+    color: var(--orange);
+    font-weight: 700;
+  }
+  .span-2 {
+    grid-column: 1 / -1;
+  }
+  @media (max-width: 820px) {
+    body { padding: 12px; }
+    .sheet { padding: 18px; }
+    .grid { grid-template-columns: 1fr; }
+    .span-2 { grid-column: auto; }
+  }
+  @media print {
+    body {
+      background: #fff;
+      padding: 0;
+    }
+    .sheet {
+      max-width: none;
+      border: 0;
+      padding: 0;
+    }
+    .section {
+      break-inside: avoid;
+    }
+  }
+</style>
+</head>
+<body>
+  <main class="sheet">
+    <div class="brand">
+      <img src="../assets/tidyweb_logo.png" alt="TidyWeb logo">
+      <div class="brand-copy">
+        <p class="brand-kicker">TidyWeb</p>
+              </div>
+    </div>
+    <p class="deck">Compressed command sheet for the operating patterns only. This is the quick-reference version: what to type, what the brackets do, and what each pattern means.</p>
+
+    <div class="grid">
+      <section class="section">
+        <h2>Core Idea</h2>
+        <p>Filtering asks a question about each row and keeps only the rows where the answer is yes.</p>
+        <p>The original table does not change. You are making a smaller view for the current question.</p>
+
+        <h3>Symbol Guide</h3>
+        <table>
+          <tr><th>Symbol</th><th>Meaning</th></tr>
+          <tr><td><code>[ ]</code></td><td>Square brackets. Used to select a column or keep rows.</td></tr>
+          <tr><td><code>( )</code></td><td>Round brackets. Used to group each condition when combining conditions.</td></tr>
+          <tr><td><code>==</code></td><td>Equals.</td></tr>
+          <tr><td><code>!=</code></td><td>Does not equal.</td></tr>
+          <tr><td><code>&gt;</code></td><td>Greater than.</td></tr>
+          <tr><td><code>&lt;</code></td><td>Less than.</td></tr>
+          <tr><td><code>&amp;</code></td><td>AND. Both conditions must be true.</td></tr>
+          <tr><td><code>|</code></td><td>OR. Either condition being true is enough.</td></tr>
+          <tr><td><code>.</code></td><td>Reach into something, for example <code>.shape</code>.</td></tr>
+        </table>
+      </section>
+
+      <section class="section">
+        <h2>The Two Jobs</h2>
+        <div class="code">df[df["column"] == value]</div>
+        <p><strong>Inner job:</strong> <code>df["column"] == value</code><br>Ask the row-by-row question.</p>
+        <p><strong>Outer job:</strong> <code>df[ ... ]</code><br>Keep only the rows where that question came out <code>True</code>.</p>
+
+        <h3>Ask A Yes/No Question Only</h3>
+        <div class="code">df["column"] == value</div>
+        <p>Ask whether each row's column value matches the value.</p>
+      </section>
+
+      <section class="section">
+        <h2>Single Filters</h2>
+
+        <h3>Equals</h3>
+        <div class="code">df[df["column"] == value]</div>
+        <p>Keep rows where the column matches the value exactly.</p>
+
+        <h3>Not Equal</h3>
+        <div class="code">df[df["column"] != value]</div>
+        <p>Keep rows where the column is anything except that value.</p>
+
+        <h3>Greater Than</h3>
+        <div class="code">df[df["number_column"] &gt; number]</div>
+        <p>Keep rows above the threshold.</p>
+
+        <h3>Less Than</h3>
+        <div class="code">df[df["number_column"] &lt; number]</div>
+        <p>Keep rows below the threshold.</p>
+      </section>
+
+      <section class="section">
+        <h2>Combined Filters</h2>
+
+        <h3>AND</h3>
+        <div class="code">df[(condition_1) &amp; (condition_2)]</div>
+        <p>Both tests must pass.</p>
+        <div class="code">df[(df["species"] == "virginica") &amp; (df["petal_width"] &gt; 2.0)]</div>
+
+        <h3>OR</h3>
+        <div class="code">df[(condition_1) | (condition_2)]</div>
+        <p>The first test can pass, the second test can pass, or both can pass.</p>
+        <div class="code">df[(df["species"] == "setosa") | (df["sepal_length"] &gt; 7.0)]</div>
+      </section>
+
+      <section class="section span-2">
+        <h2>Bracket Rule</h2>
+        <p>Use round brackets around each full condition before <code>&amp;</code> or <code>|</code>.</p>
+        <div class="grid">
+          <div>
+            <h3>Correct</h3>
+            <div class="code">df[(df["column"] == value) &amp; (df["other_column"] &gt; number)]</div>
+          </div>
+          <div>
+            <h3>Wrong Shape</h3>
+            <div class="code">df[df["column"] == value &amp; df["other_column"] &gt; number]</div>
+          </div>
+        </div>
+        <p class="micro">Square brackets keep rows. Round brackets group each condition so Python knows what belongs together.</p>
+      </section>
+
+      <section class="section">
+        <h2>Check Result Size</h2>
+        <div class="code">df[df["column"] == value].shape</div>
+        <p>Show the filtered result size as <code>(rows, columns)</code>.</p>
+        <p><span class="warning">Important:</span> <code>.shape</code> has no <code>()</code>.</p>
+      </section>
+
+      <section class="section">
+        <h2>Translation Pattern</h2>
+        <p>When moving from a dummy example to the real dataset, usually only three things change:</p>
+        <ul>
+          <li>table name</li>
+          <li>column name</li>
+          <li>value</li>
+        </ul>
+        <div class="code">dummy_df["category"] == "bread"</div>
+        <p>becomes:</p>
+        <div class="code">df["species"] == "setosa"</div>
+      </section>
+
+      <section class="section">
+        <h2>Quick Checks</h2>
+        <p>If you get only the column headers and no rows, the filter probably found zero matches.</p>
+        <p>Common reasons:</p>
+        <ul>
+          <li>typo in the value</li>
+          <li>wrong capital letters</li>
+          <li>wrong column name</li>
+          <li>a condition that is too strict</li>
+        </ul>
+        <div class="code">df["column"].unique()</div>
+        <p>Show the real values that exist in that column.</p>
+      </section>
+
+      <section class="section span-2">
+        <h2>Minimal Examples</h2>
+        <div class="code">df["species"] == "setosa"
+df[df["species"] == "setosa"]
+df[df["species"] != "setosa"]
+df[df["petal_length"] &gt; 5.0]
+df[df["sepal_width"] &lt; 3.0]
+df[(df["species"] == "virginica") &amp; (df["petal_width"] &gt; 2.0)]
+df[(df["species"] == "setosa") | (df["sepal_length"] &gt; 7.0)]
+df[df["species"] == "virginica"].shape</div>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

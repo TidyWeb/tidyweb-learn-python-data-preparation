@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 4 - Expressions and Aggregates</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;family=IBM+Plex+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+:root{--paper:#fffdf9;--ink:#20303c;--muted:#5f6f7d;--line:#d8e0e7;--navy:#1d4e89;--cyan:#1e7c8a;--amber:#d48920;--rose:#a55462;--green:#2f6b61;--soft-blue:#edf4ff;--soft-cyan:#eefbfc;--soft-amber:#fff8eb;--soft-rose:#fff1f3;--soft-green:#edf8f4;--code:#101821}*{box-sizing:border-box}body{margin:0;background:#eef4f7;color:var(--ink);font-family:'IBM Plex Sans',sans-serif}.page{max-width:1080px;margin:24px auto 56px;background:var(--paper);border:1px solid var(--line);box-shadow:0 18px 44px rgba(28,41,52,.14)}main{padding:40px 46px 60px}.eyebrow,.label,.step{font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase}.eyebrow{color:var(--cyan);margin-bottom:10px}h1,h2,h3{font-family:'Atkinson Hyperlegible',sans-serif;color:var(--navy)}h1{font-size:42px;line-height:1.05;margin:0 0 14px}h2{font-size:28px;margin:40px 0 14px}h3{font-size:21px;margin:0 0 10px}p,li{font-size:16px;line-height:1.72}p{color:var(--muted);margin:0 0 12px}ul,ol{padding-left:22px;display:grid;gap:8px}.lead{font-size:18px;max-width:78ch}.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.panel{border:1px solid var(--line);border-radius:18px;background:#fff;padding:20px}.panel h2{margin-top:0}.concept{border-left:6px solid var(--navy);background:var(--soft-blue)}.syntax{border-left:6px solid var(--cyan);background:var(--soft-cyan)}.example{border-left:6px solid var(--green);background:var(--soft-green)}.mistake{border-left:6px solid var(--rose);background:var(--soft-rose)}.checkpoint{border-left:6px solid var(--amber);background:var(--soft-amber)}.stack{display:grid;gap:16px}.label{display:block;color:var(--cyan);margin-bottom:8px}.question{font-weight:700;color:var(--ink)}pre{margin:12px 0;background:var(--code);color:#e8eef4;padding:16px 18px;border-radius:14px;overflow:auto;font:14px/1.75 'IBM Plex Mono',monospace}code{font-family:'IBM Plex Mono',monospace;background:#f0f3f6;border-radius:4px;padding:.08em .3em;color:#173f6a}pre code{background:transparent;color:inherit;padding:0}.command{font:700 18px/1.55 'IBM Plex Mono',monospace;color:var(--navy);overflow-wrap:anywhere}.plain{border-top:1px solid var(--line);padding-top:12px;font-style:italic;color:var(--ink)}table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px}th,td{border:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top}th{background:#f3f7fa;color:var(--navy);font:600 12px 'IBM Plex Mono',monospace}.parts td:first-child{width:28%;font:600 13px 'IBM Plex Mono',monospace;color:var(--navy)}.route{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:22px 0}.route div{border:1px solid var(--line);border-radius:14px;background:#fff;padding:14px}.route strong{display:block;color:var(--navy);margin:5px 0}.route span:last-child{font-size:14px;line-height:1.5;color:var(--muted)}.footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}@media(max-width:820px){.grid,.route{grid-template-columns:1fr}main{padding:26px 20px 42px}h1{font-size:32px}}
+.panel,.stack,.grid>*{min-width:0}table{display:block;max-width:100%;overflow-x:auto}
+</style></head>
+<body><div class="page"><main>
+<div class="eyebrow">Chapter 4 · Analysis</div>
+<h1>Expressions And Aggregates</h1>
+<p class="lead">Until now, the result has mostly repeated facts already stored in a table. Expressions let SQL calculate a new value for each row. Aggregates go further: they turn many rows into one summary—or one summary per group. The central question becomes: <strong>what should one result row represent?</strong></p>
+
+<div class="route" aria-label="Chapter learning route"><div><span class="step">01</span><strong>Calculate per row</strong><span>Build expressions from existing values and label them with <code>AS</code>.</span></div><div><span class="step">02</span><strong>Summarise all rows</strong><span>Use <code>COUNT</code>, <code>SUM</code>, <code>AVG</code>, <code>MIN</code>, and <code>MAX</code>.</span></div><div><span class="step">03</span><strong>Create groups</strong><span>Use <code>GROUP BY</code> to change the result grain.</span></div><div><span class="step">04</span><strong>Filter at the right level</strong><span>Use <code>WHERE</code> for source rows and <code>HAVING</code> for finished groups.</span></div></div>
+
+<section class="panel concept"><span class="label">The material for this chapter</span><h2>A Small Wildlife Survey</h2><p>Each row records one survey visit. The table is deliberately unrelated to the practice labs.</p><table><thead><tr><th>site</th><th>habitat</th><th>birds_seen</th><th>hours</th><th>observer</th></tr></thead><tbody><tr><td>Reed Pool</td><td>Wetland</td><td>18</td><td>2</td><td>Ada</td></tr><tr><td>Oak Rise</td><td>Woodland</td><td>9</td><td>3</td><td>Ben</td></tr><tr><td>Marsh Edge</td><td>Wetland</td><td>24</td><td>4</td><td>Ada</td></tr><tr><td>Pine Track</td><td>Woodland</td><td>12</td><td>2</td><td>Chen</td></tr><tr><td>Cliff Path</td><td>Coastal</td><td>15</td><td>3</td><td>Ben</td></tr></tbody></table></section>
+
+<div class="stack" style="margin-top:16px">
+  <section class="panel concept"><span class="label">Concept 1 · A new value for every source row</span><h2>An Expression Calculates Without Changing Stored Data</h2><p>An expression combines columns, literal values, operators, or functions to produce a value in the result. SQL evaluates it separately for each source row. The calculation is temporary unless a separate data-changing statement stores it.</p></section>
+  <section class="panel syntax"><span class="label">Command bridge</span><div class="command">birds_seen / hours AS birds_per_hour</div><table class="parts"><tbody><tr><td>birds_seen</td><td>The stored bird count for the current row.</td></tr><tr><td>/</td><td>The division operator.</td></tr><tr><td>hours</td><td>The stored survey duration for the same row.</td></tr><tr><td>AS</td><td>Introduces a temporary result-column name, called an alias.</td></tr><tr><td>birds_per_hour</td><td>The readable label chosen for the calculated output. It is not a stored column in the source table.</td></tr></tbody></table></section>
+  <section class="panel example"><span class="label">Worked example · expression result</span><pre><code>SELECT site,
+       birds_seen,
+       hours,
+       birds_seen * 1.0 / hours AS birds_per_hour
+FROM surveys;</code></pre><table><thead><tr><th>site</th><th>birds_seen</th><th>hours</th><th>birds_per_hour</th></tr></thead><tbody><tr><td>Reed Pool</td><td>18</td><td>2</td><td>9.0</td></tr><tr><td>Oak Rise</td><td>9</td><td>3</td><td>3.0</td></tr><tr><td>Marsh Edge</td><td>24</td><td>4</td><td>6.0</td></tr><tr><td>Pine Track</td><td>12</td><td>2</td><td>6.0</td></tr><tr><td>Cliff Path</td><td>15</td><td>3</td><td>5.0</td></tr></tbody></table><p>The <code>* 1.0</code> encourages decimal division in systems where dividing whole numbers could otherwise produce a whole-number result.</p></section>
+</div>
+
+<section class="panel mistake" style="margin-top:16px"><h2>An Alias Is A Label, Not The Calculation</h2><p><strong>Wrong instinct:</strong> think <code>AS birds_per_hour</code> performs the maths.</p><p><strong>Correction:</strong> <code>birds_seen * 1.0 / hours</code> performs the calculation. <code>AS</code> merely gives the returned expression a clear heading so later people do not have to decode it.</p></section>
+
+<div class="stack" style="margin-top:16px">
+  <section class="panel concept"><span class="label">Concept 2 · Many rows become one answer</span><h2>Aggregate Functions Summarise A Set Of Rows</h2><p>An aggregate function accepts values from several rows and returns one summary value. Without <code>GROUP BY</code>, the whole filtered table is treated as one set.</p></section>
+  <section class="panel syntax"><span class="label">The five foundation aggregates</span><table class="parts"><tbody><tr><td>COUNT(*)</td><td>Counts result rows, including rows that contain missing values in some columns.</td></tr><tr><td>COUNT(column)</td><td>Counts non-<code>NULL</code> values in that particular column.</td></tr><tr><td>SUM(column)</td><td>Adds the non-missing numeric values.</td></tr><tr><td>AVG(column)</td><td>Calculates the mean of the non-missing numeric values.</td></tr><tr><td>MIN(column)</td><td>Returns the smallest non-missing value.</td></tr><tr><td>MAX(column)</td><td>Returns the largest non-missing value.</td></tr></tbody></table></section>
+  <section class="panel example"><span class="label">Worked example · one summary row</span><pre><code>SELECT COUNT(*) AS survey_count,
+       SUM(birds_seen) AS total_birds,
+       AVG(hours) AS average_hours,
+       MAX(birds_seen) AS highest_count
+FROM surveys;</code></pre><table><thead><tr><th>survey_count</th><th>total_birds</th><th>average_hours</th><th>highest_count</th></tr></thead><tbody><tr><td>5</td><td>78</td><td>2.8</td><td>24</td></tr></tbody></table><p>Five source rows have been compressed into one result row containing four different summaries.</p></section>
+</div>
+
+<section class="panel checkpoint" style="margin-top:16px"><h2>The Grain Question</h2><p><strong>Grain</strong> means what one row represents. Before aggregation, one row represents one survey visit. After the query above, one row represents the entire set of survey visits.</p><p class="plain">If you cannot finish the sentence “one result row will represent…”, pause before adding <code>GROUP BY</code>.</p></section>
+
+<div class="stack" style="margin-top:16px">
+  <section class="panel concept"><span class="label">Concept 3 · One summary for each category</span><h2><code>GROUP BY</code> Splits Rows Into Buckets</h2><p><code>GROUP BY habitat</code> gathers all Wetland rows into one bucket, all Woodland rows into another, and so on. The aggregate functions then calculate separately inside each bucket.</p></section>
+  <section class="panel syntax"><span class="label">Command bridge</span><div class="command">SELECT habitat, SUM(birds_seen) ... GROUP BY habitat;</div><table class="parts"><tbody><tr><td>habitat</td><td>The category label shown once for each group.</td></tr><tr><td>SUM(birds_seen)</td><td>The calculation repeated independently inside every habitat group.</td></tr><tr><td>GROUP BY habitat</td><td>Changes the grain to one result row per distinct habitat.</td></tr></tbody></table></section>
+  <section class="panel example"><span class="label">Worked example · grouped result</span><pre><code>SELECT habitat,
+       COUNT(*) AS survey_count,
+       SUM(birds_seen) AS total_birds
+FROM surveys
+GROUP BY habitat;</code></pre><table><thead><tr><th>habitat</th><th>survey_count</th><th>total_birds</th></tr></thead><tbody><tr><td>Coastal</td><td>1</td><td>15</td></tr><tr><td>Wetland</td><td>2</td><td>42</td></tr><tr><td>Woodland</td><td>2</td><td>21</td></tr></tbody></table><p>The five visit rows have become three habitat rows.</p></section>
+</div>
+
+<section class="panel mistake" style="margin-top:16px"><h2>Why Un-grouped Detail Columns Do Not Belong</h2><pre><code>SELECT habitat, observer, SUM(birds_seen)
+FROM surveys
+GROUP BY habitat;</code></pre><p>One habitat group can contain several observers. SQL cannot honestly place one arbitrary observer beside the habitat total and pretend that person represents the whole group. The safe beginner rule is: every selected item should either be a grouped column or an aggregate calculation.</p></section>
+
+<section class="panel syntax" style="margin-top:16px"><h2>Grouping By More Than One Column</h2><p>Each additional grouped column makes the grain more detailed.</p><pre><code>SELECT habitat,
+       observer,
+       SUM(birds_seen) AS total_birds
+FROM surveys
+GROUP BY habitat, observer;</code></pre><p>One result row now represents one unique <em>habitat-and-observer combination</em>, not habitat alone.</p></section>
+
+<div class="stack" style="margin-top:16px">
+  <section class="panel concept"><span class="label">Concept 4 · Filter before or after grouping</span><h2><code>WHERE</code> And <code>HAVING</code> Work At Different Levels</h2><p><code>WHERE</code> decides which individual source rows are allowed into the grouping stage. <code>HAVING</code> decides which completed group summaries survive afterwards.</p></section>
+  <section class="panel example"><span class="label">Worked example · two filters, two jobs</span><pre><code>SELECT habitat,
+       SUM(birds_seen) AS total_birds
+FROM surveys
+WHERE hours &gt;= 3
+GROUP BY habitat
+HAVING SUM(birds_seen) &gt; 10;</code></pre><ol><li><code>WHERE hours &gt;= 3</code> removes the shorter individual visits.</li><li><code>GROUP BY habitat</code> creates groups from the remaining rows.</li><li><code>SUM(birds_seen)</code> calculates a total for each group.</li><li><code>HAVING SUM(birds_seen) &gt; 10</code> removes completed groups whose total is not above 10.</li></ol></section>
+</div>
+
+<div class="grid" style="margin-top:16px"><section class="panel"><h2>Use <code>WHERE</code> When…</h2><ul><li>The condition is about a stored value in one source row.</li><li>You want to exclude rows before the calculation.</li><li>The wording says “only visits lasting at least three hours”.</li></ul></section><section class="panel"><h2>Use <code>HAVING</code> When…</h2><ul><li>The condition is about a finished group or aggregate.</li><li>You want to exclude groups after summary values exist.</li><li>The wording says “only habitats with more than ten birds”.</li></ul></section></div>
+
+<section class="panel checkpoint" style="margin-top:16px"><span class="label">A reliable aggregation planning routine</span><h2>Write The Meaning Before The Query</h2><ol><li>Complete: “one source row represents…”</li><li>Decide whether the question wants detail rows, one overall summary, or one summary per category.</li><li>If grouped, complete: “one result row represents…”</li><li>Identify filters about individual rows; place those in <code>WHERE</code>.</li><li>Identify filters about group calculations; place those in <code>HAVING</code>.</li><li>Name every calculated column so the output explains itself.</li></ol></section>
+
+<section class="panel mistake" style="margin-top:16px"><h2>Common Analytical Wrong Turns</h2><table><thead><tr><th>Wrong turn</th><th>Repair</th></tr></thead><tbody><tr><td>Expecting an expression to reduce the row count.</td><td>A row-level expression usually adds a calculated value to every row. Aggregation is what compresses rows.</td></tr><tr><td>Using <code>WHERE COUNT(*) &gt; 2</code>.</td><td>The count does not exist during <code>WHERE</code>. Group first, then use <code>HAVING COUNT(*) &gt; 2</code>.</td></tr><tr><td>Selecting a detail column that is neither grouped nor aggregated.</td><td>Remove it, aggregate it, or add it to <code>GROUP BY</code> only if the more detailed grain is genuinely intended.</td></tr><tr><td>Assuming <code>COUNT(column)</code> and <code>COUNT(*)</code> always match.</td><td>Remember that <code>COUNT(column)</code> ignores missing values in that column.</td></tr></tbody></table></section>
+
+<section class="panel checkpoint" style="margin-top:16px"><span class="label">Ready for the Chapter 4 exercises?</span><h2>You Are Ready When You Can Explain These</h2><ul><li>The difference between a row-level expression and an aggregate.</li><li>What <code>AS</code> changes—and what it does not change.</li><li>Why <code>GROUP BY</code> changes what one result row represents.</li><li>Why selected non-aggregate columns must match the intended group grain.</li><li>How to decide between <code>WHERE</code> and <code>HAVING</code>.</li><li>Why <code>COUNT(*)</code> and <code>COUNT(column)</code> can return different numbers.</li></ul></section>
+
+<section class="panel" style="margin-top:16px"><h2>Next: Understand The Order Behind The Rules</h2><p>Chapter 5 reveals SQL’s logical processing order. That order explains why row filters come before groups, why <code>HAVING</code> exists, when a calculated alias becomes visible, and how subqueries create an intermediate answer for a later stage.</p></section>
+<p class="footer">Learning route: SQLBolt Lessons 9–11. The wildlife survey data is deliberately separate from the aggregate practice dataset.</p>
+</main></div><script src="../../../shared/site-nav.js"></script></body></html>

@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 5 - Query Order and Thinking</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;family=IBM+Plex+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+:root{--paper:#fffdf9;--ink:#20303c;--muted:#5f6f7d;--line:#d8e0e7;--navy:#1d4e89;--cyan:#1e7c8a;--amber:#d48920;--rose:#a55462;--green:#2f6b61;--soft-blue:#edf4ff;--soft-cyan:#eefbfc;--soft-amber:#fff8eb;--soft-rose:#fff1f3;--soft-green:#edf8f4;--code:#101821}*{box-sizing:border-box}body{margin:0;background:#eef4f7;color:var(--ink);font-family:'IBM Plex Sans',sans-serif}.page{max-width:1080px;margin:24px auto 56px;background:var(--paper);border:1px solid var(--line);box-shadow:0 18px 44px rgba(28,41,52,.14)}main{padding:40px 46px 60px}.eyebrow,.label,.step{font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase}.eyebrow{color:var(--cyan);margin-bottom:10px}h1,h2,h3{font-family:'Atkinson Hyperlegible',sans-serif;color:var(--navy)}h1{font-size:42px;line-height:1.05;margin:0 0 14px}h2{font-size:28px;margin:40px 0 14px}h3{font-size:21px;margin:0 0 10px}p,li{font-size:16px;line-height:1.72}p{color:var(--muted);margin:0 0 12px}ul,ol{padding-left:22px;display:grid;gap:8px}.lead{font-size:18px;max-width:78ch}.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.panel{border:1px solid var(--line);border-radius:18px;background:#fff;padding:20px}.panel h2{margin-top:0}.concept{border-left:6px solid var(--navy);background:var(--soft-blue)}.syntax{border-left:6px solid var(--cyan);background:var(--soft-cyan)}.example{border-left:6px solid var(--green);background:var(--soft-green)}.mistake{border-left:6px solid var(--rose);background:var(--soft-rose)}.checkpoint{border-left:6px solid var(--amber);background:var(--soft-amber)}.stack{display:grid;gap:16px}.label{display:block;color:var(--cyan);margin-bottom:8px}.question{font-weight:700;color:var(--ink)}pre{margin:12px 0;background:var(--code);color:#e8eef4;padding:16px 18px;border-radius:14px;overflow:auto;font:14px/1.75 'IBM Plex Mono',monospace}code{font-family:'IBM Plex Mono',monospace;background:#f0f3f6;border-radius:4px;padding:.08em .3em;color:#173f6a}pre code{background:transparent;color:inherit;padding:0}.command{font:700 18px/1.55 'IBM Plex Mono',monospace;color:var(--navy);overflow-wrap:anywhere}.plain{border-top:1px solid var(--line);padding-top:12px;font-style:italic;color:var(--ink)}table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px}th,td{border:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top}th{background:#f3f7fa;color:var(--navy);font:600 12px 'IBM Plex Mono',monospace}.parts td:first-child{width:24%;font:600 13px 'IBM Plex Mono',monospace;color:var(--navy)}.route{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:22px 0}.route div{border:1px solid var(--line);border-radius:14px;background:#fff;padding:14px}.route strong{display:block;color:var(--navy);margin:5px 0}.route span:last-child{font-size:14px;line-height:1.5;color:var(--muted)}.stage-list{counter-reset:stage;display:grid;gap:10px;padding:0}.stage-list li{list-style:none;counter-increment:stage;border:1px solid var(--line);border-radius:12px;padding:12px 14px 12px 52px;position:relative;background:#fff}.stage-list li:before{content:counter(stage);position:absolute;left:14px;top:12px;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--soft-blue);color:var(--navy);font:700 12px 'IBM Plex Mono',monospace}.footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}@media(max-width:820px){.grid,.route{grid-template-columns:1fr}main{padding:26px 20px 42px}h1{font-size:32px}}
+.panel,.stack,.grid>*{min-width:0}table{display:block;max-width:100%;overflow-x:auto}
+</style></head>
+<body><div class="page"><main>
+<div class="eyebrow">Chapter 5 · Deeper Reasoning</div>
+<h1>Query Order And Thinking</h1>
+<p class="lead">SQL is written in an order that reads well to a person, but the database builds the answer in a different logical order. Understanding that hidden journey turns several “odd rules” into predictable consequences. It also prepares you to solve problems in stages with subqueries and to stack compatible results with set operations.</p>
+
+<div class="route" aria-label="Chapter learning route"><div><span class="step">01</span><strong>Separate written and logical order</strong><span>Know where each clause becomes available.</span></div><div><span class="step">02</span><strong>Trace one query</strong><span>Follow rows as they are filtered, grouped, selected, and sorted.</span></div><div><span class="step">03</span><strong>Answer in stages</strong><span>Use a subquery when the outer question needs an intermediate value.</span></div><div><span class="step">04</span><strong>Stack compatible answers</strong><span>Use <code>UNION</code> or <code>UNION ALL</code>, not a join.</span></div></div>
+
+<section class="panel concept"><span class="label">The material for this chapter</span><h2>A Community Course Table</h2><p>The examples use this separate neutral dataset.</p><table><thead><tr><th>course_name</th><th>format</th><th>fee</th><th>enrolled</th></tr></thead><tbody><tr><td>Woodwork Basics</td><td>Workshop</td><td>80</td><td>12</td></tr><tr><td>Digital Photos</td><td>Online</td><td>45</td><td>30</td></tr><tr><td>Bread Making</td><td>Workshop</td><td>60</td><td>18</td></tr><tr><td>First Aid</td><td>Evening</td><td>35</td><td>24</td></tr><tr><td>Local History</td><td>Online</td><td>25</td><td>16</td></tr><tr><td>Bike Repair</td><td>Workshop</td><td>70</td><td>14</td></tr></tbody></table></section>
+
+<div class="grid" style="margin-top:16px"><section class="panel concept"><h2>The Written Order</h2><p>This is the order in which clauses normally appear in a statement:</p><pre><code>SELECT
+FROM / JOIN
+WHERE
+GROUP BY
+HAVING
+ORDER BY
+LIMIT / OFFSET</code></pre><p>It leads with the desired output, which makes the question readable.</p></section><section class="panel syntax"><h2>The Logical Order</h2><p>This is a useful beginner model of how the answer is assembled:</p><pre><code>FROM / JOIN
+WHERE
+GROUP BY
+HAVING
+SELECT
+DISTINCT
+ORDER BY
+LIMIT / OFFSET</code></pre><p>Database engines may optimise the physical work, but the result must behave as though these logical stages occurred.</p></section></div>
+
+<section class="panel checkpoint" style="margin-top:16px"><h2>Why This Model Earns Its Place</h2><ul><li><code>WHERE</code> cannot filter a group total because grouping has not happened yet.</li><li><code>HAVING</code> can filter a group total because groups now exist.</li><li>A <code>SELECT</code> alias often cannot be used in <code>WHERE</code> because the alias has not been created at that stage.</li><li><code>ORDER BY</code> can often use a <code>SELECT</code> alias because selection has already named the output.</li><li><code>LIMIT</code> comes last because SQL must first know which rows are at the front.</li></ul></section>
+
+<div class="stack" style="margin-top:16px">
+  <section class="panel concept"><span class="label">Concept 1 · Trace the answer through stages</span><h2>One Question, Several Transformations</h2><p class="question">Question: Among courses costing at least 40, show each format’s average enrolment when that average is at least 14; highest average first.</p><pre><code>SELECT format,
+       AVG(enrolled) AS average_enrolment
+FROM courses
+WHERE fee &gt;= 40
+GROUP BY format
+HAVING AVG(enrolled) &gt;= 14
+ORDER BY average_enrolment DESC;</code></pre></section>
+  <section class="panel example"><span class="label">Worked example · watch the result take shape</span><ol class="stage-list"><li><strong><code>FROM courses</code></strong><br>Start with all six source rows.</li><li><strong><code>WHERE fee &gt;= 40</code></strong><br>Keep Woodwork Basics, Digital Photos, Bread Making, and Bike Repair. The 35 and 25 fee rows leave now.</li><li><strong><code>GROUP BY format</code></strong><br>Create an Online group and a Workshop group from the surviving rows.</li><li><strong><code>HAVING AVG(enrolled) &gt;= 14</code></strong><br>Online averages 30. Workshop averages 14.67. Both groups survive.</li><li><strong><code>SELECT ... AS average_enrolment</code></strong><br>Build the two requested output columns and give the calculation a readable heading.</li><li><strong><code>ORDER BY average_enrolment DESC</code></strong><br>Place the higher finished average first.</li></ol><table><thead><tr><th>format</th><th>average_enrolment</th></tr></thead><tbody><tr><td>Online</td><td>30.0</td></tr><tr><td>Workshop</td><td>14.67</td></tr></tbody></table></section>
+</div>
+
+<section class="panel mistake" style="margin-top:16px"><h2>Do Not Memorise The List Without Using It</h2><p>The point is not to recite eight clause names. Use the order as a diagnostic tool: “Does the value I am referring to exist yet?” If not, the condition belongs later, the expression must be repeated, or the current query needs to become an inner stage.</p></section>
+
+<div class="stack" style="margin-top:16px">
+  <section class="panel concept"><span class="label">Concept 2 · An intermediate answer</span><h2>A Subquery Is A Query Used By Another Query</h2><p>Some questions compare each row with a fact that must first be calculated from the table itself. A subquery creates that intermediate answer. Parentheses mark where the inner query begins and ends.</p></section>
+  <section class="panel syntax"><span class="label">Command bridge</span><div class="command">WHERE fee &gt; (SELECT AVG(fee) FROM courses)</div><table class="parts"><tbody><tr><td>SELECT AVG(fee)</td><td>The inner query calculates one value: the overall average fee.</td></tr><tr><td>( ... )</td><td>Parentheses contain the inner query and make its result available as one expression.</td></tr><tr><td>fee &gt;</td><td>The outer query compares each course row with that returned average.</td></tr></tbody></table></section>
+  <section class="panel example"><span class="label">Worked example · inner first, outer second</span><pre><code>SELECT course_name, fee
+FROM courses
+WHERE fee &gt; (
+  SELECT AVG(fee)
+  FROM courses
+);</code></pre><ol><li>The inner query calculates the overall average fee: 52.5.</li><li>The outer query tests each row’s fee against 52.5.</li><li>Only fees above 52.5 remain.</li></ol><table><thead><tr><th>course_name</th><th>fee</th></tr></thead><tbody><tr><td>Woodwork Basics</td><td>80</td></tr><tr><td>Bread Making</td><td>60</td></tr><tr><td>Bike Repair</td><td>70</td></tr></tbody></table></section>
+</div>
+
+<section class="panel mistake" style="margin-top:16px"><h2>Know The Shape The Inner Query Returns</h2><p>The comparison <code>fee &gt; (...)</code> expects one scalar value—a single cell. If the inner query returns several rows, ordinary <code>&gt;</code> does not know which one to use. Before writing the outer query, ask whether the inner answer is one value, one column of values, or a whole table. The outer operator must match that shape.</p></section>
+
+<div class="stack" style="margin-top:16px">
+  <section class="panel concept"><span class="label">Concept 3 · Put answer sets one above another</span><h2>Set Operations Stack Rows Vertically</h2><p>A join connects related columns side by side. A set operation combines the rows returned by complete queries. Each side must return the same number of columns in the same order, with compatible kinds of values.</p></section>
+  <section class="panel syntax"><span class="label">Command bridge</span><table class="parts"><tbody><tr><td>UNION</td><td>Stacks the two result sets and removes duplicate result rows.</td></tr><tr><td>UNION ALL</td><td>Stacks the two result sets and keeps every row, including duplicates.</td></tr></tbody></table><pre><code>SELECT course_name FROM spring_sessions
+UNION
+SELECT course_name FROM autumn_sessions;</code></pre></section>
+  <section class="panel example"><span class="label">Worked example · duplicate decision</span><div class="grid"><div><p class="question">spring_sessions</p><table><tbody><tr><td>First Aid</td></tr><tr><td>Bike Repair</td></tr></tbody></table></div><div><p class="question">autumn_sessions</p><table><tbody><tr><td>First Aid</td></tr><tr><td>Bread Making</td></tr></tbody></table></div></div><div class="grid"><div><p class="question"><code>UNION</code> result</p><table><tbody><tr><td>First Aid</td></tr><tr><td>Bike Repair</td></tr><tr><td>Bread Making</td></tr></tbody></table></div><div><p class="question"><code>UNION ALL</code> result</p><table><tbody><tr><td>First Aid</td></tr><tr><td>Bike Repair</td></tr><tr><td>First Aid</td></tr><tr><td>Bread Making</td></tr></tbody></table></div></div></section>
+</div>
+
+<section class="panel checkpoint" style="margin-top:16px"><h2>Join, Subquery, Or Union?</h2><table><thead><tr><th>If the question needs…</th><th>Think first about…</th></tr></thead><tbody><tr><td>Extra columns from related records</td><td>A <strong>join</strong>: connect tables side by side through a key.</td></tr><tr><td>An intermediate value or set needed by another condition</td><td>A <strong>subquery</strong>: calculate the inner answer, then use it outside.</td></tr><tr><td>Compatible result rows from separate queries in one column layout</td><td>A <strong>union</strong>: stack the answers vertically.</td></tr></tbody></table></section>
+
+<section class="panel mistake" style="margin-top:16px"><h2>Frequent Deeper-Query Mistakes</h2><table><thead><tr><th>Wrong turn</th><th>Repair</th></tr></thead><tbody><tr><td>Using a selected aggregate alias inside <code>WHERE</code>.</td><td>The alias and aggregate do not exist yet. Filter source rows with <code>WHERE</code> or group results with <code>HAVING</code>.</td></tr><tr><td>Writing the outer query before knowing the inner query’s result.</td><td>Run or reason through the inner query alone first. State its shape and value.</td></tr><tr><td>Using a join to place two similar lists together.</td><td>If the desired columns line up and the rows should stack, use a set operation.</td></tr><tr><td>Using <code>UNION</code> when duplicate occurrences carry meaning.</td><td>Choose <code>UNION ALL</code> when every occurrence must remain.</td></tr><tr><td>Sorting each side of a union independently.</td><td>Build the combined result first, then apply one final <code>ORDER BY</code> to the completed set.</td></tr></tbody></table></section>
+
+<section class="panel checkpoint" style="margin-top:16px"><span class="label">Ready for the Chapter 5 exercises?</span><h2>You Are Ready When You Can Explain These</h2><ul><li>Why written order and logical order are different but both useful.</li><li>At which stage rows, groups, selected aliases, and sorted results exist.</li><li>How to solve an above-or-below-average question in two explicit stages.</li><li>Why the expected shape of a subquery matters to the outer comparison.</li><li>The difference between placing columns side by side and stacking rows vertically.</li><li>Why <code>UNION</code> and <code>UNION ALL</code> answer different duplicate questions.</li></ul></section>
+
+<section class="panel" style="margin-top:16px"><h2>Next: Stop Reading And Start Changing</h2><p>Chapter 6 introduces statements that alter rows or the table structure itself. The reasoning discipline stays the same, but the consequences change: a mistaken reading query gives a wrong answer; a mistaken writing query changes data.</p></section>
+<p class="footer">Learning route: SQLBolt Lesson 12 plus subquery and set-operation topics. The course data is deliberately separate from the Travel practice dataset.</p>
+</main></div><script src="../../../shared/site-nav.js"></script></body></html>

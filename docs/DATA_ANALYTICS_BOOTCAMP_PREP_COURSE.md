@@ -39,7 +39,8 @@ From the course outline:
 Every concept inside every teaching block must use this four-part sequence:
 
 1. Explain the concept in plain English. What it is, why it exists, and what problem it solves. No code yet.
-2. Show a worked example as a real executed code cell with visible output.
+2. Show a worked example as a real executed code cell with visible output stored
+   in the notebook.
 3. Ask a specific question immediately above the learner's empty cell. The question must name the dataset and the column or operation.
 4. Provide an empty code cell. No pre-filled hints.
 
@@ -47,7 +48,8 @@ Each concept is taught once on one lesson dataset per block. Dummy worked exampl
 
 ## Refresh Checks
 
-At the end of every block, before moving to the next block, the learner completes a refresh check.
+At the end of each of Blocks 1 through 8, before moving to the next block, the
+learner completes a refresh check.
 
 The refresh check must:
 
@@ -58,17 +60,23 @@ The refresh check must:
 - provide empty code cells only
 - end with a plain-English findings note about what the data showed
 
-The refresh check is capped at 45 minutes. If it runs over, stop anyway. Incomplete is acceptable. Skipped is not.
+The refresh check is capped at 45 minutes. If it runs over, stop anyway.
+Incomplete is acceptable. Skipped is not.
+
+Blocks 9 and 10 are capstones, so they do not have separate refresh checks.
+Block 9 is verified by the completed ETL artifacts from both runs. Block 10 is
+verified by its three KPI charts, findings report, and verbal summary. These
+completion artifacts are the retrieval and transfer check for each capstone.
 
 ## Dataset Pool
 
 Shared dataset folder:
 
-- `/home/Phil/C&C/Learn_Python_Data/datasets/`
+- `datasets/`
 
 Project dataset folder:
 
-- `/home/Phil/Codex-Projects/Learning_Python/datasets/`
+- `datasets/`
 
 Current datasets:
 
@@ -82,11 +90,11 @@ Current datasets:
 
 Primary live notebook folder:
 
-- `/home/Phil/C&C/Learn_Python_Data/Live_Jupyter_Notebooks/`
+- `Live_Jupyter_Notebooks/`
 
 Project copy folder:
 
-- `/home/Phil/Codex-Projects/Learning_Python/`
+- `project root/`
 
 User-facing notes and references must also be copied to the shared folder when created.
 
@@ -124,7 +132,7 @@ Findings artifact:
 Active artifacts:
 
 - `block_01_table_literacy.ipynb`
-- `block_01_refresh_check.ipynb`
+- `refresh_block_01.ipynb`
 
 ## Block 2 - Selection and Filtering
 
