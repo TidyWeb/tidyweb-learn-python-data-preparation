@@ -3,9 +3,13 @@
 Created: 2026-07-02
 Restructured: 2026-07-03
 
-Purpose: prepare for the data analytics syllabus while building enough Python and pandas fluency to keep up in class.
+Purpose: prepare a beginner to use Python and pandas to turn supplied data into
+a clean, deliberate table that SQL can query, then hand that table clearly into
+the separate Learning SQL book.
 
-This is not a general Python course. It is a practical data analytics readiness course.
+This is not a general Python course. It is a practical data-preparation course
+with a clear Python-to-SQL core route and a separate optional continuation into
+broader data analysis.
 
 ## Operating Principle
 
@@ -15,7 +19,27 @@ A block is a unit of skill. It ends when the learner can perform the core moves 
 
 Phil may complete one block in a few hours, or several blocks in one long study day. The 8-hour study capacity should be used through depth, repetition, dataset rotation, refresh checks, and plain-English findings, not through thin overviews.
 
-## The Syllabus We Are Preparing For
+## Primary Route: Python Data Preparation for SQL
+
+This is the route a new learner should see first and complete before moving to
+the separate SQL book:
+
+1. Environment check and Python foundations.
+2. Load and inspect a table.
+3. Select and filter rows and columns.
+4. Clean missing or awkward values.
+5. Group, reshape, rename, and save a prepared table.
+6. Complete the SQL-readiness hand-off and produce the required `prepared_df`.
+7. Prove the hand-off in the Python-to-SQL bridge, then continue to Learning SQL.
+
+Blocks 5–10, visualisation references, and Git material remain available as
+optional continuation work. They must not be presented as prerequisites for
+reaching SQL.
+
+## The Wider Syllabus This Course Supports
+
+The following topics explain the broader bootcamp context. They are useful
+continuation material, not requirements for the Python-to-SQL route above.
 
 From the course outline:
 

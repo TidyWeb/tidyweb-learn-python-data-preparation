@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Learn Python Data · Jupyter Notebooks</title>
+<style>
+:root {
+  --panel:#fffdfa;
+  --ink:#202124;
+  --muted:#5f6368;
+  --line:#dde2e8;
+  --rail-bg:#17212b;
+  --rail-text:#dce7ef;
+  --rail-muted:#8fa4b5;
+  --navy:#1f4f82;
+  --yellow:#f6c85f;
+  --yellow-soft:#fff4c2;
+  --shadow:0 16px 46px rgba(39,50,60,.18);
+}
+* { box-sizing:border-box; }
+body { margin:0; background:linear-gradient(180deg,#e8edf1 0%,#f3f6f8 100%); color:var(--ink); font-family:'IBM Plex Sans',Arial,sans-serif; }
+.frame { width:min(1240px,calc(100vw - 32px)); margin:30px auto 60px; display:grid; grid-template-columns:240px minmax(0,1fr); background:var(--panel); border:1px solid var(--line); box-shadow:var(--shadow); }
+.rail { background:var(--rail-bg); color:var(--rail-text); padding:32px 22px 40px; position:sticky; top:0; height:100vh; overflow-y:auto; }
+.rail-logo-wrap { display:flex; justify-content:center; align-items:center; margin:0 0 18px; padding:0 0 18px; border-bottom:1px solid rgba(255,255,255,.1); }
+.rail-logo-link { display:block; line-height:0; }
+.rail-logo { display:block; width:min(84px,100%); height:auto; filter:drop-shadow(0 10px 18px rgba(34,214,255,.16)); }
+.rail-title { font-family:'Atkinson Hyperlegible',Arial,sans-serif; font-size:20px; font-weight:700; color:#fff; line-height:1.2; margin-bottom:8px; }
+.rail-sub { font-size:12px; color:var(--rail-muted); line-height:1.55; margin-bottom:28px; padding-bottom:20px; border-bottom:1px solid rgba(255,255,255,.1); }
+.token { display:flex; gap:10px; align-items:center; padding:9px 0; border-top:1px solid rgba(255,255,255,.1); font:600 11px 'IBM Plex Mono',monospace; text-transform:uppercase; letter-spacing:.06em; color:var(--rail-muted); }
+.dot { width:10px; height:10px; border-radius:50%; background:var(--yellow); flex-shrink:0; }
+.rail-nav { margin-top:22px; border-top:1px solid rgba(255,255,255,.1); padding-top:16px; }
+.rail-nav-label { font:600 10px 'IBM Plex Mono',monospace; text-transform:uppercase; letter-spacing:.08em; color:var(--rail-muted); margin-bottom:10px; }
+.rail-nav a { display:flex; align-items:center; gap:8px; padding:7px 0; font-size:13px; color:var(--rail-text); text-decoration:none; line-height:1.35; border-bottom:1px solid rgba(255,255,255,.06); }
+.rail-nav a:hover { color:#fff; }
+.rail-nav a .num { font:600 10px 'IBM Plex Mono',monospace; color:var(--rail-muted); flex-shrink:0; width:22px; }
+.notebook-nav { margin:28px -8px 0; padding:14px 8px 10px; border-top:5px solid var(--yellow); border-bottom:5px solid var(--yellow); background:linear-gradient(180deg,rgba(246,200,95,.18),rgba(246,200,95,.05)); box-shadow:0 0 0 1px rgba(246,200,95,.24); }
+.notebook-nav .rail-nav-label { color:var(--yellow); }
+.notebook-nav a { color:#fff8df; padding:8px 6px; border-bottom-color:rgba(246,200,95,.18); }
+.notebook-nav a:hover { background:rgba(246,200,95,.18); color:#fff; }
+.notebook-nav a .num { color:var(--yellow); }
+main { padding:0 52px; min-width:0; }
+.bar { height:16px; margin:0 -52px; background:var(--yellow); }
+.content { padding:42px 0 48px; }
+.eyebrow { color:#9a7410; font:700 12px 'IBM Plex Mono',monospace; letter-spacing:.12em; text-transform:uppercase; }
+h1 { margin:10px 0 14px; color:var(--navy); font-family:'Atkinson Hyperlegible',Arial,sans-serif; font-size:42px; line-height:1.05; }
+.intro { max-width:72ch; color:var(--muted); font-size:17px; line-height:1.75; }
+.setup-intro { margin:28px 0 12px; padding:18px 20px; border-left:6px solid var(--yellow); background:#fffdf1; line-height:1.65; }
+.setup-intro p + p { margin-top:8px; }
+.setup-bento { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-bottom:42px; }
+.setup-card { border:1px solid var(--line); border-top:5px solid var(--navy); background:#fbfcfd; }
+.setup-card.start { border-top-color:var(--yellow); background:#fffdf1; }
+.setup-card.stop { border-top-color:#d97706; }
+.setup-card.recover { border-top-color:#7d4655; }
+.setup-card.path { border-top-color:#4d6b4f; }
+.setup-card header { display:flex; justify-content:space-between; align-items:center; gap:10px; padding:8px 14px; border-bottom:1px solid var(--line); font:600 11px 'IBM Plex Mono',monospace; text-transform:uppercase; letter-spacing:.08em; }
+.setup-card header .tag { color:var(--navy); }
+.setup-card header .type { color:var(--muted); text-align:right; }
+.setup-card .body { padding:14px 16px 16px; color:var(--ink); font-size:15px; line-height:1.65; }
+.setup-card .body p + p { margin-top:8px; }
+.setup-card pre { margin:8px 0 12px; padding:10px 12px; overflow-x:auto; background:#202a33; color:#fff8df; border-radius:4px; font:13px/1.5 'IBM Plex Mono',monospace; }
+.setup-card pre code { padding:0; background:transparent; border-radius:0; white-space:pre; }
+.setup-card .command-label { margin-top:10px; color:var(--muted); font:600 10px 'IBM Plex Mono',monospace; text-transform:uppercase; letter-spacing:.08em; }
+code { padding:.1em .3em; background:#f4f5f7; border-radius:4px; font-family:'IBM Plex Mono',monospace; }
+section { margin-top:42px; scroll-margin-top:20px; }
+h2 { color:var(--navy); font-family:'Atkinson Hyperlegible',Arial,sans-serif; font-size:25px; margin:0 0 16px; }
+.grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+.notebook-link { display:block; padding:18px 20px; border:1px solid #e5d48b; border-left:6px solid var(--yellow); color:var(--navy); text-decoration:none; background:#fffef7; }
+.notebook-link:hover { background:var(--yellow-soft); }
+.notebook-link strong { display:block; font-size:17px; margin-bottom:6px; }
+.notebook-link span { color:var(--muted); line-height:1.5; }
+.notebook-link .action { display:block; margin-top:10px; color:#9a7410; font:600 11px 'IBM Plex Mono',monospace; text-transform:uppercase; letter-spacing:.06em; }
+.back { display:inline-block; margin-top:42px; color:var(--navy); font-weight:700; }
+@media (max-width:980px) {
+  .frame { grid-template-columns:1fr; }
+  .rail { position:relative; height:auto; }
+  main { padding:0 28px; }
+  .bar { margin:0 -28px; }
+}
+@media (max-width:700px) { main { padding:0 22px; } .bar { margin:0 -22px; } .content { padding-top:30px; } h1 { font-size:34px; } .grid, .setup-bento { grid-template-columns:1fr; } .setup-card header { align-items:flex-start; flex-direction:column; } .setup-card header .type { text-align:left; } }
+</style>
+</head>
+<body>
+<article class="frame">
+  <aside class="rail">
+    <div class="rail-logo-wrap">
+      <a class="rail-logo-link" href="../index.html" aria-label="Return to the Learn Python Data bookshelf">
+        <img class="rail-logo" src="../assets/tidyweb_logo.png" alt="TidyWeb logo">
+      </a>
+    </div>
+    <div class="rail-title">Jupyter Notebook Hub</div>
+    <div class="rail-sub">Open the companion notebooks in JupyterLab after reading the matching HTML chapter.</div>
+    <div class="token"><span class="dot"></span> JupyterLab Route</div>
+    <div class="token"><span class="dot"></span> Notebook Exercise</div>
+    <nav class="rail-nav">
+      <div class="rail-nav-label">Bookshelf Home</div>
+      <a href="../index.html"><span class="num">00</span><span>Main Shelf</span></a>
+    </nav>
+    <nav class="rail-nav notebook-nav">
+      <div class="rail-nav-label">This Notebook Hub</div>
+      <a href="#foundations"><span class="num">01</span><span>Foundations</span></a>
+      <a href="#core"><span class="num">02</span><span>Core Blocks 1–4</span></a>
+      <a href="#refresh"><span class="num">03</span><span>Refresh Checks</span></a>
+      <a href="#handoff"><span class="num">04</span><span>SQL Hand-off</span></a>
+      <a href="#optional"><span class="num">05</span><span>Optional Blocks 5–10</span></a>
+    </nav>
+    <nav class="rail-nav">
+      <div class="rail-nav-label">Return</div>
+      <a href="../index.html"><span class="num">←</span><span>Learn Python Data bookshelf</span></a>
+    </nav>
+  </aside>
+  <main>
+    <div class="bar"></div>
+    <div class="content">
+      <div class="eyebrow">Jupyter notebook companions</div>
+      <h1>Read the chapter. Then do the work.</h1>
+      <p class="intro">The HTML pages explain the idea first. These notebooks are the practical companions where you run the code, complete the learner tasks, and work with the supplied datasets.</p>
+      <div class="setup-intro" id="jupyter-start">
+        <strong>Start the course workspace before using these buttons.</strong> The boxes below are Bento boxes: each small box has one job and shows the commands in the order you need them. Keep the downloaded repository together: the folder must contain <code>notebooks/</code>, <code>datasets/</code>, and the launcher.
+      </div>
+      <div class="setup-bento" aria-label="JupyterLab setup instructions">
+        <section class="setup-card start">
+          <header><span class="tag">01 / Start JupyterLab</span><span class="type">run once per session</span></header>
+          <div class="body">
+            <p>Open a terminal in the downloaded repository folder. On Linux or macOS, run:</p>
+            <pre><code>./start_jupyter_lab.sh</code></pre>
+            <p class="command-label">Windows</p>
+            <pre><code>start_jupyter_lab.bat</code></pre>
+            <p>Leave the terminal open while you use the notebook links.</p>
+          </div>
+        </section>
+        <section class="setup-card stop">
+          <header><span class="tag">02 / Stop JupyterLab</span><span class="type">save work first</span></header>
+          <div class="body">
+            <p>To stop it normally, press <code>Ctrl+C</code> in the terminal that started it.</p>
+            <p>If that terminal is no longer available, run:</p>
+            <pre><code>jupyter server stop 8888</code></pre>
+            <p>This stops the local server only; it does not delete your files.</p>
+          </div>
+        </section>
+        <section class="setup-card recover">
+          <header><span class="tag">03 / Port or wrong-root problem</span><span class="type">links fail or path is missing</span></header>
+          <div class="body">
+            <p>If you see <code>Failed to connect</code> or <code>Could not find path: notebooks/...</code>, an older server may be using port <code>8888</code>.</p>
+            <pre><code>jupyter server list
+jupyter server stop 8888</code></pre>
+            <p>Then run the Start command again, close the old Jupyter tab, and use a fresh link.</p>
+          </div>
+        </section>
+        <section class="setup-card path">
+          <header><span class="tag">04 / Launcher not found</span><span class="type">wrong folder or permissions</span></header>
+          <div class="body">
+            <p>If the terminal says <code>No such file or directory</code>, use <code>Open Terminal Here</code> on the folder containing the launcher. If it says <code>Permission denied</code>, run:</p>
+            <pre><code>bash start_jupyter_lab.sh</code></pre>
+          </div>
+        </section>
+      </div>
+
+      <section id="foundations">
+        <h2>Before Block 1</h2>
+        <div class="grid">
+          <a class="notebook-link" target="_blank" rel="noopener" href="http://localhost:8888/lab/tree/notebooks/00_environment_check.ipynb"><strong>Environment Check</strong><span>Confirm that Python, Jupyter, and the supplied dataset are ready.</span><span class="action">Open in JupyterLab</span></a>
+          <a class="notebook-link" target="_blank" rel="noopener" href="http://localhost:8888/lab/tree/notebooks/foundations/foundation_01_values_variables_decisions.ipynb"><strong>Foundation 1 · Values And Decisions</strong><span>Build the first Python vocabulary for data work.</span><span class="action">Open in JupyterLab</span></a>
+          <a class="notebook-link" target="_blank" rel="noopener" href="http://localhost:8888/lab/tree/notebooks/foundations/foundation_02_records_lists_loops.ipynb"><strong>Foundation 2 · Records And Loops</strong><span>Work with records, lists, and repeated actions.</span><span class="action">Open in JupyterLab</span></a>
+          <a class="notebook-link" target="_blank" rel="noopener" href="http://localhost:8888/lab/tree/notebooks/foundations/foundation_03_functions_tables.ipynb"><strong>Foundation 3 · Functions And Tables</strong><span>Connect reusable actions to table thinking.</span><span class="action">Open in JupyterLab</span></a>
+          <a class="notebook-link" target="_blank" rel="noopener" href="http://localhost:8888/lab/tree/notebooks/foundations/foundation_transfer_check.ipynb"><strong>Foundation Transfer Check</strong><span>Test the foundation ideas without the teaching scaffolds.</span><span class="action">Open in JupyterLab</span></a>
+        </div>
+      </section>
+
+      <section id="core">
+        <h2>Core route</h2>
+        <div class="grid">
+          <a class="notebook-link" target="_blank" rel="noopener" href="http://localhost:8888/lab/tree/notebooks/blocks_1_10/block_01_table_literacy.ipynb"><strong>Block 1 · Table Literacy</strong><span>Load and inspect the Iris table.</span><span class="action">Open in JupyterLab</span></a>
+          <a class="notebook-link" target="_blank" rel="noopener" href="http://localhost:8888/lab/tree/notebooks/blocks_1_10/block_02_selection_and_filtering.ipynb"><strong>Block 2 · Selection</strong><span>Ask focused questions of rows and columns.</span><span class="action">Open in JupyterLab</span></a>
+          <a class="notebook-link" target="_blank" rel="noopener" href="http://localhost:8888/lab/tree/notebooks/blocks_1_10/block_03_missing_data_and_cleaning.ipynb"><strong>Block 3 · Cleaning</strong><span>Inspect and handle missing data deliberately.</span><span class="action">Open in JupyterLab</span></a>
+          <a class="notebook-link" target="_blank" rel="noopener" href="http://localhost:8888/lab/tree/notebooks/blocks_1_10/block_04_grouping_and_insight.ipynb"><strong>Block 4 · Grouping</strong><span>Turn grouped results into findings.</span><span class="action">Open in JupyterLab</span></a>
+        </div>
+      </section>
+
+      <section id="refresh">
+        <h2>Refresh checks</h2>
+        <div class="grid">
+          <a class="notebook-link" target="_blank" rel="noopener" href="http://localhost:8888/lab/tree/notebooks/refresh_checks/refresh_block_01.ipynb"><strong>Refresh 1 · Table Literacy</strong><span>Practise the move on unfamiliar material.</span><span class="action">Open in JupyterLab</span></a>
+          <a class="notebook-link" target="_blank" rel="noopener" href="http://localhost:8888/lab/tree/notebooks/refresh_checks/refresh_block_02.ipynb"><strong>Refresh 2 · Selection</strong><span>Practise without copying the worked example.</span><span class="action">Open in JupyterLab</span></a>
+          <a class="notebook-link" target="_blank" rel="noopener" href="http://localhost:8888/lab/tree/notebooks/refresh_checks/refresh_block_03.ipynb"><strong>Refresh 3 · Cleaning</strong><span>Make a deliberate cleaning decision.</span><span class="action">Open in JupyterLab</span></a>
+          <a class="notebook-link" target="_blank" rel="noopener" href="http://localhost:8888/lab/tree/notebooks/refresh_checks/refresh_block_04.ipynb"><strong>Refresh 4 · Grouping</strong><span>Explain the grouped result in plain English.</span><span class="action">Open in JupyterLab</span></a>
+        </div>
+      </section>
+
+      <section id="handoff">
+        <h2>Finish the Python route</h2>
+        <div class="grid">
+          <a class="notebook-link" target="_blank" rel="noopener" href="http://localhost:8888/lab/tree/notebooks/hand_off/sql_readiness_handoff.ipynb"><strong>SQL-readiness Hand-off</strong><span>Prepare and explain the table contract before moving into SQL.</span><span class="action">Open in JupyterLab</span></a>
+        </div>
+      </section>
+
+      <section id="optional">
+        <h2>Optional continuation</h2>
+        <div class="grid">
+          <a class="notebook-link" target="_blank" rel="noopener" href="http://localhost:8888/lab/tree/notebooks/blocks_1_10/block_05_visualisation.ipynb"><strong>Block 5 · Visualisation</strong><span>Choose a chart that answers the question.</span><span class="action">Open in JupyterLab</span></a>
+          <a class="notebook-link" target="_blank" rel="noopener" href="http://localhost:8888/lab/tree/notebooks/blocks_1_10/block_06_statistics_foundations.ipynb"><strong>Block 6 · Statistics</strong><span>Build a grounded statistical vocabulary.</span><span class="action">Open in JupyterLab</span></a>
+          <a class="notebook-link" target="_blank" rel="noopener" href="http://localhost:8888/lab/tree/notebooks/blocks_1_10/block_07_hypothesis_and_evidence.ipynb"><strong>Block 7 · Evidence</strong><span>Move from pattern to supported claim.</span><span class="action">Open in JupyterLab</span></a>
+          <a class="notebook-link" target="_blank" rel="noopener" href="http://localhost:8888/lab/tree/notebooks/blocks_1_10/block_08_full_eda_cycle.ipynb"><strong>Block 8 · Full EDA</strong><span>Run a complete exploratory cycle.</span><span class="action">Open in JupyterLab</span></a>
+          <a class="notebook-link" target="_blank" rel="noopener" href="http://localhost:8888/lab/tree/notebooks/blocks_1_10/block_09_etl_drill.ipynb"><strong>Block 9 · ETL</strong><span>Extract, transform, load, and explain.</span><span class="action">Open in JupyterLab</span></a>
+          <a class="notebook-link" target="_blank" rel="noopener" href="http://localhost:8888/lab/tree/notebooks/blocks_1_10/block_10_dashboard_and_presentation.ipynb"><strong>Block 10 · Dashboard</strong><span>Turn analysis into a clear presentation.</span><span class="action">Open in JupyterLab</span></a>
+        </div>
+      </section>
+
+      <a class="back" href="../index.html">← Back to the Learn Python Data bookshelf</a>
+    </div>
+    <div class="bar"></div>
+  </main>
+</article>
+<script>
+  const sourceMode = decodeURIComponent(location.pathname).includes('/release_shell/');
+  document.querySelector('.rail-logo').src = sourceMode ? '../../assets/tidyweb_logo.png' : '../assets/tidyweb_logo.png';
+</script>
+</body>
+</html>

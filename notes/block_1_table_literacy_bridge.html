@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Block 1 Table Literacy Bridge</title>
+<title>Block 1: Table Literacy</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -144,6 +144,18 @@ main { padding: 48px 52px 72px; }
   padding-bottom: 28px;
   border-bottom: 2px solid var(--mono-bg);
 }
+.page-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+.page-link {
+  display: inline-block;
+  padding: 9px 13px;
+  border: 1px solid var(--navy);
+  border-radius: 4px;
+  color: var(--navy);
+  background: #fff;
+  font-weight: 700;
+  text-decoration: none;
+}
+.page-link:hover { color: #fff; background: var(--navy); }
 .note-section { margin-bottom: 64px; scroll-margin-top: 20px; }
 .note-eyebrow {
   display: flex;
@@ -190,6 +202,8 @@ main { padding: 48px 52px 72px; }
 .panel header .type { color: var(--muted); }
 .panel .body { padding: 16px 20px; font-size: 16px; line-height: 1.8; }
 .panel .body p + p { margin-top: 10px; }
+.panel .body ol { margin: 0 0 14px 1.35em; }
+.panel .body li + li { margin-top: 8px; }
 .panel.translation { border-left: 4px solid var(--yellow); }
 .panel.rule { border-left: 4px solid var(--orange); }
 .panel.resolution { border-left: 4px solid var(--cyan); }
@@ -306,17 +320,19 @@ th {
 <article class="frame">
   <aside class="rail">
     <div class="rail-logo-wrap">
-      <img class="rail-logo" src="../assets/tidyweb_logo.png" alt="TidyWeb logo">
+      <a class="rail-logo-link" href="../index.html" aria-label="Return to the Learn Python Data home page">
+        <img class="rail-logo" src="../assets/tidyweb_logo.png" alt="TidyWeb logo">
+      </a>
     </div>
-    <div class="rail-title">Block 1 Table Literacy Bridge</div>
-    <div class="rail-sub">A reference bridge from the earlier Python notebooks into the Block 1 table literacy workflow.</div>
+    <div class="rail-title">Block 1: Table Literacy</div>
+    <div class="rail-sub">Learn how to load a CSV file and inspect it as a table with Python.</div>
     <div class="token"><span class="dot"></span> Translation</div>
     <div class="token"><span class="dot cyan"></span> Command Meaning</div>
     <div class="token"><span class="dot green"></span> Code Breakdown</div>
     <div class="token"><span class="dot orange"></span> Vocabulary Rule</div>
     <nav class="rail-nav">
       <div class="rail-nav-label">Sections</div>
-      <a href="#notebook-sequence"><span class="num">00</span><span>Notebook Match</span></a>
+      <a href="#notebook-sequence"><span class="num">00</span><span>Start Here</span></a>
       <a href="#shift"><span class="num">01</span><span>The Layer Shift</span></a>
       <a href="#table"><span class="num">02</span><span>Translation Table</span></a>
       <a href="#commands"><span class="num">03</span><span>Block 1 Commands</span></a>
@@ -325,47 +341,59 @@ th {
   </aside>
   <main>
     <div class="page-mode">Reference Guide</div>
-    <h1 class="page-title">Block 1 Table Literacy Bridge</h1>
-    <p class="page-sub">You are not abandoning the Python vocabulary from the earlier notebooks. You are moving up one layer, from hand-built data structures into pandas table work. This page translates the terms and gives you the Block 1 commands as large glanceable boxes.</p>
+    <h1 class="page-title">Block 1: Table Literacy</h1>
+    <p class="page-sub">This is the first practical lesson in the course. You will use Python and pandas to open a small data file called <span class="mono">iris.csv</span>, look at its rows and columns, and begin asking simple questions of the table. This page explains the ideas; the companion notebook is where you run the code and practise.</p>
 
     <section class="note-section" id="notebook-sequence">
       <div class="note-eyebrow">
         <span class="note-num">NOTE 00</span>
-        <h2 class="note-heading">How This Guide Matches The Notebook</h2>
+        <h2 class="note-heading">Start here: use this page with the notebook</h2>
         <span class="note-rule"></span>
       </div>
       <div class="stack">
         <div class="panel resolution">
-          <header><span class="tag">Notebook source</span><span class="type">actual working order</span></header>
+          <header><span class="tag">What this lesson is</span><span class="type">your first practical lesson</span></header>
           <div class="body">
-            <p>This guide follows <span class="mono">Block 1 - Table Literacy With Iris</span>. The learner should meet the setup first, then the worked example, then the concept sequence below.</p>
-            <p>Lesson dataset: <span class="mono">iris.csv</span>, supplied in the <span class="mono">datasets</span> folder. If the supplied folder layout is kept, the example path is <span class="mono">../../datasets/iris.csv</span>. If the files are moved, point the path at wherever that CSV has been saved.</p>
-            <p>Worked example dataset: <span class="mono">dummy_bread_stock.csv</span>.</p>
+            <p><span class="mono">Block 1</span> is the first practical unit in this course. <span class="mono">Table literacy</span> means learning how a data table is organised: its rows, columns, values, and size.</p>
+            <p>The lesson table is called <span class="mono">iris.csv</span>. It contains measurements of iris flowers. You will load it with pandas, look at its contents, and ask simple questions about it.</p>
+            <p>This page explains each move. The companion notebook is where you run the code and answer the practice questions.</p>
           </div>
         </div>
         <div class="panel translation">
-          <header><span class="tag">Setup cells</span><span class="type">run before the lesson questions</span></header>
-          <div class="body legend"><p><span class="mono">import pandas as pd</span></p>
-<p><span class="mono">dummy_path = &quot;../../datasets/dummy_bread_stock.csv&quot;</span></p>
-<p><span class="mono">dummy_df = pd.read_csv(dummy_path)</span></p></div>
+          <header><span class="tag">Start JupyterLab</span><span class="type">do this before any notebook link</span></header>
+          <div class="body">
+            <p>The JupyterLab links open a notebook running on your own computer. A browser link cannot start JupyterLab for you.</p>
+            <ol>
+              <li>Open a terminal in the downloaded course folder—the folder containing <span class="mono">notebooks/</span> and <span class="mono">start_jupyter_lab.sh</span>.</li>
+              <li>On Linux or macOS, run <span class="mono">./start_jupyter_lab.sh</span> from that folder. On Windows, double-click <span class="mono">start_jupyter_lab.bat</span>.</li>
+              <li>Leave the terminal window open and wait for JupyterLab to open in your browser.</li>
+              <li>Return to this page, then choose the Block 1 JupyterLab link in the left-hand navigation.</li>
+            </ol>
+            <p><strong>If the terminal says “No such file or directory”:</strong> you are not in the folder containing the launcher. Use your file manager's <span class="mono">Open Terminal Here</span> action on the downloaded repository folder, or change to that folder first. The command <span class="mono">bash start_jupyter_lab.sh</span> works only when that file is in the terminal's current folder. If <span class="mono">./start_jupyter_lab.sh</span> says “Permission denied”, run <span class="mono">bash start_jupyter_lab.sh</span> from the same folder.</p>
+            <p><strong>If you see “Failed to connect” or “Could not find path: notebooks/...”:</strong> JupyterLab is not running, or an older Jupyter server is using port <span class="mono">8888</span> with the wrong root folder. Run <span class="mono">jupyter server list</span> to see what is running. If port 8888 is listed, stop that old server with <span class="mono">jupyter server stop 8888</span>, or press <span class="mono">Ctrl+C</span> in the terminal that started it. Then return to the course home page, start the course launcher, close the old Jupyter tab, and use a fresh link. Do not double-click the raw <span class="mono">.ipynb</span> file.</p>
+            <div class="page-links">
+              <a class="page-link" data-notebook-hub href="../notebooks/index.html">Open the Notebook Hub</a>
+              <a class="page-link" data-course-home href="../index.html">Course home and startup instructions</a>
+            </div>
+          </div>
         </div>
         <div class="panel translation">
-          <header><span class="tag">Concept sequence</span><span class="type">same order as the notebook</span></header>
-          <div class="body"><table><thead><tr><th>Step</th><th>Notebook concept</th></tr></thead><tbody><tr><td>1</td><td>Bring pandas into the notebook</td></tr>
+          <header><span class="tag">What you will do</span><span class="type">the learning sequence</span></header>
+          <div class="body"><p>The notebook sometimes demonstrates a command on tiny bread-stock data first, because a small table makes the result easier to see. You then use the same command on <span class="mono">iris.csv</span>.</p><table><thead><tr><th>Step</th><th>What you will learn</th></tr></thead><tbody><tr><td>1</td><td>Bring pandas into the notebook</td></tr>
 <tr><td>2</td><td>Store the Iris file path</td></tr>
 <tr><td>3</td><td>Read a CSV from a path</td></tr>
-<tr><td>4</td><td>Store the loaded table as df</td></tr>
-<tr><td>5</td><td>First look with df.head()</td></tr>
-<tr><td>6</td><td>Table size with df.shape</td></tr>
-<tr><td>7</td><td>Structure check with df.info()</td></tr>
-<tr><td>8</td><td>Summary with df.describe(include=&quot;all&quot;)</td></tr>
-<tr><td>9</td><td>Column types with df.dtypes</td></tr>
-<tr><td>10</td><td>Select one column with df[&quot;column&quot;]</td></tr>
-<tr><td>11</td><td>Select multiple columns with df[[&quot;col1&quot;, &quot;col2&quot;]]</td></tr>
-<tr><td>12</td><td>Count values with df[&quot;column&quot;].value_counts()</td></tr></tbody></table></div>
+<tr><td>4</td><td>Store the loaded table as <span class="mono">df</span></td></tr>
+<tr><td>5</td><td>Take a first look with <span class="mono">df.head()</span></td></tr>
+<tr><td>6</td><td>Check the table size with <span class="mono">df.shape</span></td></tr>
+<tr><td>7</td><td>Check the table structure with <span class="mono">df.info()</span></td></tr>
+<tr><td>8</td><td>See a summary with <span class="mono">df.describe(include="all")</span></td></tr>
+<tr><td>9</td><td>Check column types with <span class="mono">df.dtypes</span></td></tr>
+<tr><td>10</td><td>Select one column</td></tr>
+<tr><td>11</td><td>Select several columns</td></tr>
+<tr><td>12</td><td>Count values in a column</td></tr></tbody></table></div>
         </div>
         <div class="panel code">
-          <header><span class="tag">Core commands</span><span class="type">notebook order</span></header>
+          <header><span class="tag">Commands you will meet</span><span class="type">the main operations</span></header>
           <div class="body"><pre>import pandas as pd
 pd.__name__
 dataset_path = &quot;../../datasets/iris.csv&quot;
@@ -769,5 +797,6 @@ df[&quot;species&quot;].value_counts()</pre></div>
     <p class="footer">Created for the Block 1 table literacy workflow in the Learning_Python project.</p>
   </main>
 </article>
+<script src="../shared/site-nav.js"></script>
 </body>
 </html>
