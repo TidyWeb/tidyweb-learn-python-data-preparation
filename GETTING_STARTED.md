@@ -402,7 +402,43 @@ If you see that result, the difficult setup part is finished.
 
 ---
 
-## Step 10 — Stop JupyterLab safely
+## Step 10 — Open the course bookshelf
+
+JupyterLab runs the notebooks on your computer. The course bookshelf contains the HTML lessons that explain what to do in those notebooks.
+
+You can use either the hosted bookshelf or the downloaded bookshelf. Both versions can open notebooks through the JupyterLab server running on your computer.
+
+### Option A — Use the hosted bookshelf
+
+Open this address in your browser:
+
+[https://tidyweb.github.io/tidyweb-learn-python-data-preparation/](https://tidyweb.github.io/tidyweb-learn-python-data-preparation/)
+
+This is the course website hosted by GitHub Pages. It requires an internet connection and normally shows the latest published version of the HTML lessons.
+
+### Option B — Use the downloaded bookshelf
+
+1. Open your course folder in your file manager.
+2. Find the file named `index.html`.
+3. Double-click `index.html`.
+4. If your computer asks which program to use, choose your normal web browser.
+
+The local address will begin with `file://`. That is normal. This version works without an internet connection and matches the files currently downloaded to your computer.
+
+### Keep the lesson and notebook visible separately
+
+The easiest arrangement is to use two browser windows:
+
+- **Window 1 — Course bookshelf:** keep the HTML explanation open here.
+- **Window 2 — JupyterLab:** keep the matching notebook open here.
+
+You can place the windows side by side or switch between them. Read a section in the HTML lesson, then perform that step in the notebook without losing your place.
+
+Keep the Konsole or terminal that started JupyterLab open in the background. The notebook window will stop working if you close that terminal.
+
+---
+
+## Step 11 — Stop JupyterLab safely
 
 Save any notebook work first.
 
@@ -422,6 +458,8 @@ Do not download the course again. Do not create `.venv` again. Do not reinstall 
 2. Open a terminal in that folder.
 3. Activate the existing environment.
 4. Start JupyterLab.
+5. Open either the hosted bookshelf or the downloaded `index.html`.
+6. Keep the bookshelf and JupyterLab in separate browser windows.
 
 ### Fedora or macOS
 
@@ -529,7 +567,7 @@ Then start JupyterLab again from the correct course folder.
 
 After the environment check passes:
 
-1. open [`index.html`](index.html) in your browser;
+1. open either the [hosted bookshelf](https://tidyweb.github.io/tidyweb-learn-python-data-preparation/) or your downloaded `index.html`;
 2. begin with Foundation 1;
 3. read the matching HTML chapter before opening its notebook;
 4. work through the learner cells slowly; and
