@@ -3,6 +3,13 @@
 An explanation-first route for turning supplied data into a clean, deliberate
 table in Python, then handing that table to SQL.
 
+I built this to prepare for the Code Institute 16 week Skills Bootcamp in Data Analysis with AI,
+but I think it should help anyone who is starting out in learning DA.
+
+Note: there are some software things you will need to install and configure.
+I found using GEMINI, ChatGPT, and Claude using free accounts guided me perfectly.
+They make useful helpers.
+
 Start with [GETTING_STARTED.md](GETTING_STARTED.md), then use the bookshelf
 (`index.html`) to follow this required route:
 
