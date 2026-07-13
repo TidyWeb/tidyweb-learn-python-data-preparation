@@ -20,9 +20,39 @@ home folder, the folder containing the ZIP, or the parent folder.
 If Git is already familiar, clone the repository and open a terminal in the
 cloned project folder. Git is useful, but it is not required for this course.
 
+> **IMPORTANT — WORK INSIDE THE DOWNLOADED PROJECT FOLDER**
+>
+> Before running any setup command, make sure the terminal is open in the
+> folder that contains `requirements.txt`, `datasets/`, `notebooks/`, and
+> `start_jupyter_lab.sh`.
+>
+> Check your location:
+>
+> ```bash
+> pwd
+> ls
+> ```
+>
+> Only continue when `ls` shows `requirements.txt`. Do not run the setup from
+> your home folder, the folder containing the ZIP, or the parent folder. The
+> `.venv` folder is created wherever the command runs.
+>
+> **How to open a terminal in this folder**
+>
+> - **Linux (Fedora/KDE):** Open the project folder in your file manager.
+>   Right-click an empty area inside it and choose **Open Terminal Here**.
+> - **macOS:** Open the project folder in Finder. If available, right-click
+>   it and choose **Services → New Terminal at Folder**. Otherwise open
+>   Terminal, type `cd ` (including the space), drag the project folder into
+>   the Terminal window, and press Enter.
+> - **Windows:** Open the project folder in File Explorer. Right-click an
+>   empty area and choose **Open in Terminal**. Alternatively click the
+>   address bar, type `powershell`, and press Enter. If you use Git Bash,
+>   choose **Open Git Bash here** when that option is available.
+
 ## 1. Make a small Python environment
 
-Open a terminal in the downloaded project folder and run:
+From that project folder, run:
 
 ```bash
 python -m venv .venv
