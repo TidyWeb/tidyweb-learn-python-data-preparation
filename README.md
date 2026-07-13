@@ -17,7 +17,7 @@ Start with [GETTING_STARTED.md](GETTING_STARTED.md), then use the bookshelf
 2. Load, inspect, select, filter, clean, group, and reshape tables.
 3. Complete the SQL-readiness hand-off.
 4. Prove the hand-off in the Python-to-SQL bridge.
-5. Continue to Book 2, Learning SQL.
+5. Continue to [Book 2, Learning SQL](https://tidyweb.github.io/tidyweb-learn-sql/).
 
 Visualisation, statistics, full EDA, dashboards, and Git remain useful optional
 continuation material. They are not prerequisites for reaching SQL.

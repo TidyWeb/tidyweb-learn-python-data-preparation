@@ -277,8 +277,8 @@ main { padding:48px 52px 72px; }
     <nav class="rail-nav">
       <div class="rail-nav-label">End of Python Route</div>
       <a href="notes/sql_readiness_handoff.html"><span class="num">05</span><span>SQL Readiness Hand-off</span></a>
-      <a href="sql/exercises/html/Coffee%20Python%20SQL%20Bridge%20Prototype.html"><span class="num">06</span><span>Python-to-SQL Bridge</span></a>
-      <a href="sql/guide/html/SQLBolt%20Compressed%20Map.html"><span class="num">07</span><span>Learning SQL · Book 2</span></a>
+      <a href="https://tidyweb.github.io/tidyweb-learn-sql/exercises/html/Coffee%20Python%20SQL%20Bridge%20Prototype.html"><span class="num">06</span><span>Python-to-SQL Bridge</span></a>
+      <a href="https://tidyweb.github.io/tidyweb-learn-sql/"><span class="num">07</span><span>Learning SQL · Book 2</span></a>
     </nav>
   </aside>
   <main>
@@ -450,16 +450,16 @@ jupyter server stop 8888</code></pre>
           <h3>Python-to-SQL bridge</h3>
           <p>Use the prepared table in the browser, then query it with SQL. The bridge follows the hand-off lesson.</p>
           <div class="link-row">
-            <a class="btn primary" href="sql/exercises/html/Coffee%20Python%20SQL%20Bridge%20Prototype.html">Open bridge</a>
+            <a class="btn primary" href="https://tidyweb.github.io/tidyweb-learn-sql/exercises/html/Coffee%20Python%20SQL%20Bridge%20Prototype.html">Open bridge</a>
           </div>
         </article>
 
         <article class="card sql">
           <div class="eyebrow">Book 2</div>
           <h3>Learning SQL</h3>
-          <p>Continue from the prepared table into the separate SQL book. This current link is a compatibility route until the permanent public Book 2 home is recorded.</p>
+          <p>Continue from the prepared table into the separately published SQL book.</p>
           <div class="link-row">
-            <a class="btn primary" href="sql/guide/html/SQLBolt%20Compressed%20Map.html">Open Book 2 route</a>
+            <a class="btn primary" href="https://tidyweb.github.io/tidyweb-learn-sql/">Open Book 2 route</a>
           </div>
         </article>
 
@@ -628,7 +628,7 @@ jupyter server stop 8888</code></pre>
       'notes/block_9_etl_drill.html': '../notes/Block 9 ETL Drill.html',
       'notes/block_10_dashboard_and_presentation.html': '../notes/Block 10 Dashboard and Presentation.html',
       'notes/seaborn_foundations.html': '../notes/Seaborn Foundations.html',
-      'notes/sql_reference.html': '../../../../Codex-Projects/Learning_SQL/guide/html/SQLBolt%20Compressed%20Map.html',
+      'notes/sql_reference.html': 'https://tidyweb.github.io/tidyweb-learn-sql/',
       'notes/git_and_github/git_and_github_reference.html': '../notes/Git and GitHub/Git and GitHub Reference.html'
     };
     document.querySelector('.rail-logo').src = '../assets/tidyweb_logo.png';
@@ -643,10 +643,6 @@ jupyter server stop 8888</code></pre>
         link.href = '../release_shell/' + href;
       } else if (href.startsWith('assets/')) {
         link.href = '../' + href;
-      } else if (href.startsWith('sql/exercises/')) {
-        link.href = '../../../../Codex-Projects/Learning_SQL/exercises/html/' + href.split('/').pop();
-      } else if (href.startsWith('sql/guide/')) {
-        link.href = '../../../../Codex-Projects/Learning_SQL/guide/html/' + href.split('/').pop();
       }
     });
   })();

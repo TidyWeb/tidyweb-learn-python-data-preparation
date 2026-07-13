@@ -6,7 +6,9 @@
   const notesIndex = pathParts.lastIndexOf('notes');
   const relativeParts = notesIndex >= 0 ? pathParts.slice(notesIndex) : pathParts;
   const rootPrefix = '../'.repeat(Math.max(0, relativeParts.length - 1));
-  const root = target => rootPrefix + target;
+  const root = target => /^https?:\/\//.test(target) ? target : rootPrefix + target;
+  const sqlCourse = 'https://tidyweb.github.io/tidyweb-learn-sql/';
+  const sqlBridge = `${sqlCourse}exercises/html/Coffee%20Python%20SQL%20Bridge%20Prototype.html`;
 
   const notes = sourceMode ? {
     overview: 'notes/Data Analysis Field Overview.html',
@@ -15,8 +17,8 @@
     block3: 'notes/Block 3 Missing Data and Cleaning.html',
     block4: 'notes/Block 4 Grouping and Insight.html',
     handoff: 'notes/sql_readiness_handoff.html',
-    bridge: '../../../Codex-Projects/Learning_SQL/exercises/html/Coffee%20Python%20SQL%20Bridge%20Prototype.html',
-    book2: '../../../Codex-Projects/Learning_SQL/guide/html/SQLBolt%20Compressed%20Map.html',
+    bridge: sqlBridge,
+    book2: sqlCourse,
     block5: 'notes/Block 5 Visualisation.html',
     block6: 'notes/Block 6 Statistics Foundations.html',
     block7: 'notes/Block 7 Hypothesis and Evidence.html',
@@ -32,8 +34,8 @@
     block3: 'notes/block_3_missing_data_and_cleaning.html',
     block4: 'notes/block_4_grouping_and_insight.html',
     handoff: 'notes/sql_readiness_handoff.html',
-    bridge: 'sql/exercises/html/Coffee%20Python%20SQL%20Bridge%20Prototype.html',
-    book2: 'sql/guide/html/SQLBolt%20Compressed%20Map.html',
+    bridge: sqlBridge,
+    book2: sqlCourse,
     block5: 'notes/block_5_visualisation.html',
     block6: 'notes/block_6_statistics_foundations.html',
     block7: 'notes/block_7_hypothesis_and_evidence.html',
