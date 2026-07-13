@@ -1,0 +1,886 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Movie SQL Practice Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#edf3f7;
+  --paper:#fffdf9;
+  --ink:#21303d;
+  --muted:#637482;
+  --line:#d6e0e8;
+  --navy:#1b4f88;
+  --cyan:#1e7d88;
+  --green:#476f51;
+  --amber:#d48920;
+  --slate:#17212b;
+  --soft-navy:#eef4ff;
+  --shadow:0 18px 46px rgba(30,42,53,.14);
+  --code:#101821;
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body {
+  background:
+    radial-gradient(circle at top left, rgba(27,79,136,.10), transparent 30%),
+    radial-gradient(circle at top right, rgba(30,125,136,.10), transparent 22%),
+    linear-gradient(180deg, #f5f8fb 0%, var(--bg) 100%);
+  color:var(--ink);
+  font-family:'IBM Plex Sans', sans-serif;
+}
+.page {
+  width:min(1280px, calc(100vw - 28px));
+  margin:24px auto 56px;
+  display:grid;
+  grid-template-columns:260px minmax(0, 1fr);
+  border:1px solid var(--line);
+  background:var(--paper);
+  box-shadow:var(--shadow);
+}
+.rail {
+  background:var(--slate);
+  color:#dbe7ef;
+  padding:28px 22px 34px;
+  position:sticky;
+  top:0;
+  height:100vh;
+  overflow-y:auto;
+}
+.rail h1 {
+  font-family:'Atkinson Hyperlegible', sans-serif;
+  font-size:24px;
+  line-height:1.1;
+  margin-bottom:10px;
+  color:#fff;
+}
+.rail p {
+  color:#9eb2c1;
+  font-size:13px;
+  line-height:1.65;
+  margin-bottom:16px;
+}
+.mini-card,
+.rail a,
+.prompt-card,
+.panel,
+.table-wrap,
+.editor-wrap,
+.result-wrap {
+  border-radius:18px;
+}
+.mini-card {
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  padding:13px 14px;
+  margin-bottom:16px;
+}
+.mono,
+.mini-label,
+.rail-nav-title,
+.schema-pill,
+.button,
+textarea,
+pre,
+th {
+  font-family:'IBM Plex Mono', monospace;
+}
+.mini-label,
+.rail-nav-title,
+.schema-pill {
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.mini-label { color:#8fc6d0; margin-bottom:6px; display:block; }
+.mini-card strong { display:block; color:#fff; line-height:1.4; font-size:14px; }
+.rail-nav { margin-top:18px; }
+.rail-nav-title { color:#8ea4b5; margin-bottom:10px; }
+.rail a {
+  display:block;
+  color:#dbe7ef;
+  text-decoration:none;
+  padding:9px 10px;
+  border:1px solid rgba(255,255,255,.06);
+  background:rgba(255,255,255,.03);
+  margin-bottom:10px;
+  line-height:1.35;
+  font-size:13px;
+}
+.rail a:hover { color:#fff; }
+main { padding:38px 44px 72px; }
+.hero {
+  border:1px solid var(--line);
+  background:linear-gradient(135deg, rgba(27,79,136,.08), rgba(30,125,136,.10)), var(--paper);
+  border-radius:26px;
+  padding:32px 32px 26px;
+  margin-bottom:24px;
+}
+.hero .eyebrow {
+  color:var(--cyan);
+  font:600 11px 'IBM Plex Mono', monospace;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  margin-bottom:10px;
+}
+.hero h2 {
+  font-family:'Atkinson Hyperlegible', sans-serif;
+  color:var(--navy);
+  font-size:40px;
+  line-height:1.05;
+  margin-bottom:12px;
+}
+.hero p {
+  color:var(--muted);
+  line-height:1.75;
+  max-width:72ch;
+  font-size:16px;
+}
+.hero-grid,
+.top-grid,
+.prompt-grid {
+  display:grid;
+  gap:16px;
+}
+.hero-grid {
+  grid-template-columns:1.1fr .9fr;
+  margin-top:18px;
+}
+.panel {
+  border:1px solid var(--line);
+  background:#fff;
+  padding:18px;
+}
+.panel h3,
+.section-head h3 {
+  font-family:'Atkinson Hyperlegible', sans-serif;
+  color:var(--navy);
+  font-size:22px;
+  margin-bottom:10px;
+}
+.panel p,
+.prompt-card p,
+.section-sub {
+  color:var(--muted);
+  line-height:1.65;
+  font-size:15px;
+}
+.panel ul,
+.prompt-card ul {
+  padding-left:18px;
+  display:grid;
+  gap:8px;
+  line-height:1.55;
+}
+.prompt-card ul {
+  padding-left:0;
+  list-style:none;
+  gap:10px;
+}
+.prompt-item {
+  display:grid;
+  grid-template-columns:20px minmax(0, 1fr);
+  gap:10px;
+  align-items:start;
+  text-wrap:pretty;
+  font-size:14px;
+}
+.prompt-item span:last-child {
+  min-width:0;
+}
+.keep-together {
+  white-space:nowrap;
+}
+.prompt-check {
+  width:18px;
+  height:18px;
+  border:2px solid #b7c7d4;
+  border-radius:6px;
+  background:#fff;
+  position:relative;
+  margin-top:1px;
+  transition:transform .18s ease, background-color .18s ease, border-color .18s ease, box-shadow .18s ease;
+}
+.prompt-item.is-complete {
+  color:var(--green);
+  font-weight:600;
+}
+.prompt-item.is-complete .prompt-check {
+  background:var(--green);
+  border-color:var(--green);
+  box-shadow:0 0 0 4px rgba(71,111,81,.14);
+}
+.prompt-item.is-complete .prompt-check::after {
+  content:"";
+  position:absolute;
+  left:4px;
+  top:1px;
+  width:5px;
+  height:9px;
+  border:solid #fff;
+  border-width:0 2px 2px 0;
+  transform:rotate(45deg);
+}
+.prompt-item.just-completed .prompt-check {
+  animation:prompt-ping .45s ease-out;
+}
+@keyframes prompt-ping {
+  0% { transform:scale(1); box-shadow:0 0 0 0 rgba(71,111,81,.32); }
+  55% { transform:scale(1.12); box-shadow:0 0 0 12px rgba(71,111,81,0); }
+  100% { transform:scale(1); box-shadow:0 0 0 4px rgba(71,111,81,.14); }
+}
+.schema-pills {
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:12px;
+}
+.schema-pill {
+  display:inline-block;
+  padding:7px 10px;
+  border-radius:999px;
+  background:var(--soft-navy);
+  color:var(--navy);
+  border:1px solid var(--line);
+}
+.section {
+  margin-top:28px;
+}
+.section-head {
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-bottom:14px;
+}
+.section-head h3 { margin-bottom:0; }
+.rule { flex:1; height:1px; background:var(--line); }
+.top-grid {
+  grid-template-columns:1fr;
+}
+.table-wrap,
+.editor-wrap,
+.result-wrap {
+  border:1px solid var(--line);
+  background:#fff;
+  overflow:hidden;
+}
+.table-head,
+.editor-head,
+.result-head {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  padding:12px 16px;
+  border-bottom:1px solid var(--line);
+  background:#f8fbfd;
+}
+.table-head strong,
+.editor-head strong,
+.result-head strong {
+  color:var(--navy);
+}
+.table-scroll { overflow:auto; }
+table {
+  width:100%;
+  border-collapse:collapse;
+  min-width:880px;
+}
+th, td {
+  border-bottom:1px solid var(--line);
+  padding:12px 14px;
+  text-align:left;
+}
+th {
+  background:#f8fbfd;
+  color:var(--navy);
+  font-size:12px;
+  letter-spacing:.05em;
+}
+td { font-size:15px; }
+.schema-block {
+  padding:16px;
+  border-top:1px solid var(--line);
+  background:linear-gradient(180deg, #fbfdff 0%, #f6fafc 100%);
+}
+pre {
+  background:var(--code);
+  color:#e7eef5;
+  padding:16px;
+  border-radius:14px;
+  overflow:auto;
+  font-size:13px;
+  line-height:1.7;
+}
+.prompt-grid { grid-template-columns:repeat(3, minmax(0, 1fr)); }
+.prompt-card {
+  border:1px solid var(--line);
+  background:linear-gradient(180deg, #ffffff 0%, #fbfcfd 100%);
+  padding:16px;
+}
+.prompt-card:nth-child(1) { border-top:6px solid var(--cyan); }
+.prompt-card:nth-child(2) { border-top:6px solid var(--amber); }
+.prompt-card:nth-child(3) { border-top:6px solid var(--green); }
+.prompt-label {
+  color:var(--muted);
+  margin-bottom:8px;
+  display:block;
+  font:600 11px 'IBM Plex Mono', monospace;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.habit-callout {
+  border:1px solid #cfe0ec;
+  border-left:6px solid var(--cyan);
+  background:linear-gradient(135deg, #f8fcff 0%, #eef8fb 100%);
+  padding:16px 18px;
+  margin-bottom:16px;
+  border-radius:18px;
+}
+.habit-callout strong {
+  display:block;
+  margin-bottom:6px;
+  color:var(--navy);
+  font-family:'Atkinson Hyperlegible', sans-serif;
+  font-size:18px;
+}
+.habit-callout p {
+  margin:0;
+  color:var(--ink);
+  font-size:15px;
+  line-height:1.65;
+}
+.habit-callout em {
+  color:var(--cyan);
+  font-style:italic;
+}
+.button {
+  appearance:none;
+  border:1px solid var(--line);
+  background:#fff;
+  color:var(--navy);
+  padding:9px 12px;
+  border-radius:12px;
+  cursor:pointer;
+  font-size:12px;
+  font-weight:600;
+}
+.button.primary {
+  background:var(--navy);
+  color:#fff;
+  border-color:var(--navy);
+}
+.button:hover { transform:translateY(-1px); }
+.editor-tools { display:flex; gap:10px; flex-wrap:wrap; }
+textarea {
+  width:100%;
+  min-height:190px;
+  border:0;
+  padding:18px;
+  resize:vertical;
+  font-size:15px;
+  line-height:1.7;
+  background:var(--code);
+  color:#e8eef4;
+}
+.editor-note,
+.status {
+  padding:12px 16px;
+  border-top:1px solid var(--line);
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.5;
+}
+.status.error {
+  color:#8a2230;
+  background:#fff2f4;
+}
+.status.ok {
+  color:#215f3f;
+  background:#f0fbf4;
+}
+.result-body,
+.empty-state {
+  padding:16px;
+}
+.empty-state { color:var(--muted); }
+.footer {
+  margin-top:20px;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.6;
+}
+@media (max-width: 1060px) {
+  .page { grid-template-columns:1fr; }
+  .rail { display:none; }
+  main { padding:28px 20px 56px; }
+  .hero-grid,
+  .top-grid,
+  .prompt-grid { grid-template-columns:1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .prompt-check {
+    transition:none;
+  }
+  .prompt-item.just-completed .prompt-check {
+    animation:none;
+  }
+}
+</style>
+</head>
+<body>
+<article class="page">
+  <aside class="rail">
+    <h1>Movie SQL Lab</h1>
+    <p>A second self-contained practice page, this time with films instead of football. The table stays visible. The schema stays near the editor. The query box is yours.</p>
+
+    <div class="mini-card">
+      <span class="mini-label">Dataset</span>
+      <strong>One table only: <span class="mono">films</span></strong>
+    </div>
+
+    <div class="mini-card">
+      <span class="mini-label">Best For</span>
+      <strong>SELECT, WHERE, LIKE, BETWEEN, ORDER BY, LIMIT, and slightly richer filtering.</strong>
+    </div>
+
+    <div class="rail-nav">
+      <div class="rail-nav-title">Jump To</div>
+      <a href="#dataset">Dataset and Schema</a>
+      <a href="#prompts">Practice Prompts</a>
+      <a href="#lab">Live SQL Box</a>
+    </div>
+  </aside>
+
+  <main>
+    <section class="hero">
+      <div class="eyebrow">Practice Lab</div>
+      <h2>Movie SQL Practice</h2>
+      <p>This page gives you a film dataset with a few extra columns, so you can keep practising the basics. The data table remains visible, and the schema sits just above the SQL box where you actually need it.</p>
+
+      <div class="hero-grid">
+        <div class="panel">
+          <h3>What This Lab Is For</h3>
+          <ul>
+            <li>Practise basic <span class="mono">SELECT</span> queries on a familiar film table.</li>
+            <li>Filter by director, genre, decade, rating, runtime, and box office.</li>
+            <li>Stretch slightly beyond the football version with more text and number combinations.</li>
+          </ul>
+        </div>
+
+        <div class="panel">
+          <h3>Useful Columns Here</h3>
+          <p>This version has a bit more to play with than the football one, so you can ask richer questions without needing joins yet.</p>
+          <div class="schema-pills">
+            <span class="schema-pill">genre</span>
+            <span class="schema-pill">release_year</span>
+            <span class="schema-pill">runtime_minutes</span>
+            <span class="schema-pill">imdb_rating</span>
+            <span class="schema-pill">box_office_m</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="dataset">
+      <div class="section-head">
+        <h3>Dataset And Schema</h3>
+        <div class="rule"></div>
+      </div>
+
+      <div class="top-grid">
+        <div class="table-wrap">
+          <div class="table-head">
+            <strong>Visible Data Table: <span class="mono">films</span></strong>
+            <span class="section-sub">Keep this in view while you write queries.</span>
+          </div>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>film_id</th>
+                  <th>title</th>
+                  <th>director</th>
+                  <th>genre</th>
+                  <th>release_year</th>
+                  <th>runtime_minutes</th>
+                  <th>imdb_rating</th>
+                  <th>box_office_m</th>
+                </tr>
+              </thead>
+              <tbody id="source-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="schema-block">
+        <div class="section-head">
+          <h3>SQL Used To Build The Table</h3>
+          <div class="rule"></div>
+        </div>
+        <pre id="schema-sql"></pre>
+      </div>
+
+      <div class="panel" style="margin-top:16px;">
+        <h3>Read Prompts This Way</h3>
+        <ul>
+          <li>Which columns do I want back?</li>
+          <li>Do I need exact text or a pattern?</li>
+          <li>Am I filtering by number or text?</li>
+          <li>Do I want sorted results?</li>
+          <li>Do I only need the first few rows?</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section" id="prompts">
+      <div class="section-head">
+        <h3>Practice Prompts</h3>
+        <div class="rule"></div>
+      </div>
+      <div class="prompt-grid">
+        <div class="prompt-card">
+          <span class="prompt-label">Select Basics</span>
+          <ul>
+            <li class="prompt-item" data-prompt-id="select-all"><span class="prompt-check" aria-hidden="true"></span><span>Show every column for <span class="keep-together">every film</span>.</span></li>
+            <li class="prompt-item" data-prompt-id="select-title-year"><span class="prompt-check" aria-hidden="true"></span><span>Show only <span class="mono">title</span> and <span class="mono">release_year</span>.</span></li>
+            <li class="prompt-item" data-prompt-id="select-distinct-genres"><span class="prompt-check" aria-hidden="true"></span><span>Show only the distinct genres.</span></li>
+          </ul>
+        </div>
+        <div class="prompt-card">
+          <span class="prompt-label">Filtering</span>
+          <ul>
+            <li class="prompt-item" data-prompt-id="filter-scifi"><span class="prompt-check" aria-hidden="true"></span><span>Display <span class="mono">title</span> for all <span class="keep-together">science fiction films</span>.</span></li>
+            <li class="prompt-item" data-prompt-id="filter-nolan"><span class="prompt-check" aria-hidden="true"></span><span>Display <span class="mono">title</span> for films directed by Christopher Nolan.</span></li>
+            <li class="prompt-item" data-prompt-id="filter-not-denis"><span class="prompt-check" aria-hidden="true"></span><span>Display <span class="mono">title</span> and <span class="mono">director</span> for films not directed by Denis Villeneuve.</span></li>
+            <li class="prompt-item" data-prompt-id="filter-title-the"><span class="prompt-check" aria-hidden="true"></span><span>Display <span class="mono">title</span> for film titles starting with <span class="mono">The</span>.</span></li>
+            <li class="prompt-item" data-prompt-id="filter-between-years"><span class="prompt-check" aria-hidden="true"></span><span>Display <span class="mono">title</span> and <span class="mono">release_year</span> for films released between <span class="keep-together">1990 and 2010</span>.</span></li>
+            <li class="prompt-item" data-prompt-id="filter-in-genres"><span class="prompt-check" aria-hidden="true"></span><span>Display <span class="mono">title</span> and <span class="mono">genre</span> for Action or Science Fiction films. Use <span class="mono">IN</span> with those two genres.</span></li>
+          </ul>
+        </div>
+        <div class="prompt-card">
+          <span class="prompt-label">Sorting And Limit</span>
+          <ul>
+            <li class="prompt-item" data-prompt-id="sort-top-rated"><span class="prompt-check" aria-hidden="true"></span><span>Display <span class="mono">title</span> and <span class="mono">imdb_rating</span> for the <span class="keep-together">top 5 highest-rated films</span>.</span></li>
+            <li class="prompt-item" data-prompt-id="sort-longest"><span class="prompt-check" aria-hidden="true"></span><span>Display <span class="mono">title</span> and <span class="mono">runtime_minutes</span> for the <span class="keep-together">3 longest films</span>.</span></li>
+            <li class="prompt-item" data-prompt-id="sort-most-recent"><span class="prompt-check" aria-hidden="true"></span><span>Display <span class="mono">title</span> and <span class="mono">release_year</span> for the <span class="keep-together">most recent 4 films</span>.</span></li>
+            <li class="prompt-item" data-prompt-id="sort-box-office"><span class="prompt-check" aria-hidden="true"></span><span>Display <span class="mono">title</span> and <span class="mono">box_office_m</span> for the <span class="keep-together">5 biggest box offices</span>.</span></li>
+            <li class="prompt-item" data-prompt-id="slice-alphabetical"><span class="prompt-check" aria-hidden="true"></span><span>Display <span class="mono">title</span> after sorting titles A to Z, skip the first 5 films, and return the next 5.</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="lab">
+      <div class="section-head">
+        <h3>Live SQL Box</h3>
+        <div class="rule"></div>
+      </div>
+
+      <div class="panel" style="margin-bottom:16px;">
+        <h3>Schema At A Glance</h3>
+        <p>The only table in this lab is <span class="mono">films</span>. Keep these column names in view while you write your answer.</p>
+        <div class="schema-pills">
+          <span class="schema-pill">film_id</span>
+          <span class="schema-pill">title</span>
+          <span class="schema-pill">director</span>
+          <span class="schema-pill">genre</span>
+          <span class="schema-pill">release_year</span>
+          <span class="schema-pill">runtime_minutes</span>
+          <span class="schema-pill">imdb_rating</span>
+          <span class="schema-pill">box_office_m</span>
+        </div>
+      </div>
+
+      <div class="habit-callout">
+        <strong>Good Habit To Build</strong>
+        <p><em>A good habit to get into is to use <span class="mono">SELECT</span> with named columns by default.</em><br>Keep <span class="mono">SELECT *</span> for prompts that explicitly ask for every column and row.</p>
+      </div>
+
+      <div class="editor-wrap">
+        <div class="editor-head">
+          <strong>Write a query against <span class="mono">films</span></strong>
+          <div class="editor-tools">
+            <button class="button primary" id="run-query" type="button">Run Query</button>
+            <button class="button" id="reset-query" type="button">Reset Query</button>
+            <button class="button" id="reset-db" type="button">Reset Ticks</button>
+          </div>
+        </div>
+        <textarea id="query-input" spellcheck="false">-- Write your SELECT query here.</textarea>
+        <div class="editor-note">Use single quotes for text values, for example <span class="mono">'Science Fiction'</span>. This box runs <span class="mono">SELECT</span> queries safely against the practice table in your browser.</div>
+        <div class="status" id="status-box">SQL engine loading...</div>
+      </div>
+
+      <div class="result-wrap" style="margin-top:16px;">
+        <div class="result-head">
+          <strong>Query Result</strong>
+          <span class="section-sub">Your answer appears here.</span>
+        </div>
+        <div class="result-body" id="result-box">
+          <div class="empty-state">Run a query to see the result table.</div>
+        </div>
+      </div>
+    </section>
+
+    <p class="footer">This version uses a film dataset with a few extra columns for richer beginner practice.</p>
+  </main>
+</article>
+
+<script src="https://cdn.jsdelivr.net/npm/sql.js@1.10.3/dist/sql-wasm.js"></script>
+<script>
+const rows = [
+  { film_id: 1, title: "The Dark Knight", director: "Christopher Nolan", genre: "Action", release_year: 2008, runtime_minutes: 152, imdb_rating: 9.0, box_office_m: 1006 },
+  { film_id: 2, title: "Arrival", director: "Denis Villeneuve", genre: "Science Fiction", release_year: 2016, runtime_minutes: 116, imdb_rating: 7.9, box_office_m: 203 },
+  { film_id: 3, title: "Spirited Away", director: "Hayao Miyazaki", genre: "Animation", release_year: 2001, runtime_minutes: 125, imdb_rating: 8.6, box_office_m: 395 },
+  { film_id: 4, title: "The Matrix", director: "The Wachowskis", genre: "Science Fiction", release_year: 1999, runtime_minutes: 136, imdb_rating: 8.7, box_office_m: 467 },
+  { film_id: 5, title: "Parasite", director: "Bong Joon-ho", genre: "Thriller", release_year: 2019, runtime_minutes: 132, imdb_rating: 8.5, box_office_m: 262 },
+  { film_id: 6, title: "Mad Max: Fury Road", director: "George Miller", genre: "Action", release_year: 2015, runtime_minutes: 120, imdb_rating: 8.1, box_office_m: 380 },
+  { film_id: 7, title: "The Grand Budapest Hotel", director: "Wes Anderson", genre: "Comedy", release_year: 2014, runtime_minutes: 99, imdb_rating: 8.1, box_office_m: 173 },
+  { film_id: 8, title: "Interstellar", director: "Christopher Nolan", genre: "Science Fiction", release_year: 2014, runtime_minutes: 169, imdb_rating: 8.7, box_office_m: 733 },
+  { film_id: 9, title: "Whiplash", director: "Damien Chazelle", genre: "Drama", release_year: 2014, runtime_minutes: 106, imdb_rating: 8.5, box_office_m: 49 },
+  { film_id: 10, title: "The Godfather", director: "Francis Ford Coppola", genre: "Crime", release_year: 1972, runtime_minutes: 175, imdb_rating: 9.2, box_office_m: 250 },
+  { film_id: 11, title: "Blade Runner 2049", director: "Denis Villeneuve", genre: "Science Fiction", release_year: 2017, runtime_minutes: 164, imdb_rating: 8.0, box_office_m: 268 },
+  { film_id: 12, title: "The Lord of the Rings: The Fellowship of the Ring", director: "Peter Jackson", genre: "Fantasy", release_year: 2001, runtime_minutes: 178, imdb_rating: 8.9, box_office_m: 898 }
+];
+
+const seedSQL = `CREATE TABLE films (
+  film_id INTEGER PRIMARY KEY,
+  title TEXT NOT NULL,
+  director TEXT NOT NULL,
+  genre TEXT NOT NULL,
+  release_year INTEGER NOT NULL,
+  runtime_minutes INTEGER NOT NULL,
+  imdb_rating REAL NOT NULL,
+  box_office_m INTEGER NOT NULL
+);
+
+INSERT INTO films (film_id, title, director, genre, release_year, runtime_minutes, imdb_rating, box_office_m) VALUES
+  (1, 'The Dark Knight', 'Christopher Nolan', 'Action', 2008, 152, 9.0, 1006),
+  (2, 'Arrival', 'Denis Villeneuve', 'Science Fiction', 2016, 116, 7.9, 203),
+  (3, 'Spirited Away', 'Hayao Miyazaki', 'Animation', 2001, 125, 8.6, 395),
+  (4, 'The Matrix', 'The Wachowskis', 'Science Fiction', 1999, 136, 8.7, 467),
+  (5, 'Parasite', 'Bong Joon-ho', 'Thriller', 2019, 132, 8.5, 262),
+  (6, 'Mad Max: Fury Road', 'George Miller', 'Action', 2015, 120, 8.1, 380),
+  (7, 'The Grand Budapest Hotel', 'Wes Anderson', 'Comedy', 2014, 99, 8.1, 173),
+  (8, 'Interstellar', 'Christopher Nolan', 'Science Fiction', 2014, 169, 8.7, 733),
+  (9, 'Whiplash', 'Damien Chazelle', 'Drama', 2014, 106, 8.5, 49),
+  (10, 'The Godfather', 'Francis Ford Coppola', 'Crime', 1972, 175, 9.2, 250),
+  (11, 'Blade Runner 2049', 'Denis Villeneuve', 'Science Fiction', 2017, 164, 8.0, 268),
+  (12, 'The Lord of the Rings: The Fellowship of the Ring', 'Peter Jackson', 'Fantasy', 2001, 178, 8.9, 898);`;
+
+let SQL;
+let db;
+
+const sourceTableBody = document.getElementById("source-table-body");
+const schemaBlock = document.getElementById("schema-sql");
+const queryInput = document.getElementById("query-input");
+const statusBox = document.getElementById("status-box");
+const resultBox = document.getElementById("result-box");
+const runQueryButton = document.getElementById("run-query");
+const resetQueryButton = document.getElementById("reset-query");
+const resetDbButton = document.getElementById("reset-db");
+const promptItems = new Map(
+  Array.from(document.querySelectorAll(".prompt-item")).map((item) => [item.dataset.promptId, item])
+);
+const completedPromptIds = new Set();
+const promptDefinitions = [
+  { id: "select-all", label: "Show every column for every film.", sql: "SELECT * FROM films;", orderSensitive: false },
+  { id: "select-title-year", label: "Show only title and release_year.", sql: "SELECT title, release_year FROM films;", orderSensitive: false },
+  { id: "select-distinct-genres", label: "Show only the distinct genres.", sql: "SELECT DISTINCT genre FROM films;", orderSensitive: false },
+  { id: "filter-scifi", label: "Find all science fiction films.", sql: "SELECT title FROM films WHERE genre = 'Science Fiction';", orderSensitive: false },
+  { id: "filter-nolan", label: "Find films directed by Christopher Nolan.", sql: "SELECT title FROM films WHERE director = 'Christopher Nolan';", orderSensitive: false },
+  { id: "filter-not-denis", label: "Find films not directed by Denis Villeneuve.", sql: "SELECT title, director FROM films WHERE director != 'Denis Villeneuve';", orderSensitive: false },
+  { id: "filter-title-the", label: "Find film titles starting with The.", sql: "SELECT title FROM films WHERE title LIKE 'The%';", orderSensitive: false },
+  { id: "filter-between-years", label: "Find films released between 1990 and 2010.", sql: "SELECT title, release_year FROM films WHERE release_year BETWEEN 1990 AND 2010;", orderSensitive: false },
+  { id: "filter-in-genres", label: "Find Action or Science Fiction films.", sql: "SELECT title, genre FROM films WHERE genre IN ('Action', 'Science Fiction');", orderSensitive: false },
+  { id: "sort-top-rated", label: "Show the top 5 highest-rated films.", sql: "SELECT title, imdb_rating FROM films ORDER BY imdb_rating DESC LIMIT 5;", orderSensitive: true },
+  { id: "sort-longest", label: "Show the 3 longest films.", sql: "SELECT title, runtime_minutes FROM films ORDER BY runtime_minutes DESC LIMIT 3;", orderSensitive: true },
+  { id: "sort-most-recent", label: "Show the most recent 4 films.", sql: "SELECT title, release_year FROM films ORDER BY release_year DESC LIMIT 4;", orderSensitive: true },
+  { id: "sort-box-office", label: "Show the 5 biggest box offices.", sql: "SELECT title, box_office_m FROM films ORDER BY box_office_m DESC LIMIT 5;", orderSensitive: true },
+  { id: "slice-alphabetical", label: "Show titles 6 to 10 after sorting A to Z.", sql: "SELECT title FROM films ORDER BY title ASC LIMIT 5 OFFSET 5;", orderSensitive: true }
+];
+let promptAnswerKey = new Map();
+
+function renderSourceTable() {
+  sourceTableBody.innerHTML = rows.map((row) => `
+    <tr>
+      <td>${row.film_id}</td>
+      <td>${row.title}</td>
+      <td>${row.director}</td>
+      <td>${row.genre}</td>
+      <td>${row.release_year}</td>
+      <td>${row.runtime_minutes}</td>
+      <td>${row.imdb_rating}</td>
+      <td>${row.box_office_m}</td>
+    </tr>
+  `).join("");
+}
+
+function buildDatabase() {
+  db = new SQL.Database();
+  db.run(seedSQL);
+  buildPromptAnswerKey();
+}
+
+function buildPromptAnswerKey() {
+  promptAnswerKey = new Map(
+    promptDefinitions.map((prompt) => [prompt.id, db.exec(prompt.sql)[0]])
+  );
+}
+
+function renderResults(columns, values) {
+  if (!values.length) {
+    resultBox.innerHTML = '<div class="empty-state">Query ran successfully, but it returned no rows.</div>';
+    return;
+  }
+
+  const head = columns.map((column) => `<th>${column}</th>`).join("");
+  const body = values.map((row) => `<tr>${row.map((value) => `<td>${value === null ? "NULL" : value}</td>`).join("")}</tr>`).join("");
+
+  resultBox.innerHTML = `
+    <div class="table-scroll">
+      <table>
+        <thead><tr>${head}</tr></thead>
+        <tbody>${body}</tbody>
+      </table>
+    </div>
+  `;
+}
+
+function setStatus(message, kind) {
+  statusBox.textContent = message;
+  statusBox.className = `status ${kind || ""}`.trim();
+}
+
+function serialiseValues(values, orderSensitive) {
+  const normalised = values.map((row) => row.map((value) => (value === null ? "NULL" : String(value))));
+  if (orderSensitive) {
+    return JSON.stringify(normalised);
+  }
+  return JSON.stringify(
+    [...normalised].sort((left, right) => JSON.stringify(left).localeCompare(JSON.stringify(right)))
+  );
+}
+
+function resultsMatch(actual, expected, orderSensitive) {
+  if (!actual || !expected) {
+    return false;
+  }
+
+  if (actual.columns.length !== expected.columns.length) {
+    return false;
+  }
+
+  if (actual.columns.some((column, index) => column !== expected.columns[index])) {
+    return false;
+  }
+
+  return serialiseValues(actual.values, orderSensitive) === serialiseValues(expected.values, orderSensitive);
+}
+
+function markPromptComplete(promptId) {
+  const promptItem = promptItems.get(promptId);
+  if (!promptItem || completedPromptIds.has(promptId)) {
+    return;
+  }
+
+  completedPromptIds.add(promptId);
+  promptItem.classList.add("is-complete", "just-completed");
+  window.setTimeout(() => {
+    promptItem.classList.remove("just-completed");
+  }, 500);
+}
+
+function completeMatchingPrompts(result) {
+  const matchedPrompts = [];
+
+  promptDefinitions.forEach((prompt) => {
+    if (completedPromptIds.has(prompt.id)) {
+      return;
+    }
+
+    if (resultsMatch(result, promptAnswerKey.get(prompt.id), prompt.orderSensitive)) {
+      markPromptComplete(prompt.id);
+      matchedPrompts.push(prompt.label);
+    }
+  });
+
+  return matchedPrompts;
+}
+
+function runQuery() {
+  const sql = queryInput.value.trim();
+
+  if (!db) {
+    setStatus("Wait for the SQL engine to finish loading.", "error");
+    return;
+  }
+
+  if (!sql) {
+    setStatus("Write a query first.", "error");
+    return;
+  }
+
+  if (!/^select\b/i.test(sql)) {
+    setStatus("This practice page is for SELECT queries only.", "error");
+    return;
+  }
+
+  try {
+    const result = db.exec(sql);
+    if (!result.length) {
+      resultBox.innerHTML = '<div class="empty-state">Query ran successfully, but it returned no visible result table.</div>';
+      setStatus("Query ran successfully.", "ok");
+      return;
+    }
+
+    renderResults(result[0].columns, result[0].values);
+    const matchedPrompts = completeMatchingPrompts(result[0]);
+    if (matchedPrompts.length) {
+      setStatus(`Query ran successfully. ${matchedPrompts.join(" ")} checked off.`, "ok");
+      return;
+    }
+    setStatus("Query ran successfully, but it did not match a prompt yet. Check the requested columns, column names or aliases, filters, and sort order.", "");
+  } catch (error) {
+    setStatus(error.message, "error");
+  }
+}
+
+function resetQuery() {
+  queryInput.value = "-- Write your SELECT query here.";
+  setStatus("Query box reset.", "");
+}
+
+function resetPromptProgress() {
+  completedPromptIds.clear();
+  promptItems.forEach((item) => {
+    item.classList.remove("is-complete", "just-completed");
+  });
+  setStatus("Prompt ticks reset.", "");
+}
+
+renderSourceTable();
+schemaBlock.textContent = seedSQL;
+
+initSqlJs({
+  locateFile: file => `https://cdn.jsdelivr.net/npm/sql.js@1.10.3/dist/${file}`
+}).then((sqlJs) => {
+  SQL = sqlJs;
+  buildDatabase();
+  setStatus("SQL engine ready. Write a SELECT query and run it.", "ok");
+}).catch((error) => {
+  setStatus(`SQL engine failed to load: ${error.message}`, "error");
+});
+
+runQueryButton.addEventListener("click", runQuery);
+resetQueryButton.addEventListener("click", resetQuery);
+resetDbButton.addEventListener("click", resetPromptProgress);
+</script>
+<script src="../../shared/site-nav.js"></script>
+</body>
+</html>

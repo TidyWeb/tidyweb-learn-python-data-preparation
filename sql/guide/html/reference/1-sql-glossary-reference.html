@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SQL Glossary Reference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#eef4f7;color:#20303c;font-family:'IBM Plex Sans',sans-serif}
+.page{max-width:1120px;margin:24px auto 56px;background:#fffdf9;border:1px solid #d8e0e7;box-shadow:0 18px 44px rgba(28,41,52,.14)}
+main{padding:36px 42px 56px}
+.eyebrow,.term{font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase}
+.eyebrow{color:#1e7c8a;margin-bottom:10px}
+h1,h2,h3{font-family:'Atkinson Hyperlegible',sans-serif;color:#1d4e89}
+h1{font-size:40px;line-height:1.05;margin:0 0 12px}
+h2{font-size:28px;margin:36px 0 14px}
+h3{font-size:20px;margin:0 0 10px}
+p,li{font-size:16px;line-height:1.74}
+p{color:#627180;margin:0 0 12px}
+ul{padding-left:20px;display:grid;gap:8px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.card{border:1px solid #d8e0e7;border-radius:18px;background:#fff;padding:18px}
+.term{display:inline-block;padding:6px 10px;border-radius:999px;background:#eef4ff;color:#1d4e89;margin-bottom:10px}
+pre{margin:10px 0 0;background:#101821;color:#e8eef4;padding:14px;border-radius:14px;overflow:auto;font:14px/1.7 'IBM Plex Mono',monospace}
+.note{background:#fff8eb;border-left:5px solid #d48920}
+@media (max-width:860px){.grid{grid-template-columns:1fr}main{padding:24px 20px 40px}h1{font-size:31px}}
+</style>
+</head>
+<body>
+<div class="page">
+<main>
+<div class="eyebrow">Reference 1</div>
+<h1>SQL Glossary Reference</h1>
+<p>This is the quick-reference version of the core beginner SQL language. Use it when you remember the general idea but need to see the exact written form again.</p>
+
+<section class="grid">
+  <article class="card">
+    <span class="term">SELECT</span>
+    <h3>Choose what to show</h3>
+    <p>Useful beginner translation: read <code>SELECT</code> as <em>show me</em>.</p>
+    <pre>SELECT title, release_year</pre>
+  </article>
+  <article class="card">
+    <span class="term">FROM</span>
+    <h3>Name the table</h3>
+    <p>Tells SQL where the columns are coming from.</p>
+    <pre>FROM films</pre>
+  </article>
+</section>
+
+<h2>Filtering</h2>
+<section class="grid">
+  <article class="card">
+    <span class="term">WHERE</span>
+    <h3>Keep only matching rows</h3>
+    <pre>WHERE release_year = 2014</pre>
+  </article>
+  <article class="card">
+    <span class="term">=</span>
+    <h3>Exact match</h3>
+    <pre>WHERE director = 'Christopher Nolan'</pre>
+  </article>
+  <article class="card">
+    <span class="term">!=</span>
+    <h3>Not equal</h3>
+    <p>Use this for “not this exact value.”</p>
+    <pre>WHERE club != 'Liverpool'</pre>
+  </article>
+  <article class="card">
+    <span class="term">AND / OR</span>
+    <h3>Combine conditions</h3>
+    <pre>WHERE genre = 'Science Fiction'
+AND release_year > 2000</pre>
+  </article>
+  <article class="card">
+    <span class="term">BETWEEN</span>
+    <h3>Inclusive range</h3>
+    <pre>WHERE release_year BETWEEN 2000 AND 2010</pre>
+  </article>
+  <article class="card">
+    <span class="term">IN / NOT IN</span>
+    <h3>Match against a list</h3>
+    <pre>WHERE genre IN ('Drama', 'Crime')</pre>
+  </article>
+</section>
+
+<h2>Text Matching</h2>
+<section class="grid">
+  <article class="card">
+    <span class="term">'text'</span>
+    <h3>Text needs quotes</h3>
+    <pre>'Christopher Nolan'</pre>
+  </article>
+  <article class="card">
+    <span class="term">LIKE</span>
+    <h3>Pattern match</h3>
+    <pre>WHERE title LIKE 'The%'</pre>
+  </article>
+  <article class="card">
+    <span class="term">%</span>
+    <h3>Any run of characters</h3>
+    <pre>'WALL-%'</pre>
+  </article>
+  <article class="card">
+    <span class="term">_</span>
+    <h3>Exactly one character</h3>
+    <pre>'WALL-_'</pre>
+  </article>
+</section>
+
+<h2>Sorting And Trimming</h2>
+<section class="grid">
+  <article class="card">
+    <span class="term">ORDER BY</span>
+    <h3>Sort the result</h3>
+    <pre>ORDER BY release_year</pre>
+  </article>
+  <article class="card">
+    <span class="term">ASC / DESC</span>
+    <h3>Choose the direction</h3>
+    <pre>ORDER BY imdb_rating DESC</pre>
+  </article>
+  <article class="card">
+    <span class="term">LIMIT</span>
+    <h3>Keep only this many rows</h3>
+    <pre>LIMIT 5</pre>
+  </article>
+  <article class="card">
+    <span class="term">OFFSET</span>
+    <h3>Skip rows first</h3>
+    <pre>LIMIT 5 OFFSET 10</pre>
+  </article>
+</section>
+
+<h2>Joins And Missing Data</h2>
+<section class="grid">
+  <article class="card">
+    <span class="term">INNER JOIN</span>
+    <h3>Keep matches only</h3>
+    <pre>FROM films
+INNER JOIN boxoffice
+ON films.film_id = boxoffice.film_id</pre>
+  </article>
+  <article class="card">
+    <span class="term">LEFT JOIN</span>
+    <h3>Keep the left table</h3>
+    <pre>FROM films
+LEFT JOIN boxoffice
+ON films.film_id = boxoffice.film_id</pre>
+  </article>
+  <article class="card">
+    <span class="term">NULL</span>
+    <h3>Missing value</h3>
+    <pre>WHERE distributor_id IS NULL</pre>
+  </article>
+  <article class="card">
+    <span class="term">IS NOT NULL</span>
+    <h3>Value is present</h3>
+    <pre>WHERE rating IS NOT NULL</pre>
+  </article>
+</section>
+
+<h2>Calculations And Grouping</h2>
+<section class="grid">
+  <article class="card">
+    <span class="term">AS</span>
+    <h3>Name a result</h3>
+    <pre>release_year AS year_released</pre>
+  </article>
+  <article class="card">
+    <span class="term">COUNT / AVG / SUM</span>
+    <h3>Aggregate functions</h3>
+    <pre>SELECT COUNT(*), AVG(runtime_minutes)
+FROM films</pre>
+  </article>
+  <article class="card">
+    <span class="term">GROUP BY</span>
+    <h3>Summarise by category</h3>
+    <pre>GROUP BY director</pre>
+  </article>
+  <article class="card">
+    <span class="term">HAVING</span>
+    <h3>Filter grouped results</h3>
+    <pre>HAVING COUNT(*) > 1</pre>
+  </article>
+</section>
+
+<h2>Writing Queries</h2>
+<section class="grid">
+  <article class="card">
+    <span class="term">INSERT INTO</span>
+    <h3>Add rows</h3>
+    <pre>INSERT INTO films (title, director)
+VALUES ('Example', 'Example')</pre>
+  </article>
+  <article class="card">
+    <span class="term">UPDATE / SET</span>
+    <h3>Change existing rows</h3>
+    <pre>UPDATE films
+SET director = 'Correct Name'
+WHERE film_id = 4</pre>
+  </article>
+  <article class="card">
+    <span class="term">DELETE FROM</span>
+    <h3>Remove rows</h3>
+    <pre>DELETE FROM films
+WHERE film_id = 12</pre>
+  </article>
+  <article class="card">
+    <span class="term">CREATE / ALTER / DROP</span>
+    <h3>Change structure</h3>
+    <pre>CREATE TABLE awards (...)
+ALTER TABLE awards ADD category TEXT
+DROP TABLE awards</pre>
+  </article>
+</section>
+
+<section class="card note" style="margin-top:16px;">
+  <h2>The Short Version</h2>
+  <ul>
+    <li><code>SELECT</code> = show me</li>
+    <li><code>WHERE</code> = keep only these rows</li>
+    <li><code>LIKE</code> = pattern match, not exact match</li>
+    <li><code>ORDER BY</code> = sort first</li>
+    <li><code>LIMIT</code> = keep only this many rows</li>
+    <li><code>GROUP BY</code> = change from row thinking to category thinking</li>
+  </ul>
+</section>
+</main>
+</div>
+<script src="../../../shared/site-nav.js"></script>
+</body>
+</html>

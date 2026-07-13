@@ -1,0 +1,1325 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SQLBolt Learner's Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#eef3f7;
+  --paper:#fffdf8;
+  --ink:#20303c;
+  --muted:#627180;
+  --line:#d8e0e7;
+  --navy:#1d4e89;
+  --cyan:#1e7c8a;
+  --teal:#2f6b61;
+  --amber:#d4881c;
+  --rose:#a55462;
+  --slate:#17212b;
+  --soft-navy:#edf4ff;
+  --soft-cyan:#eefbfc;
+  --soft-amber:#fff7e8;
+  --soft-rose:#fff0f3;
+  --soft-teal:#edf8f4;
+  --shadow:0 18px 44px rgba(28, 41, 52, .14);
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+html { scroll-behavior:smooth; }
+body {
+  background:
+    radial-gradient(circle at top left, rgba(29,78,137,.10), transparent 28%),
+    radial-gradient(circle at top right, rgba(30,124,138,.10), transparent 24%),
+    linear-gradient(180deg, #f4f8fb 0%, var(--bg) 100%);
+  color:var(--ink);
+  font-family:'IBM Plex Sans', sans-serif;
+}
+a { color:inherit; }
+.page {
+  width:min(1240px, calc(100vw - 28px));
+  margin:24px auto 56px;
+  display:grid;
+  grid-template-columns:250px minmax(0, 1fr);
+  border:1px solid var(--line);
+  background:var(--paper);
+  box-shadow:var(--shadow);
+}
+.rail {
+  background:var(--slate);
+  color:#dbe7ef;
+  padding:28px 22px 34px;
+  position:sticky;
+  top:0;
+  height:100vh;
+  overflow-y:auto;
+}
+.rail h1 {
+  font-family:'Atkinson Hyperlegible', sans-serif;
+  font-size:24px;
+  line-height:1.1;
+  color:#fff;
+  margin-bottom:10px;
+}
+.rail p {
+  font-size:13px;
+  line-height:1.6;
+  color:#9fb2c1;
+  margin-bottom:18px;
+}
+.rail .mini-card {
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.03);
+  padding:12px 14px;
+  border-radius:14px;
+  margin-bottom:18px;
+}
+.rail .mini-label,
+.nav-title,
+.tag,
+.pill,
+.card-step,
+.subtle-label {
+  font:600 11px 'IBM Plex Mono', monospace;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.rail .mini-label { color:#8fc5d0; margin-bottom:6px; display:block; }
+.rail .mini-card strong {
+  display:block;
+  color:#fff;
+  font-size:14px;
+  line-height:1.4;
+}
+.nav-block { margin-top:20px; }
+.nav-title { color:#8fa4b5; margin-bottom:10px; }
+.nav-title { color:#f0cf63; }
+.nav-block a {
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  padding:8px 0;
+  text-decoration:none;
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.nav-block a:hover { color:#fff; }
+.nav-num {
+  color:#8fa4b5;
+  width:24px;
+  flex:0 0 24px;
+}
+.nav-text {
+  font-size:13px;
+  line-height:1.35;
+}
+main { padding:42px 46px 72px; }
+.hero {
+  position:relative;
+  overflow:hidden;
+  border:1px solid var(--line);
+  background:
+    linear-gradient(135deg, rgba(29,78,137,.07), rgba(30,124,138,.09)),
+    var(--paper);
+  border-radius:26px;
+  padding:34px 34px 28px;
+  margin-bottom:26px;
+}
+.hero::after {
+  content:"";
+  position:absolute;
+  inset:auto -80px -90px auto;
+  width:240px;
+  height:240px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(212,136,28,.20), transparent 68%);
+}
+.eyebrow {
+  color:var(--cyan);
+  margin-bottom:10px;
+}
+.hero h2 {
+  font-family:'Atkinson Hyperlegible', sans-serif;
+  font-size:42px;
+  line-height:1.04;
+  color:var(--navy);
+  max-width:11ch;
+  margin-bottom:14px;
+}
+.hero p {
+  max-width:68ch;
+  color:var(--muted);
+  line-height:1.78;
+  font-size:17px;
+}
+.source-callout {
+  margin:18px 0 4px;
+  padding:14px 16px;
+  border:1px solid var(--line);
+  border-radius:16px;
+  background:rgba(255,255,255,.75);
+}
+.source-callout .label {
+  display:block;
+  color:var(--muted);
+  margin-bottom:6px;
+}
+.source-callout a {
+  color:var(--navy);
+  font-weight:600;
+  text-decoration:none;
+}
+.source-callout a:hover { text-decoration:underline; }
+.hero-grid {
+  display:grid;
+  grid-template-columns:1.1fr .9fr;
+  gap:18px;
+  margin-top:22px;
+}
+.summary-card,
+.map-card,
+.shift-card,
+.sample-card,
+.sources-card,
+.difficulty-card,
+.lesson-card {
+  border:1px solid var(--line);
+  border-radius:20px;
+  background:#fff;
+}
+.summary-card { padding:18px 18px 16px; }
+.summary-card h3,
+.section-title {
+  font-family:'Atkinson Hyperlegible', sans-serif;
+  color:var(--navy);
+}
+.summary-card h3 {
+  font-size:20px;
+  margin-bottom:10px;
+}
+.summary-card ul {
+  display:grid;
+  gap:10px;
+  padding-left:18px;
+  color:var(--ink);
+  line-height:1.55;
+}
+.glossary-box {
+  margin-top:16px;
+  padding-top:16px;
+  border-top:1px solid var(--line);
+}
+.glossary-box h4 {
+  font:700 14px 'IBM Plex Sans', sans-serif;
+  color:var(--navy);
+  margin-bottom:10px;
+}
+.glossary-list {
+  display:grid;
+  gap:8px;
+}
+.glossary-item {
+  display:grid;
+  grid-template-columns:64px minmax(0, 1fr);
+  gap:10px;
+  align-items:start;
+  padding:9px 10px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:#fbfcfd;
+}
+.glossary-mark {
+  display:inline-block;
+  text-align:center;
+  padding:5px 6px;
+  border-radius:999px;
+  background:var(--soft-navy);
+  color:var(--navy);
+  font:600 12px 'IBM Plex Mono', monospace;
+}
+.glossary-text {
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.45;
+}
+.glossary-text strong {
+  color:var(--ink);
+}
+.glossary-example {
+  display:block;
+  margin-top:6px;
+  color:var(--ink);
+  font:600 12px 'IBM Plex Mono', monospace;
+  line-height:1.5;
+}
+.map-card {
+  background:linear-gradient(180deg, #fbfdff 0%, #f4f8fc 100%);
+  padding:18px;
+}
+.map-card h3 {
+  font-size:18px;
+  color:var(--navy);
+  margin-bottom:14px;
+}
+.map-flow {
+  display:grid;
+  gap:12px;
+}
+.flow-step {
+  position:relative;
+  padding:14px 16px 14px 50px;
+  border-radius:16px;
+  background:#fff;
+  border:1px solid var(--line);
+}
+.flow-step::before {
+  content:attr(data-step);
+  position:absolute;
+  left:14px;
+  top:14px;
+  width:24px;
+  height:24px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:var(--soft-navy);
+  color:var(--navy);
+  font:700 12px 'IBM Plex Mono', monospace;
+}
+.flow-step strong {
+  display:block;
+  margin-bottom:4px;
+  color:var(--ink);
+}
+.flow-step span {
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.5;
+}
+.section {
+  margin-top:34px;
+}
+.section-head {
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-bottom:16px;
+}
+.section-title {
+  font-size:28px;
+}
+.section-rule {
+  flex:1;
+  height:1px;
+  background:var(--line);
+}
+.pills {
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-bottom:18px;
+}
+.pill {
+  padding:8px 12px;
+  border-radius:999px;
+  border:1px solid var(--line);
+  background:#fff;
+  color:var(--muted);
+}
+.phase-grid {
+  display:grid;
+  gap:18px;
+}
+.phase {
+  border:1px solid var(--line);
+  border-radius:22px;
+  overflow:hidden;
+  background:#fff;
+}
+.phase-top {
+  display:flex;
+  justify-content:space-between;
+  gap:18px;
+  padding:18px 20px;
+  border-bottom:1px solid var(--line);
+}
+.phase.phase-read .phase-top { background:var(--soft-navy); }
+.phase.phase-shape .phase-top { background:var(--soft-cyan); }
+.phase.phase-connect .phase-top { background:var(--soft-teal); }
+.phase.phase-summarise .phase-top { background:var(--soft-amber); }
+.phase.phase-change .phase-top { background:var(--soft-rose); }
+.phase-title-wrap h3 {
+  font-family:'Atkinson Hyperlegible', sans-serif;
+  font-size:24px;
+  color:var(--navy);
+  margin-bottom:6px;
+}
+.phase-title-wrap p {
+  color:var(--muted);
+  line-height:1.65;
+  max-width:62ch;
+}
+.phase-badge {
+  align-self:flex-start;
+  border-radius:999px;
+  padding:9px 12px;
+  background:rgba(255,255,255,.8);
+  border:1px solid rgba(0,0,0,.06);
+  color:var(--ink);
+}
+.lesson-grid {
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0, 1fr));
+  gap:14px;
+  padding:18px;
+}
+.lesson-card {
+  padding:16px 16px 14px;
+  background:linear-gradient(180deg, #ffffff 0%, #fbfcfd 100%);
+}
+.lesson-head {
+  display:flex;
+  justify-content:space-between;
+  gap:14px;
+  margin-bottom:10px;
+}
+.lesson-head h4 {
+  font-size:19px;
+  line-height:1.25;
+  color:var(--navy);
+}
+.card-step { color:var(--muted); }
+.lesson-card p {
+  color:var(--muted);
+  line-height:1.65;
+  font-size:15px;
+  margin-bottom:12px;
+}
+.lesson-card ul {
+  display:grid;
+  gap:8px;
+  padding-left:18px;
+  line-height:1.5;
+  font-size:14px;
+}
+.lesson-card li strong { color:var(--ink); }
+.difficulty-grid,
+.shift-grid,
+.sample-grid,
+.sources-grid,
+.glossary-grid {
+  display:grid;
+  gap:14px;
+}
+.glossary-grid {
+  display:block;
+  column-count:2;
+  column-gap:14px;
+}
+.glossary-card {
+  border:1px solid var(--line);
+  border-radius:20px;
+  background:linear-gradient(180deg, #ffffff 0%, #fbfcfd 100%);
+  padding:18px;
+  break-inside:avoid;
+  margin:0 0 14px;
+}
+.glossary-card h3 {
+  font-family:'Atkinson Hyperlegible', sans-serif;
+  font-size:20px;
+  color:var(--navy);
+  margin-bottom:8px;
+}
+.glossary-card p {
+  color:var(--muted);
+  line-height:1.6;
+  font-size:15px;
+  margin-bottom:12px;
+}
+.difficulty-grid { grid-template-columns:repeat(2, minmax(0, 1fr)); }
+.difficulty-card,
+.shift-card,
+.sample-card,
+.sources-card { padding:18px; }
+.difficulty-card {
+  background:linear-gradient(180deg, #fff 0%, #fff7f8 100%);
+}
+.difficulty-card ul {
+  display:grid;
+  gap:8px;
+  padding-left:18px;
+  margin-top:12px;
+  color:var(--ink);
+  line-height:1.55;
+  font-size:14px;
+}
+.difficulty-card .example {
+  margin-top:12px;
+  padding:10px 12px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:#fff;
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.55;
+}
+.difficulty-card .example strong {
+  color:var(--ink);
+}
+.difficulty-card h3,
+.shift-card h3,
+.sample-card h3,
+.sources-card h3 {
+  font-family:'Atkinson Hyperlegible', sans-serif;
+  font-size:20px;
+  color:var(--navy);
+  margin-bottom:10px;
+}
+.difficulty-card p,
+.shift-card p,
+.sample-card p,
+.sources-card p {
+  color:var(--muted);
+  line-height:1.65;
+  font-size:15px;
+}
+.sample-grid {
+  grid-template-columns:repeat(3, minmax(0, 1fr));
+}
+.sample-card {
+  border-top:6px solid var(--cyan);
+  background:linear-gradient(180deg, #ffffff 0%, #f7fcfd 100%);
+}
+.sample-card:nth-child(2) { border-top-color:var(--amber); background:linear-gradient(180deg, #ffffff 0%, #fffaf0 100%); }
+.sample-card:nth-child(3) { border-top-color:var(--teal); background:linear-gradient(180deg, #ffffff 0%, #f4fbf7 100%); }
+.sample-card .subtle-label { color:var(--muted); margin-bottom:8px; display:block; }
+.sample-card h3 { margin-bottom:12px; }
+.sample-card .question {
+  font-size:16px;
+  color:var(--ink);
+  margin-bottom:12px;
+}
+.mini-list {
+  display:grid;
+  gap:8px;
+  padding-left:18px;
+  color:var(--ink);
+  line-height:1.5;
+  font-size:14px;
+}
+.code-chip {
+  display:inline-block;
+  margin:10px 10px 0 0;
+  padding:8px 10px;
+  border-radius:999px;
+  background:#f3f6f8;
+  border:1px solid var(--line);
+  font:600 12px 'IBM Plex Mono', monospace;
+  color:var(--navy);
+}
+.shift-grid {
+  grid-template-columns:repeat(3, minmax(0, 1fr));
+}
+.shift-card {
+  background:linear-gradient(180deg, #ffffff 0%, #f8fbfe 100%);
+}
+.shift-number {
+  color:var(--cyan);
+  margin-bottom:10px;
+  display:block;
+}
+.sources-grid {
+  grid-template-columns:repeat(2, minmax(0, 1fr));
+}
+.sources-card ul {
+  display:grid;
+  gap:8px;
+  padding-left:18px;
+}
+.sources-card li,
+.sources-card a {
+  color:var(--muted);
+  line-height:1.5;
+}
+.footer {
+  margin-top:28px;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.6;
+}
+@media (max-width: 1040px) {
+  .page { grid-template-columns:1fr; }
+  .rail { display:none; }
+  main { padding:28px 22px 56px; }
+  .hero-grid,
+  .lesson-grid,
+  .difficulty-grid,
+  .sample-grid,
+  .shift-grid,
+  .sources-grid { grid-template-columns:1fr; }
+  .glossary-grid { column-count:1; }
+}
+@media (max-width: 700px) {
+  .hero { padding:24px 20px; }
+  .hero h2 { font-size:31px; }
+  .section-title { font-size:24px; }
+  .phase-top { flex-direction:column; }
+}
+</style>
+</head>
+<body>
+<article class="page">
+  <aside class="rail">
+    <h1>SQLBolt Learner's Guide</h1>
+    <p>A visual rewrite of the tutorial as a learning framework: what changes, where difficulty jumps, and what to practise next.</p>
+
+    <div class="mini-card">
+      <span class="mini-label">Compression Rule</span>
+      <strong>Question first. Syntax second. Mental shift always visible.</strong>
+    </div>
+
+    <div class="nav-block">
+      <div class="nav-title">Sections</div>
+      <a href="#roadmap"><span class="nav-num">01</span><span class="nav-text">Course Roadmap</span></a>
+      <a href="#full-glossary"><span class="nav-num">02</span><span class="nav-text">Full Syntax Glossary</span></a>
+      <a href="#difficult"><span class="nav-num">03</span><span class="nav-text">Difficulty Jumps</span></a>
+      <a href="#sample"><span class="nav-num">04</span><span class="nav-text">Lessons 1 to 3 Sample</span></a>
+      <a href="#shifts"><span class="nav-num">05</span><span class="nav-text">Big Shifts Summary</span></a>
+      <a href="#exercises"><span class="nav-num">06</span><span class="nav-text">Exercises</span></a>
+      <a href="#sources"><span class="nav-num">07</span><span class="nav-text">Source Links</span></a>
+    </div>
+  </aside>
+
+  <main>
+    <section class="hero">
+      <div class="eyebrow tag">Visual Study Map</div>
+      <h2>SQLBolt Learner's Guide</h2>
+      <p>This page is a visual restructuring of the SQLBolt lesson sequence. It is not a copy of the tutorial. The goal is to show the course as a framework you can see at a glance: the main phases, the lesson purpose inside each phase, and the points where beginner understanding usually bends or breaks.</p>
+      <div class="source-callout">
+        <span class="label">Original SQLBolt tutorial</span>
+        <a href="https://sqlbolt.com/">https://sqlbolt.com/</a>
+      </div>
+
+      <div class="hero-grid">
+        <div class="summary-card">
+          <h3>How To Use This</h3>
+          <ul>
+            <li>Look at the roadmap before opening a lesson.</li>
+            <li>Ask the lesson’s question in plain English first.</li>
+            <li>Use the lesson card to see the core SQL shape and the real concept change.</li>
+            <li>Slow down at the marked difficulty jumps instead of treating every lesson as equal.</li>
+          </ul>
+          <div class="glossary-box">
+            <h4>Quick Syntax Glossary</h4>
+            <div class="glossary-list">
+              <div class="glossary-item">
+                <span class="glossary-mark">;</span>
+                <div class="glossary-text"><strong>End of query.</strong> Like pressing full stop on the SQL statement. In many teaching tools it is optional for one query, but in real SQL you should treat it as the normal ending.</div>
+              </div>
+              <div class="glossary-item">
+                <span class="glossary-mark">,</span>
+                <div class="glossary-text"><strong>Separator.</strong> It separates columns or values, like listing items: <code>title, year</code>.</div>
+              </div>
+              <div class="glossary-item">
+                <span class="glossary-mark">'text'</span>
+                <div class="glossary-text"><strong>Text value.</strong> Strings are quoted in SQL. If it is a word value, quote it. Numbers do not need quotes.</div>
+              </div>
+              <div class="glossary-item">
+                <span class="glossary-mark">*</span>
+                <div class="glossary-text"><strong>All columns.</strong> In <code>SELECT *</code>, the star means return every column from the table. It is not the text-search wildcard.</div>
+              </div>
+              <div class="glossary-item">
+                <span class="glossary-mark">=</span>
+                <div class="glossary-text"><strong>Equals test.</strong> SQL uses a single equals sign in filters: <code>WHERE year = 2003</code>. That is closer to Python <code>==</code> than Python <code>=</code>.</div>
+              </div>
+              <div class="glossary-item">
+                <span class="glossary-mark">%</span>
+                <div class="glossary-text"><strong>Text wildcard in <code>LIKE</code>.</strong> It means any run of characters inside a text pattern, not all columns and not Python modulo in this context.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="map-card">
+          <h3>The Whole Journey In Nine Moves</h3>
+          <div class="map-flow">
+            <div class="flow-step" data-step="1"><strong>Ask for columns</strong><span>Start with `SELECT` and `FROM`.</span></div>
+            <div class="flow-step" data-step="2"><strong>Filter rows</strong><span>Use `WHERE` for numbers and text.</span></div>
+            <div class="flow-step" data-step="3"><strong>Sort and trim</strong><span>Shape the returned answer with `ORDER BY`, `LIMIT`, `OFFSET`.</span></div>
+            <div class="flow-step" data-step="4"><strong>Connect tables</strong><span>Use joins when the data is split.</span></div>
+            <div class="flow-step" data-step="5"><strong>Handle blanks</strong><span>Learn why `NULL` behaves differently.</span></div>
+            <div class="flow-step" data-step="6"><strong>Compute values</strong><span>Build expressions instead of only reading raw columns.</span></div>
+            <div class="flow-step" data-step="7"><strong>Summarise groups</strong><span>Move from row thinking to aggregate thinking.</span></div>
+            <div class="flow-step" data-step="8"><strong>Understand logic order</strong><span>Written order and execution order are not the same.</span></div>
+            <div class="flow-step" data-step="9"><strong>Change data and structure</strong><span>Insert, update, delete, create, alter, drop.</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="roadmap">
+      <div class="section-head">
+        <h2 class="section-title">Course Roadmap</h2>
+        <div class="section-rule"></div>
+      </div>
+      <div class="pills">
+        <span class="pill">Read One Table</span>
+        <span class="pill">Shape The Answer</span>
+        <span class="pill">Connect Tables</span>
+        <span class="pill">Summarise</span>
+        <span class="pill">Change Data Safely</span>
+      </div>
+
+      <div class="phase-grid">
+        <section class="phase phase-read">
+          <div class="phase-top">
+            <div class="phase-title-wrap">
+              <h3>Phase 1: Read One Table</h3>
+              <p>The first job is learning that SQL is a question language. You ask for columns, then keep only the rows that matter. This is where the habit of phrasing the question clearly matters most.</p>
+            </div>
+            <div class="phase-badge pill">Foundation</div>
+          </div>
+          <div class="lesson-grid">
+            <article class="lesson-card">
+              <div class="lesson-head">
+                <h4>Introduction</h4>
+                <span class="card-step">Start</span>
+              </div>
+              <p>Relational tables, rows, columns, and the idea that a query is a request for a shaped answer.</p>
+              <ul>
+                <li><strong>Main point:</strong> think "what question am I asking the data?"</li>
+                <li><strong>Key moment:</strong> a result table is the answer to that question.</li>
+              </ul>
+            </article>
+
+            <article class="lesson-card">
+              <div class="lesson-head">
+                <h4>Lesson 1: SELECT queries 101</h4>
+                <span class="card-step">01</span>
+              </div>
+              <p>Choose which columns you want from a single table.</p>
+              <ul>
+                <li><strong>Core shape:</strong> `SELECT ... FROM ...`</li>
+                <li><strong>Key moment:</strong> stop saying "show the table"; start saying "return these fields."</li>
+              </ul>
+            </article>
+
+            <article class="lesson-card">
+              <div class="lesson-head">
+                <h4>Lesson 2: Constraints (Pt. 1)</h4>
+                <span class="card-step">02</span>
+              </div>
+              <p>Filter rows with numerical conditions, ranges, and lists.</p>
+              <ul>
+                <li><strong>Core shape:</strong> `WHERE`</li>
+                <li><strong>Key moment:</strong> row-by-row filtering becomes part of the question.</li>
+              </ul>
+            </article>
+
+            <article class="lesson-card">
+              <div class="lesson-head">
+                <h4>Lesson 3: Constraints (Pt. 2)</h4>
+                <span class="card-step">03</span>
+              </div>
+              <p>Text filtering, quoted strings, exact matches, and pattern matching.</p>
+              <ul>
+                <li><strong>Core shape:</strong> `LIKE`, `IN`, quoted text</li>
+                <li><strong>Key moment:</strong> "contains", "starts with", and "equals" are different jobs.</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section class="phase phase-shape">
+          <div class="phase-top">
+            <div class="phase-title-wrap">
+              <h3>Phase 2: Shape The Answer</h3>
+              <p>Once the right rows are in play, you control how the answer appears. This is still single-table thinking, but with more deliberate output shaping.</p>
+            </div>
+            <div class="phase-badge pill">Output Control</div>
+          </div>
+          <div class="lesson-grid">
+            <article class="lesson-card">
+              <div class="lesson-head">
+                <h4>Lesson 4: Filtering and sorting</h4>
+                <span class="card-step">04</span>
+              </div>
+              <p>Remove duplicates, order the result, and keep only the slice you need.</p>
+              <ul>
+                <li><strong>Core shape:</strong> `DISTINCT`, `ORDER BY`, `LIMIT`, `OFFSET`</li>
+                <li><strong>Key moment:</strong> sorting is part of the answer, not decoration.</li>
+              </ul>
+            </article>
+
+            <article class="lesson-card">
+              <div class="lesson-head">
+                <h4>Review: Simple SELECT queries</h4>
+                <span class="card-step">05</span>
+              </div>
+              <p>The first real checkpoint: translate a word problem into a query without being led line by line.</p>
+              <ul>
+                <li><strong>Main point:</strong> combine earlier skills.</li>
+                <li><strong>Key moment:</strong> test whether you can think in query pieces independently.</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section class="phase phase-connect">
+          <div class="phase-top">
+            <div class="phase-title-wrap">
+              <h3>Phase 3: Connect Tables</h3>
+              <p>This is where SQL stops feeling like spreadsheet filtering and starts feeling like database work. The important leap is understanding keys and matching logic.</p>
+            </div>
+            <div class="phase-badge pill">Relationships</div>
+          </div>
+          <div class="lesson-grid">
+            <article class="lesson-card">
+              <div class="lesson-head">
+                <h4>Lesson 6: Multi-table queries with JOINs</h4>
+                <span class="card-step">06</span>
+              </div>
+              <p>Combine data from two tables using a shared key.</p>
+              <ul>
+                <li><strong>Core shape:</strong> `INNER JOIN ... ON ...`</li>
+                <li><strong>Key moment:</strong> if the `ON` match is wrong, the entire answer is wrong.</li>
+              </ul>
+            </article>
+
+            <article class="lesson-card">
+              <div class="lesson-head">
+                <h4>Lesson 7: OUTER JOINs</h4>
+                <span class="card-step">07</span>
+              </div>
+              <p>Keep unmatched rows when missing relationships matter.</p>
+              <ul>
+                <li><strong>Core shape:</strong> `LEFT JOIN`, `RIGHT JOIN`, `FULL JOIN`</li>
+                <li><strong>Key moment:</strong> ask whether you want only matches or the missing edges too.</li>
+              </ul>
+            </article>
+
+            <article class="lesson-card">
+              <div class="lesson-head">
+                <h4>Lesson 8: NULLs</h4>
+                <span class="card-step">08</span>
+              </div>
+              <p>Missing data is not an ordinary value and needs special tests.</p>
+              <ul>
+                <li><strong>Core shape:</strong> `IS NULL`, `IS NOT NULL`</li>
+                <li><strong>Key moment:</strong> blank-looking data changes query logic.</li>
+              </ul>
+            </article>
+
+            <article class="lesson-card">
+              <div class="lesson-head">
+                <h4>Lesson 9: Expressions</h4>
+                <span class="card-step">09</span>
+              </div>
+              <p>Build new output values with arithmetic, functions, and aliases.</p>
+              <ul>
+                <li><strong>Main point:</strong> SQL can compute, not just fetch.</li>
+                <li><strong>Key moment:</strong> useful output is often constructed, not merely retrieved.</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section class="phase phase-summarise">
+          <div class="phase-top">
+            <div class="phase-title-wrap">
+              <h3>Phase 4: Summarise And Reason</h3>
+              <p>This is the major conceptual jump. You stop thinking only in individual rows and start thinking in grouped categories, summaries, and logical processing order.</p>
+            </div>
+            <div class="phase-badge pill">Analysis</div>
+          </div>
+          <div class="lesson-grid">
+            <article class="lesson-card">
+              <div class="lesson-head">
+                <h4>Lesson 10: Aggregates (Pt. 1)</h4>
+                <span class="card-step">10</span>
+              </div>
+              <p>Summarise many rows into counts, sums, averages, minimums, and maximums.</p>
+              <ul>
+                <li><strong>Core shape:</strong> `COUNT`, `SUM`, `AVG`, `MIN`, `MAX`</li>
+                <li><strong>Key moment:</strong> shift from "what rows?" to "how much?" and "how many?"</li>
+              </ul>
+            </article>
+
+            <article class="lesson-card">
+              <div class="lesson-head">
+                <h4>Lesson 11: Aggregates (Pt. 2)</h4>
+                <span class="card-step">11</span>
+              </div>
+              <p>Group rows, then filter the groups after they exist.</p>
+              <ul>
+                <li><strong>Core shape:</strong> `GROUP BY ... HAVING ...`</li>
+                <li><strong>Key moment:</strong> `WHERE` is before grouping, `HAVING` is after grouping.</li>
+              </ul>
+            </article>
+
+            <article class="lesson-card">
+              <div class="lesson-head">
+                <h4>Lesson 12: Order of execution</h4>
+                <span class="card-step">12</span>
+              </div>
+              <p>Understand why SQL is written in one order but processed in another.</p>
+              <ul>
+                <li><strong>Main point:</strong> logic order explains earlier confusion.</li>
+                <li><strong>Key moment:</strong> clause visibility depends on when the database evaluates it.</li>
+              </ul>
+            </article>
+
+            <article class="lesson-card">
+              <div class="lesson-head">
+                <h4>Topics: Subqueries and Set Operations</h4>
+                <span class="card-step">Extra</span>
+              </div>
+              <p>Handle intermediate answers and combine compatible results as sets.</p>
+              <ul>
+                <li><strong>Core shapes:</strong> nested queries, `UNION`, `UNION ALL`</li>
+                <li><strong>Key moment:</strong> joins place tables side by side; unions stack results vertically.</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section class="phase phase-change">
+          <div class="phase-top">
+            <div class="phase-title-wrap">
+              <h3>Phase 5: Change Data And Structure</h3>
+              <p>The final block moves from reading to editing. The syntax is not the hard part here. The hard part is learning to respect the blast radius.</p>
+            </div>
+            <div class="phase-badge pill">Safety</div>
+          </div>
+          <div class="lesson-grid">
+            <article class="lesson-card">
+              <div class="lesson-head">
+                <h4>Lesson 13: Inserting rows</h4>
+                <span class="card-step">13</span>
+              </div>
+              <p>Add new records that fit the table schema.</p>
+              <ul>
+                <li><strong>Core shape:</strong> `INSERT INTO ... VALUES ...`</li>
+                <li><strong>Key moment:</strong> schema controls what valid data looks like.</li>
+              </ul>
+            </article>
+
+            <article class="lesson-card">
+              <div class="lesson-head">
+                <h4>Lesson 14: Updating rows</h4>
+                <span class="card-step">14</span>
+              </div>
+              <p>Change existing data with deliberate constraints.</p>
+              <ul>
+                <li><strong>Core shape:</strong> `UPDATE ... SET ... WHERE ...`</li>
+                <li><strong>Key moment:</strong> `WHERE` is safety equipment, not decoration.</li>
+              </ul>
+            </article>
+
+            <article class="lesson-card">
+              <div class="lesson-head">
+                <h4>Lesson 15: Deleting rows</h4>
+                <span class="card-step">15</span>
+              </div>
+              <p>Remove rows without wiping the table by accident.</p>
+              <ul>
+                <li><strong>Core shape:</strong> `DELETE FROM ... WHERE ...`</li>
+                <li><strong>Key moment:</strong> deleting rows is destructive filtering.</li>
+              </ul>
+            </article>
+
+            <article class="lesson-card">
+              <div class="lesson-head">
+                <h4>Lessons 16 to 18: Schema changes</h4>
+                <span class="card-step">16-18</span>
+              </div>
+              <p>Create, alter, and remove tables as structural database actions.</p>
+              <ul>
+                <li><strong>Core shapes:</strong> `CREATE TABLE`, `ALTER TABLE`, `DROP TABLE`</li>
+                <li><strong>Key moment:</strong> deleting rows and deleting the table are completely different stakes.</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section class="section" id="full-glossary">
+      <div class="section-head">
+        <h2 class="section-title">Full Syntax Glossary</h2>
+        <div class="section-rule"></div>
+      </div>
+      <div class="pills">
+        <span class="pill">Syntax Only</span>
+        <span class="pill">Short Definitions</span>
+        <span class="pill">Python-Brain Friendly</span>
+      </div>
+      <div class="glossary-grid">
+        <article class="glossary-card">
+          <h3>Selecting And Naming</h3>
+          <p>The pieces that ask for columns and name the result you want back.</p>
+          <div class="glossary-list">
+            <div class="glossary-item"><span class="glossary-mark">SELECT</span><div class="glossary-text"><strong>Choose columns.</strong> This starts the query and says what you want returned.<span class="glossary-example">SELECT title, year</span></div></div>
+            <div class="glossary-item"><span class="glossary-mark">FROM</span><div class="glossary-text"><strong>Name the table.</strong> This tells SQL where to get the data from.<span class="glossary-example">FROM movies</span></div></div>
+            <div class="glossary-item"><span class="glossary-mark">*</span><div class="glossary-text"><strong>All columns.</strong> In <code>SELECT *</code>, return every column from the table.<span class="glossary-example">SELECT * FROM movies;</span></div></div>
+            <div class="glossary-item"><span class="glossary-mark">DISTINCT</span><div class="glossary-text"><strong>Remove duplicate rows.</strong> Use this when repeated results should collapse to unique ones.<span class="glossary-example">SELECT DISTINCT director FROM movies;</span></div></div>
+            <div class="glossary-item"><span class="glossary-mark">AS</span><div class="glossary-text"><strong>Rename a result.</strong> Like a label for a returned column or table alias.<span class="glossary-example">year AS release_year</span></div></div>
+          </div>
+        </article>
+
+        <article class="glossary-card">
+          <h3>Filtering Rows</h3>
+          <p>The syntax that decides which rows stay and which rows disappear.</p>
+          <div class="glossary-list">
+            <div class="glossary-item"><span class="glossary-mark">WHERE</span><div class="glossary-text"><strong>Filter rows.</strong> Only rows where the condition is true remain.<span class="glossary-example">WHERE year = 2004</span></div></div>
+            <div class="glossary-item"><span class="glossary-mark">=</span><div class="glossary-text"><strong>Equals test.</strong> In SQL filters, single <code>=</code> behaves like Python <code>==</code>.<span class="glossary-example">WHERE club = 'Liverpool'</span></div></div>
+            <div class="glossary-item"><span class="glossary-mark">!=</span><div class="glossary-text"><strong>Not equal.</strong> Some databases also allow <code>&lt;&gt;</code> for the same job.<span class="glossary-example">WHERE club != 'Liverpool'</span></div></div>
+            <div class="glossary-item"><span class="glossary-mark">&gt; &lt; &gt;= &lt;=</span><div class="glossary-text"><strong>Comparison tests.</strong> Greater than, less than, and their inclusive versions.<span class="glossary-example">WHERE goals &gt;= 20</span></div></div>
+            <div class="glossary-item"><span class="glossary-mark">AND / OR</span><div class="glossary-text"><strong>Combine conditions.</strong> <code>AND</code> means both must be true. <code>OR</code> means either can be true.<span class="glossary-example">WHERE club = 'Arsenal' AND goals &gt; 10</span></div></div>
+            <div class="glossary-item"><span class="glossary-mark">BETWEEN</span><div class="glossary-text"><strong>Inclusive range.</strong> <code>BETWEEN 2000 AND 2010</code> includes both ends.<span class="glossary-example">WHERE year BETWEEN 2000 AND 2010</span></div></div>
+            <div class="glossary-item"><span class="glossary-mark">IN (...)</span><div class="glossary-text"><strong>Value is in this list.</strong> Useful when checking against several allowed options.<span class="glossary-example">WHERE id IN (1, 3, 5)</span></div></div>
+            <div class="glossary-item"><span class="glossary-mark">NOT IN</span><div class="glossary-text"><strong>Value is not in this list.</strong> The exclusion version of <code>IN</code>.<span class="glossary-example">WHERE club NOT IN ('Arsenal', 'Liverpool')</span></div></div>
+          </div>
+        </article>
+
+        <article class="glossary-card">
+          <h3>Text Matching</h3>
+          <p>The extra syntax that appears when you are matching words rather than just numbers.</p>
+          <div class="glossary-list">
+            <div class="glossary-item"><span class="glossary-mark">'text'</span><div class="glossary-text"><strong>Quoted string.</strong> Text values are written in quotes so SQL knows they are text.<span class="glossary-example">'John Lasseter'</span></div></div>
+            <div class="glossary-item"><span class="glossary-mark">LIKE</span><div class="glossary-text"><strong>Pattern match.</strong> Use this when you are matching a text shape, not just exact text.<span class="glossary-example">WHERE title LIKE 'Toy Story%'</span></div></div>
+            <div class="glossary-item"><span class="glossary-mark">NOT LIKE</span><div class="glossary-text"><strong>Pattern does not match.</strong> The exclusion version of <code>LIKE</code>.<span class="glossary-example">WHERE title NOT LIKE 'Toy%'</span></div></div>
+            <div class="glossary-item"><span class="glossary-mark">%</span><div class="glossary-text"><strong>Any run of characters.</strong> Only a wildcard inside <code>LIKE</code> patterns.<span class="glossary-example">'WALL-%'</span></div></div>
+            <div class="glossary-item"><span class="glossary-mark">_</span><div class="glossary-text"><strong>Exactly one character.</strong> Also only used inside <code>LIKE</code> patterns.<span class="glossary-example">'WALL-_'</span></div></div>
+          </div>
+        </article>
+
+        <article class="glossary-card">
+          <h3>Sorting And Slicing</h3>
+          <p>The syntax that shapes the order of the answer and trims how much you see.</p>
+          <div class="glossary-list">
+            <div class="glossary-item"><span class="glossary-mark">ORDER BY</span><div class="glossary-text"><strong>Sort the result.</strong> This changes the order of the returned rows.<span class="glossary-example">ORDER BY year</span></div></div>
+            <div class="glossary-item"><span class="glossary-mark">ASC</span><div class="glossary-text"><strong>Ascending.</strong> Small to large, A to Z. Usually the default.<span class="glossary-example">ORDER BY year ASC</span></div></div>
+            <div class="glossary-item"><span class="glossary-mark">DESC</span><div class="glossary-text"><strong>Descending.</strong> Large to small, Z to A.<span class="glossary-example">ORDER BY year DESC</span></div></div>
+            <div class="glossary-item"><span class="glossary-mark">LIMIT</span><div class="glossary-text"><strong>Only this many rows.</strong> Keep the first <code>n</code> returned rows.<span class="glossary-example">LIMIT 5</span></div></div>
+            <div class="glossary-item"><span class="glossary-mark">OFFSET</span><div class="glossary-text"><strong>Skip rows first.</strong> Often used with <code>LIMIT</code> to step through results.<span class="glossary-example">LIMIT 5 OFFSET 10</span></div></div>
+          </div>
+        </article>
+
+        <article class="glossary-card">
+          <h3>Joins And Missing Data</h3>
+          <p>The syntax for combining tables and dealing with rows that do not match cleanly.</p>
+          <div class="glossary-list">
+            <div class="glossary-item"><span class="glossary-mark">JOIN</span><div class="glossary-text"><strong>Combine tables.</strong> Bring related rows together from more than one table.</div></div>
+            <div class="glossary-item"><span class="glossary-mark">INNER JOIN</span><div class="glossary-text"><strong>Matches only.</strong> Keep rows that match in both tables.</div></div>
+            <div class="glossary-item"><span class="glossary-mark">LEFT JOIN</span><div class="glossary-text"><strong>Keep the left table.</strong> Show all left-side rows, even when the right side has no match.</div></div>
+            <div class="glossary-item"><span class="glossary-mark">RIGHT JOIN</span><div class="glossary-text"><strong>Keep the right table.</strong> The mirror version of <code>LEFT JOIN</code>.</div></div>
+            <div class="glossary-item"><span class="glossary-mark">FULL JOIN</span><div class="glossary-text"><strong>Keep both sides.</strong> Show all rows from both tables, matched where possible.</div></div>
+            <div class="glossary-item"><span class="glossary-mark">ON</span><div class="glossary-text"><strong>Match rule for the join.</strong> This says which columns connect the two tables.</div></div>
+            <div class="glossary-item"><span class="glossary-mark">NULL</span><div class="glossary-text"><strong>Missing value.</strong> Not the same thing as zero or empty text.</div></div>
+            <div class="glossary-item"><span class="glossary-mark">IS NULL</span><div class="glossary-text"><strong>Check for missing.</strong> Use this instead of <code>= NULL</code>.</div></div>
+            <div class="glossary-item"><span class="glossary-mark">IS NOT NULL</span><div class="glossary-text"><strong>Check for present.</strong> Keep rows where the value is not missing.</div></div>
+          </div>
+        </article>
+
+        <article class="glossary-card">
+          <h3>Calculations And Summaries</h3>
+          <p>The syntax for computed columns, grouped answers, and aggregate thinking.</p>
+          <div class="glossary-list">
+            <div class="glossary-item"><span class="glossary-mark">expr AS name</span><div class="glossary-text"><strong>Calculated column with a label.</strong> Build a value during the query and name it.</div></div>
+            <div class="glossary-item"><span class="glossary-mark">COUNT()</span><div class="glossary-text"><strong>Count rows.</strong> Often used to answer "how many?"</div></div>
+            <div class="glossary-item"><span class="glossary-mark">SUM()</span><div class="glossary-text"><strong>Add values.</strong> Total a numeric column.</div></div>
+            <div class="glossary-item"><span class="glossary-mark">AVG()</span><div class="glossary-text"><strong>Average values.</strong> Mean of a numeric column.</div></div>
+            <div class="glossary-item"><span class="glossary-mark">MIN() / MAX()</span><div class="glossary-text"><strong>Smallest or largest value.</strong> Useful for earliest, latest, lowest, highest.</div></div>
+            <div class="glossary-item"><span class="glossary-mark">GROUP BY</span><div class="glossary-text"><strong>Group rows by category.</strong> This turns row-level data into grouped summaries.</div></div>
+            <div class="glossary-item"><span class="glossary-mark">HAVING</span><div class="glossary-text"><strong>Filter groups.</strong> Like <code>WHERE</code>, but after the grouping has happened.</div></div>
+          </div>
+        </article>
+
+        <article class="glossary-card">
+          <h3>Changing Data</h3>
+          <p>The statements that stop reading and start editing table contents.</p>
+          <div class="glossary-list">
+            <div class="glossary-item"><span class="glossary-mark">INSERT INTO</span><div class="glossary-text"><strong>Add new rows.</strong> Put new records into a table.</div></div>
+            <div class="glossary-item"><span class="glossary-mark">VALUES (...)</span><div class="glossary-text"><strong>The new data.</strong> The values being inserted for the row or rows.</div></div>
+            <div class="glossary-item"><span class="glossary-mark">UPDATE</span><div class="glossary-text"><strong>Change existing rows.</strong> Edit rows already in the table.</div></div>
+            <div class="glossary-item"><span class="glossary-mark">SET</span><div class="glossary-text"><strong>New column values.</strong> Used inside <code>UPDATE</code> to say what changes.</div></div>
+            <div class="glossary-item"><span class="glossary-mark">DELETE FROM</span><div class="glossary-text"><strong>Remove rows.</strong> Deletes row data, usually with a <code>WHERE</code> filter for safety.</div></div>
+          </div>
+        </article>
+
+        <article class="glossary-card">
+          <h3>Changing Structure</h3>
+          <p>The statements that define, alter, or remove the table itself.</p>
+          <div class="glossary-list">
+            <div class="glossary-item"><span class="glossary-mark">CREATE TABLE</span><div class="glossary-text"><strong>Make a new table.</strong> Define the table and its columns.</div></div>
+            <div class="glossary-item"><span class="glossary-mark">ALTER TABLE</span><div class="glossary-text"><strong>Change a table.</strong> Add, drop, or rename parts of the schema.</div></div>
+            <div class="glossary-item"><span class="glossary-mark">ADD</span><div class="glossary-text"><strong>Add a column.</strong> Commonly used with <code>ALTER TABLE</code>.</div></div>
+            <div class="glossary-item"><span class="glossary-mark">DROP</span><div class="glossary-text"><strong>Remove something.</strong> Can remove a column or a whole table depending on context.</div></div>
+            <div class="glossary-item"><span class="glossary-mark">RENAME TO</span><div class="glossary-text"><strong>Rename a table.</strong> Change the table name without rebuilding it.</div></div>
+            <div class="glossary-item"><span class="glossary-mark">DROP TABLE</span><div class="glossary-text"><strong>Delete the whole table.</strong> Stronger than deleting rows because the structure goes too.</div></div>
+            <div class="glossary-item"><span class="glossary-mark">IF EXISTS / IF NOT EXISTS</span><div class="glossary-text"><strong>Guard clauses.</strong> Avoid errors when dropping or creating tables conditionally.</div></div>
+          </div>
+        </article>
+
+        <article class="glossary-card">
+          <h3>Table Rules And Data Types</h3>
+          <p>These are schema words rather than query words, but the later lessons introduce them.</p>
+          <div class="glossary-list">
+            <div class="glossary-item"><span class="glossary-mark">INTEGER</span><div class="glossary-text"><strong>Whole number type.</strong> For values like counts or ids.</div></div>
+            <div class="glossary-item"><span class="glossary-mark">VARCHAR(...)</span><div class="glossary-text"><strong>Variable-length text.</strong> Text up to a chosen maximum size.</div></div>
+            <div class="glossary-item"><span class="glossary-mark">DATETIME</span><div class="glossary-text"><strong>Date and time type.</strong> Stores time-based values.</div></div>
+            <div class="glossary-item"><span class="glossary-mark">PRIMARY KEY</span><div class="glossary-text"><strong>Main unique identifier.</strong> The column that uniquely identifies each row.</div></div>
+            <div class="glossary-item"><span class="glossary-mark">AUTOINCREMENT</span><div class="glossary-text"><strong>Auto-numbering id.</strong> Often used for a primary key that grows automatically.</div></div>
+            <div class="glossary-item"><span class="glossary-mark">NOT NULL</span><div class="glossary-text"><strong>Value required.</strong> This column is not allowed to be missing.</div></div>
+            <div class="glossary-item"><span class="glossary-mark">DEFAULT</span><div class="glossary-text"><strong>Fallback value.</strong> Used when no value is supplied.</div></div>
+            <div class="glossary-item"><span class="glossary-mark">CHECK (...)</span><div class="glossary-text"><strong>Validation rule.</strong> Limits what values are allowed.</div></div>
+            <div class="glossary-item"><span class="glossary-mark">FOREIGN KEY</span><div class="glossary-text"><strong>Link to another table.</strong> A column whose values should match keys in another table.</div></div>
+          </div>
+        </article>
+
+        <article class="glossary-card">
+          <h3>Punctuation And Small Symbols</h3>
+          <p>These are tiny, but they cause a surprising amount of friction when you are new.</p>
+          <div class="glossary-list">
+            <div class="glossary-item"><span class="glossary-mark">;</span><div class="glossary-text"><strong>End of query.</strong> Treat it as the normal full stop for a SQL statement.</div></div>
+            <div class="glossary-item"><span class="glossary-mark">,</span><div class="glossary-text"><strong>Separator.</strong> Splits columns, values, or expressions in a list.</div></div>
+            <div class="glossary-item"><span class="glossary-mark">( )</span><div class="glossary-text"><strong>Group parts together.</strong> Used in functions, inserted values, and subqueries.</div></div>
+            <div class="glossary-item"><span class="glossary-mark">/ * + -</span><div class="glossary-text"><strong>Math operators.</strong> Used in expressions when SQL is computing a value.</div></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="difficult">
+      <div class="section-head">
+        <h2 class="section-title">Difficulty Jumps</h2>
+        <div class="section-rule"></div>
+      </div>
+      <div class="difficulty-grid">
+        <article class="difficulty-card">
+          <h3>Text versus number filtering</h3>
+          <p>This becomes difficult because the question feels the same, but SQL expects different syntax depending on the data type.</p>
+          <ul>
+            <li><strong>What goes wrong:</strong> you write text as if it were a number, or forget quotes.</li>
+            <li><strong>Why it happens:</strong> both are filtered with <code>WHERE</code>, so they look deceptively similar.</li>
+            <li><strong>How to solve it:</strong> numbers stay bare, text gets single quotes.</li>
+          </ul>
+          <div class="example"><strong>Look at this:</strong> <code>WHERE year = 2004</code> versus <code>WHERE club = 'Liverpool'</code>.</div>
+        </article>
+        <article class="difficulty-card">
+          <h3>`LIKE` with `%` and `_`</h3>
+          <p>This is hard because you are no longer asking for an exact value. You are asking for a text pattern.</p>
+          <ul>
+            <li><strong>What goes wrong:</strong> learners try to use <code>=</code> with a wildcard, such as <code>= 'WALL-%'</code>.</li>
+            <li><strong>Why it happens:</strong> the eye notices the text first, not the fact that the question has changed from exact match to pattern match.</li>
+            <li><strong>How to solve it:</strong> use <code>=</code> for exact known text and <code>LIKE</code> only when the shape matters.</li>
+          </ul>
+          <div class="example"><strong>Look at this:</strong> exact title: <code>WHERE title = 'WALL-E'</code>. Pattern: <code>WHERE title LIKE 'WALL-%'</code>.</div>
+        </article>
+        <article class="difficulty-card">
+          <h3>`INNER JOIN` versus outer joins</h3>
+          <p>The syntax is not the real difficulty. The real difficulty is deciding what should happen to rows with no match.</p>
+          <ul>
+            <li><strong>What goes wrong:</strong> you use an inner join and accidentally lose rows you still cared about.</li>
+            <li><strong>Why it happens:</strong> beginners often assume “combine tables” means “keep everything.”</li>
+            <li><strong>How to solve it:</strong> ask one question first: should unmatched rows vanish or remain visible?</li>
+          </ul>
+          <div class="example"><strong>Look at this:</strong> <code>INNER JOIN</code> keeps matches only. <code>LEFT JOIN</code> keeps all rows from the left table and fills the missing side with <code>NULL</code>.</div>
+        </article>
+        <article class="difficulty-card">
+          <h3>`NULL` logic</h3>
+          <p><code>NULL</code> looks like a blank value, but SQL treats it as missingness, not as ordinary text or number data.</p>
+          <ul>
+            <li><strong>What goes wrong:</strong> learners try <code>= NULL</code> or assume blank means zero or empty text.</li>
+            <li><strong>Why it happens:</strong> other languages train you to compare values directly.</li>
+            <li><strong>How to solve it:</strong> switch mental model and treat missingness as its own condition.</li>
+          </ul>
+          <div class="example"><strong>Look at this:</strong> not <code>WHERE building_id = NULL</code>, but <code>WHERE building_id IS NULL</code>.</div>
+        </article>
+        <article class="difficulty-card">
+          <h3>Row thinking to group thinking</h3>
+          <p>Aggregates feel strange because you stop asking about individual rows and start asking summary questions.</p>
+          <ul>
+            <li><strong>What goes wrong:</strong> you expect the query to show detail rows and a summary at the same time without grouping properly.</li>
+            <li><strong>Why it happens:</strong> the learner is still thinking “show me records,” not “summarise categories.”</li>
+            <li><strong>How to solve it:</strong> ask whether the output should be one row per record or one row per group.</li>
+          </ul>
+          <div class="example"><strong>Look at this:</strong> <code>SELECT director, COUNT(*) FROM movies GROUP BY director;</code> returns one row per director, not one row per movie.</div>
+        </article>
+        <article class="difficulty-card">
+          <h3>`WHERE` versus `HAVING`</h3>
+          <p>This is a classic confusion because both clauses feel like filters, but they act at different stages of the query.</p>
+          <ul>
+            <li><strong>What goes wrong:</strong> learners try to filter an aggregate with <code>WHERE</code>.</li>
+            <li><strong>Why it happens:</strong> the grouped result does not exist yet when <code>WHERE</code> runs.</li>
+            <li><strong>How to solve it:</strong> remember the split: rows first with <code>WHERE</code>, groups later with <code>HAVING</code>.</li>
+          </ul>
+          <div class="example"><strong>Look at this:</strong> <code>WHERE year &gt; 2000</code> filters rows. <code>HAVING COUNT(*) &gt; 2</code> filters grouped results.</div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="sample">
+      <div class="section-head">
+        <h2 class="section-title">Lessons 1 To 3 Sample</h2>
+        <div class="section-rule"></div>
+      </div>
+      <div class="sample-grid">
+        <article class="sample-card">
+          <span class="subtle-label">Lesson 1</span>
+          <h3>What am I asking for?</h3>
+          <p class="question">Which parts of each row do I want back?</p>
+          <ul class="mini-list">
+            <li>`SELECT` chooses properties.</li>
+            <li>`FROM` names the table.</li>
+            <li>The answer is a returned table.</li>
+          </ul>
+          <span class="code-chip">SELECT title FROM movies;</span>
+          <span class="code-chip">SELECT title, year FROM movies;</span>
+        </article>
+
+        <article class="sample-card">
+          <span class="subtle-label">Lesson 2</span>
+          <h3>Which rows stay?</h3>
+          <p class="question">Out of the whole table, which rows should remain in the result?</p>
+          <ul class="mini-list">
+            <li>`WHERE` tests each row.</li>
+            <li>Matching rows stay.</li>
+            <li>Non-matching rows disappear.</li>
+          </ul>
+          <span class="code-chip">WHERE year = 2003</span>
+          <span class="code-chip">WHERE year BETWEEN 2000 AND 2010</span>
+        </article>
+
+        <article class="sample-card">
+          <span class="subtle-label">Lesson 3</span>
+          <h3>How do I filter text?</h3>
+          <p class="question">What if I know the text exactly, only partly, or only by a pattern?</p>
+          <ul class="mini-list">
+            <li>Text values need quotes.</li>
+            <li>`=` and `LIKE` are not the same question.</li>
+            <li>`%` means any run of characters.</li>
+          </ul>
+          <span class="code-chip">WHERE director = 'John Lasseter'</span>
+          <span class="code-chip">WHERE title LIKE 'Toy Story%'</span>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="shifts">
+      <div class="section-head">
+        <h2 class="section-title">Big Shifts Summary</h2>
+        <div class="section-rule"></div>
+      </div>
+      <div class="shift-grid">
+        <article class="shift-card">
+          <span class="shift-number tag">Shift 01</span>
+          <h3>From table to question</h3>
+          <p>You stop treating SQL as "opening data" and start using it to ask a precise question.</p>
+        </article>
+        <article class="shift-card">
+          <span class="shift-number tag">Shift 02</span>
+          <h3>From rows to relationships</h3>
+          <p>You move from one table at a time to matching related records across tables.</p>
+        </article>
+        <article class="shift-card">
+          <span class="shift-number tag">Shift 03</span>
+          <h3>From detail to summary</h3>
+          <p>You stop only asking what happened row by row and start asking how much, how many, and by category.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="exercises">
+      <div class="section-head">
+        <h2 class="section-title">Exercises</h2>
+        <div class="section-rule"></div>
+      </div>
+      <div class="sources-grid">
+        <article class="sources-card">
+          <h3>Exercises For Chapters 1 And 2</h3>
+          <p>These are the current self-contained exercise pages with visible datasets, schema reminders near the editor, and live SQL boxes for repetition.</p>
+          <ul>
+            <li><a href="../../exercises/html/Football%20SQL%20Practice%20Lab.html">Football SQL Practice Lab</a></li>
+            <li><a href="../../exercises/html/Movie%20SQL%20Practice%20Lab.html">Movie SQL Practice Lab</a></li>
+            <li><a href="../../exercises/html/Tomato%20SQL%20Practice%20Lab.html">Tomato SQL Practice Lab</a></li>
+          </ul>
+        </article>
+
+        <article class="sources-card">
+          <h3>Exercises For Chapters 3 And 4</h3>
+          <p>First connect tables and handle missing matches; then make calculated values with clear names.</p>
+          <ul>
+            <li><a href="../../exercises/html/Relationships%20SQL%20Practice%20Lab.html">Relationships SQL Practice Lab</a></li>
+            <li><a href="../../exercises/html/Retail%20SQL%20Practice%20Lab.html">Retail SQL Practice Lab</a></li>
+          </ul>
+        </article>
+
+        <article class="sources-card">
+          <h3>Exercises For Chapters 5 And 6</h3>
+          <p>Use Travel for staged and combined queries, then use the resettable workshop for data-changing SQL.</p>
+          <ul>
+            <li><a href="../../exercises/html/Travel%20SQL%20Practice%20Lab.html">Travel SQL Practice Lab</a></li>
+            <li><a href="../../exercises/html/Workshop%20SQL%20Practice%20Lab.html">Workshop SQL Practice Lab</a></li>
+          </ul>
+        </article>
+
+        <article class="sources-card">
+          <h3>How To Use Them</h3>
+          <ul>
+            <li>Use the chapter pages first if a concept feels unclear.</li>
+            <li>Use the glossary if you forget the exact written form.</li>
+            <li>Use the mistake page when your query feels close but still fails.</li>
+            <li>Use the exercise labs to repeat the basics until the syntax feels ordinary.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="sources">
+      <div class="section-head">
+        <h2 class="section-title">Source Links</h2>
+        <div class="section-rule"></div>
+      </div>
+      <div class="sources-grid">
+        <article class="sources-card">
+          <h3>Main Tutorial</h3>
+          <ul>
+            <li><a href="https://sqlbolt.com/">SQLBolt course home</a></li>
+            <li><a href="https://sqlbolt.com/lesson/select_queries_introduction">Lesson 1: SELECT queries 101</a></li>
+            <li><a href="https://sqlbolt.com/lesson/select_queries_with_constraints">Lesson 2: Queries with constraints (Pt. 1)</a></li>
+            <li><a href="https://sqlbolt.com/lesson/select_queries_with_constraints_pt_2">Lesson 3: Queries with constraints (Pt. 2)</a></li>
+            <li><a href="https://sqlbolt.com/lesson/filtering_sorting_query_results">Lesson 4: Filtering and sorting query results</a></li>
+            <li><a href="https://sqlbolt.com/lesson/select_queries_with_joins">Lesson 6: Multi-table queries with JOINs</a></li>
+            <li><a href="https://sqlbolt.com/lesson/select_queries_with_outer_joins">Lesson 7: OUTER JOINs</a></li>
+            <li><a href="https://sqlbolt.com/lesson/select_queries_with_nulls">Lesson 8: A short note on NULLs</a></li>
+            <li><a href="https://sqlbolt.com/lesson/select_queries_with_expressions">Lesson 9: Queries with expressions</a></li>
+          </ul>
+        </article>
+
+        <article class="sources-card">
+          <h3>Later Lessons And Topics</h3>
+          <ul>
+            <li><a href="https://sqlbolt.com/lesson/select_queries_with_aggregates">Lesson 10: Queries with aggregates (Pt. 1)</a></li>
+            <li><a href="https://sqlbolt.com/lesson/select_queries_with_aggregates_pt_2">Lesson 11: Queries with aggregates (Pt. 2)</a></li>
+            <li><a href="https://sqlbolt.com/lesson/select_queries_order_of_execution">Lesson 12: Order of execution of a query</a></li>
+            <li><a href="https://sqlbolt.com/lesson/inserting_rows">Lesson 13: Inserting rows</a></li>
+            <li><a href="https://sqlbolt.com/lesson/updating_rows">Lesson 14: Updating rows</a></li>
+            <li><a href="https://sqlbolt.com/lesson/deleting_rows">Lesson 15: Deleting rows</a></li>
+            <li><a href="https://sqlbolt.com/lesson/creating_tables">Lesson 16: Creating tables</a></li>
+            <li><a href="https://sqlbolt.com/lesson/altering_tables">Lesson 17: Altering tables</a></li>
+            <li><a href="https://sqlbolt.com/lesson/dropping_tables">Lesson 18: Dropping tables</a></li>
+            <li><a href="https://sqlbolt.com/topic/subqueries">Topic: Subqueries</a></li>
+            <li><a href="https://sqlbolt.com/topic/set_operations">Topic: Unions, Intersections and Exceptions</a></li>
+          </ul>
+        </article>
+      </div>
+      <p class="footer">This page compresses and restructures the tutorial into an original visual study guide. It is meant to support your own learning workflow, not replace the original interactive exercises.</p>
+    </section>
+  </main>
+</article>
+<script src="../../shared/site-nav.js"></script>
+</body>
+</html>

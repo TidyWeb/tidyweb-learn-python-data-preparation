@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SQL Readiness Hand-off</title>
+<style>
+:root { --bg:#eef1f4; --panel:#fffdfa; --ink:#202124; --muted:#5f6368; --line:#dde2e8; --navy:#1f4f82; --cyan:#1f7a8c; --yellow:#f6c85f; --green:#4d6b4f; --orange:#d97706; --code:#111820; --mono:#f4f5f7; }
+* { box-sizing:border-box; margin:0; padding:0; }
+body { background:var(--bg); color:var(--ink); font-family:Arial, sans-serif; }
+.frame { width:min(980px, calc(100vw - 32px)); margin:30px auto 60px; background:var(--panel); border:1px solid var(--line); box-shadow:0 16px 46px rgba(39,50,60,.14); }
+main { padding:46px 54px 68px; }
+.eyebrow { color:var(--cyan); font:700 11px/1.4 monospace; letter-spacing:.1em; text-transform:uppercase; margin-bottom:10px; }
+h1, h2, h3 { color:var(--navy); line-height:1.2; }
+h1 { font-size:38px; margin-bottom:14px; }
+h2 { font-size:25px; margin-bottom:14px; }
+.page-sub { color:var(--muted); font-size:17px; line-height:1.75; border-bottom:2px solid var(--mono); padding-bottom:28px; margin-bottom:42px; }
+.section { margin-bottom:48px; }
+.panel { border:1px solid var(--line); border-left:5px solid var(--cyan); background:#fbfcfd; margin:14px 0; padding:20px 22px; }
+.panel.rule { border-left-color:var(--orange); }
+.panel.example { border-left-color:var(--green); }
+.panel.bridge { border-left-color:var(--yellow); }
+.panel h3 { font-size:18px; margin-bottom:8px; }
+p, li { font-size:16px; line-height:1.75; }
+p + p { margin-top:10px; }
+ul, ol { padding-left:24px; }
+li + li { margin-top:5px; }
+.mono { font-family:monospace; background:var(--mono); padding:.08em .3em; border-radius:3px; overflow-wrap:anywhere; }
+pre { background:var(--code); color:#e8eef4; padding:18px 20px; margin-top:14px; font:15px/1.65 monospace; white-space:pre-wrap; overflow-wrap:anywhere; border-radius:4px; }
+.command { display:block; color:var(--navy); font:700 18px/1.5 monospace; background:#f6f9fc; border:2px solid #cfd8e3; padding:14px 16px; margin:12px 0; overflow-wrap:anywhere; }
+.button { display:inline-block; color:white; background:var(--navy); padding:11px 16px; text-decoration:none; border-radius:4px; font-weight:700; margin-top:12px; }
+.button:hover { background:#173b63; }
+.footer { color:var(--muted); font-size:13px; text-align:center; margin-top:56px; }
+@media (max-width:700px) { main { padding:30px 22px 46px; } h1 { font-size:29px; } h2 { font-size:22px; } .page-sub { font-size:16px; } .panel { padding:17px 16px; } }
+</style>
+</head>
+<body>
+<article class="frame">
+<main>
+  <div class="eyebrow">Core route · before SQL</div>
+  <h1>SQL Readiness Hand-off</h1>
+  <p class="page-sub">Python prepares the table. SQL asks questions of it. This short chapter explains the decisions that make that hand-off deliberate, then introduces the small browser adaptation used by the next bridge.</p>
+
+  <section class="section">
+    <h2>What “ready for SQL” means</h2>
+    <div class="panel">
+      <p>A table is ready when you can explain what one row means, use names that are easy to query, trust the main value types, account for missing values, and distinguish accidental duplicates from legitimate repeated records.</p>
+      <ol>
+        <li>One row has one clear meaning.</li>
+        <li>Column names are lowercase, consistent, and easy to type.</li>
+        <li>Dates behave like dates and measurements behave like numbers.</li>
+        <li>Missing values and duplicates have deliberate decisions behind them.</li>
+        <li>The final table is named <span class="mono">prepared_df</span>.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>The preparation decisions</h2>
+    <div class="panel example">
+      <h3>1. One-row meaning</h3>
+      <p>Start with the table's grain: what does one row represent? A SQL query is easier to trust when you know whether a row is one workout, one order, one person, or one event.</p>
+      <span class="command">df.shape</span>
+      <p><span class="mono">shape</span> reports the row and column count. It helps you notice whether a cleaning decision unexpectedly changed the table's size.</p>
+    </div>
+    <div class="panel example">
+      <h3>2. Useful column names</h3>
+      <p>Names such as <span class="mono">activity_date</span>, <span class="mono">duration_minutes</span>, and <span class="mono">max_pulse</span> are easier to type and read than names containing spaces or punctuation.</p>
+      <span class="command">df = df.rename(columns={"Date": "activity_date"})</span>
+      <p><span class="mono">rename</span> changes labels; it does not change the values inside the table.</p>
+    </div>
+    <div class="panel example">
+      <h3>3. Deliberate types</h3>
+      <p>Inspect the types before SQL receives the table. Convert date-looking text to dates and number-looking text to numbers only after checking that the conversion makes sense.</p>
+      <span class="command">df["activity_date"] = pd.to_datetime(df["activity_date"])</span>
+      <p><span class="mono">dtypes</span> is the quick inspection that shows what pandas is using for each column.</p>
+    </div>
+    <div class="panel rule">
+      <h3>4. Missing values and duplicates</h3>
+      <p>Inspect first. Then decide whether to fill, remove, or preserve a missing value. Remove a duplicate only when you know it is accidental; repeated events can be real data.</p>
+      <pre>df.isna().sum()
+df.duplicated().sum()</pre>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>The hand-off name: <span class="mono">prepared_df</span></h2>
+    <div class="panel bridge">
+      <p><span class="mono">prepared_df</span> is not a special pandas word. It is the agreed contract between Python preparation and the bridge. The bridge stays locked until it finds a valid prepared table under that exact name.</p>
+      <p>Before opening the bridge, print the table's shape, column names, types, missing-value counts, and first rows. Then explain why your decisions make the table ready for the next step.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Why the browser uses <span class="mono">StringIO(csv_text)</span></h2>
+    <div class="panel">
+      <p>A local notebook can read a file path such as <span class="mono">pd.read_csv(dataset_path)</span>. The browser bridge holds the CSV characters in a variable called <span class="mono">csv_text</span>.</p>
+      <p><span class="mono">StringIO</span> wraps that text so <span class="mono">read_csv</span> can read it as file-like input. It does not clean or reshape the data.</p>
+      <span class="command">prepared_df = pd.read_csv(StringIO(csv_text))</span>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Work through the notebook</h2>
+    <div class="panel">
+      <p>Use the notebook on the supplied <span class="mono">dirty_data.csv</span> material. The notebook explains each move with unrelated dummy data, then leaves the lesson task for you to complete.</p>
+      <a class="button" href="../notebooks/hand_off/sql_readiness_handoff.ipynb">Open SQL Readiness Notebook</a>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Next step</h2>
+    <div class="panel bridge">
+      <p>Once you can explain your <span class="mono">prepared_df</span>, open the Python-to-SQL bridge. The visible Python step is small because the preparation decisions have already been taught here.</p>
+    </div>
+  </section>
+
+  <p class="footer">Learn Python Data · prepare the table first, query it second.</p>
+</main>
+</article>
+</body>
+</html>

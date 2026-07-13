@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Common SQL Mistakes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#eef4f7;color:#20303c;font-family:'IBM Plex Sans',sans-serif}
+.page{max-width:1120px;margin:24px auto 56px;background:#fffdf9;border:1px solid #d8e0e7;box-shadow:0 18px 44px rgba(28,41,52,.14)}
+main{padding:36px 42px 56px}
+.eyebrow{font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:#1e7c8a;margin-bottom:10px}
+h1,h2,h3{font-family:'Atkinson Hyperlegible',sans-serif;color:#1d4e89}
+h1{font-size:40px;line-height:1.05;margin:0 0 12px}
+h2{font-size:28px;margin:36px 0 14px}
+h3{font-size:20px;margin:0 0 10px}
+p,li{font-size:16px;line-height:1.74}
+p{color:#627180;margin:0 0 12px}
+.mistake{border:1px solid #d8e0e7;border-radius:18px;background:#fff;padding:18px;margin-top:16px}
+.bad{background:#fff2f4;border-left:5px solid #b54747}
+.good{background:#f0fbf4;border-left:5px solid #3f6f48}
+pre{margin:10px 0 0;background:#101821;color:#e8eef4;padding:14px;border-radius:14px;overflow:auto;font:14px/1.7 'IBM Plex Mono',monospace}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:860px){.grid{grid-template-columns:1fr}main{padding:24px 20px 40px}h1{font-size:31px}}
+</style>
+</head>
+<body>
+<div class="page">
+<main>
+<div class="eyebrow">Reference 2</div>
+<h1>Common SQL Mistakes</h1>
+<p>This page exists for exactly the places beginners tend to trip: the points where the grammar looks almost right, but the thinking behind it is wrong.</p>
+
+<section class="mistake">
+  <h2>1. Using <code>=</code> When The Question Is Really A Pattern</h2>
+  <p>The learner sees text and reaches for exact comparison even though the task is about shape.</p>
+  <div class="grid">
+    <div class="bad">
+      <h3>Wrong</h3>
+      <pre>WHERE title = 'WALL-%'</pre>
+    </div>
+    <div class="good">
+      <h3>Right</h3>
+      <pre>WHERE title LIKE 'WALL-%'</pre>
+    </div>
+  </div>
+  <p>Rule: <code>=</code> means exact value. <code>LIKE</code> means pattern.</p>
+</section>
+
+<section class="mistake">
+  <h2>2. Reaching For <code>NOT</code> When <code>!=</code> Is Simpler</h2>
+  <p>This happens when the learner thinks “I want not,” but the actual job is just exact-value exclusion.</p>
+  <div class="grid">
+    <div class="bad">
+      <h3>Overcomplicated Thought</h3>
+      <pre>NOT ... ?</pre>
+    </div>
+    <div class="good">
+      <h3>Direct Form</h3>
+      <pre>WHERE club != 'Liverpool'</pre>
+    </div>
+  </div>
+  <p>Rule: use <code>!=</code> for “not this exact value.” Use <code>NOT LIKE</code>, <code>NOT IN</code>, or <code>IS NOT NULL</code> when you are reversing a broader condition.</p>
+</section>
+
+<section class="mistake">
+  <h2>3. Forgetting Quotes Around Text</h2>
+  <div class="grid">
+    <div class="bad">
+      <h3>Wrong</h3>
+      <pre>WHERE director = Christopher Nolan</pre>
+    </div>
+    <div class="good">
+      <h3>Right</h3>
+      <pre>WHERE director = 'Christopher Nolan'</pre>
+    </div>
+  </div>
+  <p>Rule: text values need quotes. Numbers do not.</p>
+</section>
+
+<section class="mistake">
+  <h2>4. Thinking <code>LIMIT</code> Means “Top” By Itself</h2>
+  <div class="grid">
+    <div class="bad">
+      <h3>Wrong Instinct</h3>
+      <pre>SELECT title
+FROM films
+LIMIT 5;</pre>
+    </div>
+    <div class="good">
+      <h3>Right Move</h3>
+      <pre>SELECT title, imdb_rating
+FROM films
+ORDER BY imdb_rating DESC
+LIMIT 5;</pre>
+    </div>
+  </div>
+  <p>Rule: sort first if you mean top, bottom, newest, oldest, largest, or smallest.</p>
+</section>
+
+<section class="mistake">
+  <h2>5. Using <code>= NULL</code></h2>
+  <div class="grid">
+    <div class="bad">
+      <h3>Wrong</h3>
+      <pre>WHERE distributor_id = NULL</pre>
+    </div>
+    <div class="good">
+      <h3>Right</h3>
+      <pre>WHERE distributor_id IS NULL</pre>
+    </div>
+  </div>
+  <p><code>NULL</code> is not an ordinary value. Treat it as missingness, not as a text or numeric value to compare normally.</p>
+</section>
+
+<section class="mistake">
+  <h2>6. Losing Rows By Using The Wrong Join</h2>
+  <p>The join itself works, but the result is thinner than expected because non-matching rows vanished.</p>
+  <div class="grid">
+    <div class="bad">
+      <h3>Wrong For “Keep All Films”</h3>
+      <pre>FROM films
+INNER JOIN boxoffice
+ON films.film_id = boxoffice.film_id</pre>
+    </div>
+    <div class="good">
+      <h3>Right For “Keep All Films”</h3>
+      <pre>FROM films
+LEFT JOIN boxoffice
+ON films.film_id = boxoffice.film_id</pre>
+    </div>
+  </div>
+  <p>Rule: decide first whether unmatched rows should disappear or stay visible.</p>
+</section>
+
+<section class="mistake">
+  <h2>7. Using <code>WHERE</code> For Group Filters</h2>
+  <div class="grid">
+    <div class="bad">
+      <h3>Wrong</h3>
+      <pre>SELECT director, COUNT(*)
+FROM films
+WHERE COUNT(*) > 1
+GROUP BY director</pre>
+    </div>
+    <div class="good">
+      <h3>Right</h3>
+      <pre>SELECT director, COUNT(*)
+FROM films
+GROUP BY director
+HAVING COUNT(*) > 1</pre>
+    </div>
+  </div>
+  <p>Rule: <code>WHERE</code> filters rows before grouping. <code>HAVING</code> filters groups after grouping.</p>
+</section>
+
+<section class="mistake">
+  <h2>8. Forgetting What One Row Represents</h2>
+  <p>This is less a typing mistake and more a thinking mistake.</p>
+  <p>Before you run a query, ask: should one row in my result mean one record, or one grouped category? If you cannot answer that, grouping mistakes are waiting for you.</p>
+</section>
+</main>
+</div>
+<script src="../../../shared/site-nav.js"></script>
+</body>
+</html>

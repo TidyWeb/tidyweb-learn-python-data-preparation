@@ -22,6 +22,8 @@
   --green:#4d6b4f;
   --orange:#d97706;
   --plum:#7d4655;
+  --jupyter:#f6c85f;
+  --jupyter-soft:#fff4c2;
   --mono-bg:#f4f5f7;
   --shadow:0 16px 46px rgba(39,50,60,.18);
 }
@@ -55,10 +57,11 @@ body { background:linear-gradient(180deg, #e8edf1 0%, #f3f6f8 100%); color:var(-
 }
 .rail-logo {
   display:block;
-  width:min(132px, 100%);
+  width:min(84px, 100%);
   height:auto;
   filter:drop-shadow(0 10px 18px rgba(34, 214, 255, .16));
 }
+.rail-logo-link { display:block; line-height:0; }
 .rail-title { font-family:'Atkinson Hyperlegible', sans-serif; font-size:20px; font-weight:700; color:#fff; line-height:1.2; margin-bottom:8px; }
 .rail-sub { font-size:12px; color:var(--rail-muted); line-height:1.55; margin-bottom:28px; padding-bottom:20px; border-bottom:1px solid rgba(255,255,255,.1); }
 .token {
@@ -71,6 +74,7 @@ body { background:linear-gradient(180deg, #e8edf1 0%, #f3f6f8 100%); color:var(-
 .dot.cyan { background:var(--cyan); }
 .dot.green { background:var(--green); }
 .dot.orange { background:var(--orange); }
+.dot.jupyter { background:var(--jupyter); }
 .rail-nav { margin-top:22px; border-top:1px solid rgba(255,255,255,.1); padding-top:16px; }
 .rail-nav-label { font:600 10px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.08em; color:var(--rail-muted); margin-bottom:10px; }
 .rail-nav a {
@@ -79,11 +83,49 @@ body { background:linear-gradient(180deg, #e8edf1 0%, #f3f6f8 100%); color:var(-
 }
 .rail-nav a:hover { color:#fff; }
 .rail-nav .num { font:600 10px 'IBM Plex Mono', monospace; color:var(--rail-muted); width:22px; flex-shrink:0; }
+.jupyter-nav {
+  margin:28px -8px 0;
+  padding:14px 8px 10px;
+  border-top:5px solid var(--jupyter);
+  border-bottom:5px solid var(--jupyter);
+  background:linear-gradient(180deg, rgba(246,200,95,.18), rgba(246,200,95,.05));
+  box-shadow:0 0 0 1px rgba(246,200,95,.24);
+}
+.jupyter-nav .rail-nav-label { color:var(--jupyter-soft); }
+.jupyter-nav a { color:#fff8df; padding:8px 6px; border-bottom-color:rgba(246,200,95,.18); }
+.jupyter-nav a:hover { background:rgba(246,200,95,.18); color:#fff; }
+.jupyter-nav .num { color:var(--jupyter); }
+.notebook-route-panel { border-top:5px solid var(--jupyter); border-bottom:5px solid var(--jupyter); background:#fffdf3; }
+.notebook-route-panel header .tag { color:#9a7410; }
 main { padding:48px 52px 72px; }
 .page-mode { font:700 11px 'IBM Plex Mono', monospace; letter-spacing:.1em; text-transform:uppercase; color:var(--cyan); margin-bottom:10px; }
 .page-title { font-family:'Atkinson Hyperlegible', sans-serif; font-size:40px; font-weight:700; color:var(--navy); line-height:1.06; margin-bottom:14px; }
 .page-sub { font-size:17px; line-height:1.8; color:var(--muted); margin-bottom:48px; padding-bottom:28px; border-bottom:2px solid var(--mono-bg); max-width:78ch; }
 .page-sub p + p { margin-top:18px; }
+.page-sub .link-row { margin-top:24px; }
+.start-here-panel { margin-top:28px; }
+.start-here-intro { border:1px solid var(--line); border-top:5px solid var(--jupyter); background:#fffdf3; padding:18px 20px; }
+.start-here-intro header { display:flex; justify-content:space-between; align-items:center; gap:12px; font:600 11px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.08em; }
+.start-here-intro header .tag { color:#9a7410; }
+.start-here-intro header .type { color:var(--muted); }
+.start-here-intro p { margin-top:10px; font-size:16px; line-height:1.7; color:#3f4954; }
+.setup-bento { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-top:12px; }
+.setup-box { border:1px solid var(--line); border-top:5px solid var(--cyan); background:#fbfcfd; border-radius:4px; overflow:hidden; }
+.setup-box.start { border-top-color:var(--jupyter); background:#fffdf3; }
+.setup-box.stop { border-top-color:var(--orange); }
+.setup-box.recover { border-top-color:var(--plum); }
+.setup-box.path { border-top-color:var(--green); }
+.setup-box header { display:flex; justify-content:space-between; align-items:center; gap:10px; padding:8px 14px; border-bottom:1px solid var(--line); font:600 11px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.08em; }
+.setup-box header .tag { color:var(--navy); }
+.setup-box header .type { color:var(--muted); text-align:right; }
+.setup-box .body { padding:14px 16px 16px; font-size:15px; line-height:1.65; }
+.setup-box .body p + p { margin-top:8px; }
+.setup-box pre { margin:8px 0 12px; padding:10px 12px; overflow-x:auto; background:#202a33; color:#fff8df; border-radius:4px; font:13px/1.5 'IBM Plex Mono', monospace; }
+.setup-box pre code { padding:0; background:transparent; border-radius:0; white-space:pre; }
+.setup-box .command-label { margin-top:10px; color:var(--muted); font:600 10px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.08em; }
+.setup-next { margin:14px 4px 0; color:var(--muted); font-size:15px; line-height:1.7; }
+.jupyter-launcher { background:var(--jupyter); border-color:var(--jupyter); color:#201638; }
+.jupyter-launcher:hover { background:#d7a936; border-color:#d7a936; color:#fff; }
 .note-section { margin-bottom:64px; scroll-margin-top:20px; }
 .note-eyebrow { display:flex; align-items:center; gap:12px; margin-bottom:20px; }
 .note-num { font:600 11px 'IBM Plex Mono', monospace; color:var(--muted); letter-spacing:.06em; }
@@ -115,6 +157,23 @@ main { padding:48px 52px 72px; }
   background:linear-gradient(180deg, #ffffff 0%, #f7fafc 100%);
   padding:22px 26px;
   box-shadow:0 10px 20px rgba(31,79,130,.08);
+}
+.route-divider {
+  grid-column:1 / -1;
+  border-top:2px solid var(--mono-bg);
+  padding:26px 4px 4px;
+}
+.route-divider h3 {
+  font-family:'Atkinson Hyperlegible', sans-serif;
+  color:var(--navy);
+  font-size:24px;
+  line-height:1.2;
+}
+.route-divider p {
+  margin-top:8px;
+  color:var(--muted);
+  font-size:16px;
+  line-height:1.7;
 }
 .card.visual { border-left-color:var(--cyan); }
 .card.stats { border-left-color:var(--orange); }
@@ -153,13 +212,20 @@ main { padding:48px 52px 72px; }
   .page-title { font-size:28px; }
   .shelf { grid-template-columns:1fr; }
 }
+@media (max-width:700px) {
+  .setup-bento { grid-template-columns:1fr; }
+  .start-here-intro header, .setup-box header { align-items:flex-start; flex-direction:column; }
+  .setup-box header .type { text-align:left; }
+}
 </style>
 </head>
 <body>
 <article class="frame">
   <aside class="rail">
     <div class="rail-logo-wrap">
-      <img class="rail-logo" src="assets/tidyweb_logo.png" alt="TidyWeb logo">
+      <a class="rail-logo-link" href="index.html" aria-label="Return to the Learn Python Data home page">
+        <img class="rail-logo" src="assets/tidyweb_logo.png" alt="TidyWeb logo">
+      </a>
     </div>
     <div class="rail-title">TidyWeb's Learn Python Data Preparation</div>
     <div class="rail-sub">A Git-facing bookshelf for data analysis notes, companion notebooks, and bundled datasets. The HTML book is the main public experience. The notebooks sit alongside it as working companions.</div>
@@ -167,17 +233,32 @@ main { padding:48px 52px 72px; }
     <div class="token"><span class="dot cyan"></span> Field Or Tool Reference</div>
     <div class="token"><span class="dot orange"></span> Skill Block</div>
     <div class="token"><span class="dot green"></span> Notebook Companion</div>
+    <div class="token"><span class="dot jupyter"></span> Jupyter Notebook Route</div>
     <nav class="rail-nav">
       <div class="rail-nav-label">Bookshelf Home</div>
       <a href="index.html" class="active"><span class="num">00</span><span>Main Shelf</span></a>
     </nav>
     <nav class="rail-nav">
-      <div class="rail-nav-label">Course Chapters</div>
-      <a href="notes/data_analysis_field_overview.html"><span class="num">01</span><span>Field Overview</span></a>
-      <a href="notes/block_1_table_literacy_bridge.html"><span class="num">02</span><span>Block 1</span></a>
-      <a href="notes/block_2_selection_and_filtering.html"><span class="num">03</span><span>Block 2</span></a>
-      <a href="notes/block_3_missing_data_and_cleaning.html"><span class="num">04</span><span>Block 3</span></a>
-      <a href="notes/block_4_grouping_and_insight.html"><span class="num">05</span><span>Block 4</span></a>
+      <div class="rail-nav-label">Primary Route</div>
+      <a href="notes/block_1_table_literacy_bridge.html"><span class="num">01</span><span>Block 1</span></a>
+      <a href="notes/block_2_selection_and_filtering.html"><span class="num">02</span><span>Block 2</span></a>
+      <a href="notes/block_3_missing_data_and_cleaning.html"><span class="num">03</span><span>Block 3</span></a>
+      <a href="notes/block_4_grouping_and_insight.html"><span class="num">04</span><span>Block 4</span></a>
+    </nav>
+    <nav class="rail-nav jupyter-nav">
+      <div class="rail-nav-label">Jupyter Notebooks</div>
+      <a href="notebooks/index.html"><span class="num">J0</span><span>Notebook Hub</span></a>
+      <a href="http://localhost:8888/lab/tree/notebooks/blocks_1_10/block_01_table_literacy.ipynb" target="_blank" rel="noopener"><span class="num">J1</span><span>Block 1 · JupyterLab</span></a>
+      <a href="http://localhost:8888/lab/tree/notebooks/blocks_1_10/block_02_selection_and_filtering.ipynb" target="_blank" rel="noopener"><span class="num">J2</span><span>Block 2 · JupyterLab</span></a>
+      <a href="http://localhost:8888/lab/tree/notebooks/blocks_1_10/block_03_missing_data_and_cleaning.ipynb" target="_blank" rel="noopener"><span class="num">J3</span><span>Block 3 · JupyterLab</span></a>
+      <a href="http://localhost:8888/lab/tree/notebooks/blocks_1_10/block_04_grouping_and_insight.ipynb" target="_blank" rel="noopener"><span class="num">J4</span><span>Block 4 · JupyterLab</span></a>
+      <a href="notebooks/index.html#foundations"><span class="num">J5</span><span>Foundations And Transfer Check</span></a>
+      <a href="notebooks/index.html#handoff"><span class="num">J6</span><span>SQL Hand-off Notebook</span></a>
+      <a href="notebooks/index.html#refresh"><span class="num">J+</span><span>Refresh Checks And Optional Blocks</span></a>
+    </nav>
+    <nav class="rail-nav">
+      <div class="rail-nav-label">Optional Continuation</div>
+      <a href="notes/data_analysis_field_overview.html"><span class="num">05</span><span>Field Overview</span></a>
       <a href="notes/block_5_visualisation.html"><span class="num">06</span><span>Block 5</span></a>
       <a href="notes/block_6_statistics_foundations.html"><span class="num">07</span><span>Block 6</span></a>
       <a href="notes/block_7_hypothesis_and_evidence.html"><span class="num">08</span><span>Block 7</span></a>
@@ -188,17 +269,70 @@ main { padding:48px 52px 72px; }
     <nav class="rail-nav">
       <div class="rail-nav-label">This Page</div>
       <a href="#start"><span class="num">01</span><span>How To Use</span></a>
-      <a href="#chapters"><span class="num">02</span><span>Core Chapters</span></a>
-      <a href="#companions"><span class="num">03</span><span>Notebook Companions</span></a>
-      <a href="#references"><span class="num">04</span><span>Reference Shelf</span></a>
+      <a href="#chapters"><span class="num">02</span><span>Core Route</span></a>
+      <a href="#optional"><span class="num">03</span><span>Optional Continuation</span></a>
+      <a href="#companions"><span class="num">04</span><span>Notebook Companions</span></a>
+      <a href="#references"><span class="num">05</span><span>Reference Shelf</span></a>
+    </nav>
+    <nav class="rail-nav">
+      <div class="rail-nav-label">End of Python Route</div>
+      <a href="notes/sql_readiness_handoff.html"><span class="num">05</span><span>SQL Readiness Hand-off</span></a>
+      <a href="sql/exercises/html/Coffee%20Python%20SQL%20Bridge%20Prototype.html"><span class="num">06</span><span>Python-to-SQL Bridge</span></a>
+      <a href="sql/guide/html/SQLBolt%20Compressed%20Map.html"><span class="num">07</span><span>Learning SQL · Book 2</span></a>
     </nav>
   </aside>
   <main>
     <div class="page-mode">Bookshelf</div>
     <h1 class="page-title">TidyWeb's Learn Python Data Preparation</h1>
     <div class="page-sub">
-      <p>This project is structured as a web-first learning book. The HTML chapters are the main reading path. The notebooks are companion materials that let the learner actually perform the moves on bundled datasets. The aim is to keep the project portable, self-contained, and clear enough that a learner can read online first, then work locally second.</p>
-      <p>This course was built in preparation for Code Institute's Data Analyst with AI Bootcamp. Although it is aimed at that course, it should also work well as preparation for other data-analysis skills bootcamps and as a solid grounding for anyone who wants to begin learning data analysis in a more structured way.</p>
+      <p>This book prepares you to turn supplied data into a clean, deliberate table in Python, then hand that table to SQL. The HTML chapters explain the move first; the notebooks let you practise it locally.</p>
+      <p>The required route is Foundations → Blocks 1–4 → SQL-readiness hand-off → Python-to-SQL bridge → Book 2, Learning SQL. Visualisation, statistics, EDA, dashboards, and Git are optional continuation material, not gates on the way to SQL.</p>
+      <div class="start-here-panel" id="jupyter-start">
+        <div class="start-here-intro">
+          <header><span class="tag">Start here: run JupyterLab</span><span class="type">before clicking any notebook link</span></header>
+          <p><strong>This project has two connected parts:</strong> the HTML pages explain the ideas, and the Jupyter notebooks are where you run Python. These are Bento boxes: small, separate instruction blocks, each with one job. The browser cannot start JupyterLab for you.</p>
+        </div>
+        <div class="setup-bento" aria-label="JupyterLab setup instructions">
+          <section class="setup-box start">
+            <header><span class="tag">01 / Start JupyterLab</span><span class="type">run once per session</span></header>
+            <div class="body">
+              <p>Open a terminal in the downloaded repository folder—the folder containing <span class="mono">notebooks/</span> and the launcher. Install the course tools first:</p>
+              <pre><code>python -m pip install -r requirements.txt</code></pre>
+              <p class="command-label">Linux or macOS</p>
+              <pre><code>./start_jupyter_lab.sh</code></pre>
+              <p class="command-label">Windows</p>
+              <pre><code>start_jupyter_lab.bat</code></pre>
+            </div>
+          </section>
+          <section class="setup-box stop">
+            <header><span class="tag">02 / Stop JupyterLab</span><span class="type">save work first</span></header>
+            <div class="body">
+              <p>To stop the server normally, press <span class="mono">Ctrl+C</span> in the terminal that started it.</p>
+              <p>If that terminal is no longer available, use:</p>
+              <pre><code>jupyter server stop 8888</code></pre>
+              <p>This stops the local server; it does not delete the repository or notebooks.</p>
+            </div>
+          </section>
+          <section class="setup-box recover">
+            <header><span class="tag">03 / Port or wrong-root problem</span><span class="type">links fail or path is missing</span></header>
+            <div class="body">
+              <p>If you see <span class="mono">Failed to connect</span> or <span class="mono">Could not find path: notebooks/...</span>, an older server may own port <span class="mono">8888</span> or point at the wrong folder.</p>
+              <pre><code>jupyter server list
+jupyter server stop 8888</code></pre>
+              <p>Then run the Start command again, leave its terminal open, close the old Jupyter tab, and use a fresh notebook link.</p>
+            </div>
+          </section>
+          <section class="setup-box path">
+            <header><span class="tag">04 / Launcher not found</span><span class="type">wrong folder or permissions</span></header>
+            <div class="body">
+              <p>If the terminal says <span class="mono">No such file or directory</span>, use <span class="mono">Open Terminal Here</span> on the folder containing the launcher. If <span class="mono">./start_jupyter_lab.sh</span> says <span class="mono">Permission denied</span>, run:</p>
+              <pre><code>bash start_jupyter_lab.sh</code></pre>
+            </div>
+          </section>
+        </div>
+        <p class="setup-next">When JupyterLab is open, leave the terminal running, return to this bookshelf, read the matching HTML chapter, and click its JupyterLab button.</p>
+      </div>
+      <div class="link-row"><a class="btn jupyter-launcher" href="notebooks/index.html">Open Jupyter Notebook Hub</a></div>
     </div>
 
     <section class="note-section" id="start">
@@ -208,6 +342,18 @@ main { padding:48px 52px 72px; }
         <span class="note-rule"></span>
       </div>
       <div class="stack">
+        <div class="panel resolution notebook-route-panel">
+          <header><span class="tag">Required route</span><span class="type">complete this first</span></header>
+          <div class="body">
+            <ol>
+              <li>Complete the Python foundations and transfer check.</li>
+              <li>Work through Blocks 1–4, using the matching refresh check after each block.</li>
+              <li>Complete the SQL-readiness hand-off, then run the Python-to-SQL bridge.</li>
+              <li>Continue into Book 2, Learning SQL.</li>
+            </ol>
+          </div>
+          <div class="plain-english">Prepare the table first. Query it second.</div>
+        </div>
         <div class="panel resolution">
           <header><span class="tag">Reading Order</span><span class="type">html first, notebook second</span></header>
           <div class="body">
@@ -219,7 +365,7 @@ main { padding:48px 52px 72px; }
         <div class="panel rule">
           <header><span class="tag">Important boundary</span><span class="type">static site versus execution</span></header>
           <div class="body">
-            <p>The HTML side is intended for live web hosting through GitHub Pages. The notebooks are included as companion learning files. They can be downloaded and opened locally in Jupyter. They are not being presented here as full in-browser live notebooks.</p>
+            <p>The HTML side is intended for live web hosting through GitHub Pages. The notebooks are included as companion learning files. Start the included JupyterLab launcher from the repository root before using the notebook buttons; they are not being presented here as full in-browser live notebooks.</p>
           </div>
           <div class="plain-english">This site is the book. The notebooks are the companion workshop materials.</div>
         </div>
@@ -229,16 +375,19 @@ main { padding:48px 52px 72px; }
     <section class="note-section" id="chapters">
       <div class="note-eyebrow">
         <span class="note-num">SHELF 01</span>
-        <h2 class="note-heading">Core Chapters</h2>
+        <h2 class="note-heading">Python-to-SQL Core Route</h2>
         <span class="note-rule"></span>
       </div>
       <div class="shelf">
-        <article class="card">
-          <div class="eyebrow">Field Map</div>
-          <h3>Data Analysis Field Overview</h3>
-          <p>A wide conceptual map of the field: pipelines, roles, tools, statistics, SQL, and how data work becomes decision support.</p>
+        <article class="card exercise">
+          <div class="eyebrow">Start here if Python is new</div>
+          <h3>Python Foundations</h3>
+          <p>Three explanation-first notebooks introduce values, decisions, records, loops, functions, and table thinking before pandas. Finish with a no-hints transfer check.</p>
           <div class="link-row">
-            <a class="btn primary" href="notes/data_analysis_field_overview.html">Open Chapter</a>
+            <a class="btn primary" target="_blank" rel="noopener" href="http://localhost:8888/lab/tree/notebooks/foundations/foundation_01_values_variables_decisions.ipynb">Open Foundation 1 In JupyterLab</a>
+            <a class="btn" target="_blank" rel="noopener" href="http://localhost:8888/lab/tree/notebooks/foundations/foundation_02_records_lists_loops.ipynb">Open Foundation 2 In JupyterLab</a>
+            <a class="btn" target="_blank" rel="noopener" href="http://localhost:8888/lab/tree/notebooks/foundations/foundation_03_functions_tables.ipynb">Open Foundation 3 In JupyterLab</a>
+            <a class="btn" target="_blank" rel="noopener" href="http://localhost:8888/lab/tree/notebooks/foundations/foundation_transfer_check.ipynb">Open Transfer Check In JupyterLab</a>
           </div>
         </article>
 
@@ -248,7 +397,8 @@ main { padding:48px 52px 72px; }
           <p>Reading tables, loading CSVs, and understanding what a pandas table actually is before moving into filtering or grouping.</p>
           <div class="link-row">
             <a class="btn primary" href="notes/block_1_table_literacy_bridge.html">Open Chapter</a>
-            <a class="btn" href="notebooks/blocks_1_10/block_01_table_literacy.ipynb">Notebook</a>
+            <a class="btn" target="_blank" rel="noopener" href="http://localhost:8888/lab/tree/notebooks/blocks_1_10/block_01_table_literacy.ipynb">Open In JupyterLab</a>
+            <a class="btn" target="_blank" rel="noopener" href="http://localhost:8888/lab/tree/notebooks/refresh_checks/refresh_block_01.ipynb">Open Refresh Check</a>
           </div>
         </article>
 
@@ -258,7 +408,8 @@ main { padding:48px 52px 72px; }
           <p>Filtering rows, asking yes-or-no questions of a table, and understanding the bracket logic that makes those filters work.</p>
           <div class="link-row">
             <a class="btn primary" href="notes/block_2_selection_and_filtering.html">Open Chapter</a>
-            <a class="btn" href="notebooks/blocks_1_10/block_02_selection_and_filtering.ipynb">Notebook</a>
+            <a class="btn" target="_blank" rel="noopener" href="http://localhost:8888/lab/tree/notebooks/blocks_1_10/block_02_selection_and_filtering.ipynb">Open In JupyterLab</a>
+            <a class="btn" target="_blank" rel="noopener" href="http://localhost:8888/lab/tree/notebooks/refresh_checks/refresh_block_02.ipynb">Open Refresh Check</a>
           </div>
         </article>
 
@@ -268,7 +419,8 @@ main { padding:48px 52px 72px; }
           <p>How to inspect missingness, decide what to preserve, and clean a table without losing sight of what the operation does.</p>
           <div class="link-row">
             <a class="btn primary" href="notes/block_3_missing_data_and_cleaning.html">Open Chapter</a>
-            <a class="btn" href="notebooks/blocks_1_10/block_03_missing_data_and_cleaning.ipynb">Notebook</a>
+            <a class="btn" target="_blank" rel="noopener" href="http://localhost:8888/lab/tree/notebooks/blocks_1_10/block_03_missing_data_and_cleaning.ipynb">Open In JupyterLab</a>
+            <a class="btn" target="_blank" rel="noopener" href="http://localhost:8888/lab/tree/notebooks/refresh_checks/refresh_block_03.ipynb">Open Refresh Check</a>
           </div>
         </article>
 
@@ -278,7 +430,50 @@ main { padding:48px 52px 72px; }
           <p>Turning raw rows into grouped summaries and learning how grouped analysis becomes findings rather than just output.</p>
           <div class="link-row">
             <a class="btn primary" href="notes/block_4_grouping_and_insight.html">Open Chapter</a>
-            <a class="btn" href="notebooks/blocks_1_10/block_04_grouping_and_insight.ipynb">Notebook</a>
+            <a class="btn" target="_blank" rel="noopener" href="http://localhost:8888/lab/tree/notebooks/blocks_1_10/block_04_grouping_and_insight.ipynb">Open In JupyterLab</a>
+            <a class="btn" target="_blank" rel="noopener" href="http://localhost:8888/lab/tree/notebooks/refresh_checks/refresh_block_04.ipynb">Open Refresh Check</a>
+          </div>
+        </article>
+
+        <article class="card exercise">
+          <div class="eyebrow">Next core step</div>
+          <h3>SQL-readiness hand-off</h3>
+          <p>Learn what makes a table ready for SQL: one-row meaning, useful names, deliberate types, missing values, duplicates, and the prepared table contract.</p>
+          <div class="link-row">
+            <a class="btn primary" href="notes/sql_readiness_handoff.html">Open hand-off chapter</a>
+            <a class="btn" target="_blank" rel="noopener" href="http://localhost:8888/lab/tree/notebooks/hand_off/sql_readiness_handoff.ipynb">Open In JupyterLab</a>
+          </div>
+        </article>
+
+        <article class="card exercise">
+          <div class="eyebrow">Core practice</div>
+          <h3>Python-to-SQL bridge</h3>
+          <p>Use the prepared table in the browser, then query it with SQL. The bridge follows the hand-off lesson.</p>
+          <div class="link-row">
+            <a class="btn primary" href="sql/exercises/html/Coffee%20Python%20SQL%20Bridge%20Prototype.html">Open bridge</a>
+          </div>
+        </article>
+
+        <article class="card sql">
+          <div class="eyebrow">Book 2</div>
+          <h3>Learning SQL</h3>
+          <p>Continue from the prepared table into the separate SQL book. This current link is a compatibility route until the permanent public Book 2 home is recorded.</p>
+          <div class="link-row">
+            <a class="btn primary" href="sql/guide/html/SQLBolt%20Compressed%20Map.html">Open Book 2 route</a>
+          </div>
+        </article>
+
+        <div class="route-divider" id="optional">
+          <h3>Optional continuation — broader data analysis</h3>
+          <p>These blocks are useful for wider bootcamp preparation, but completing them is not required before reaching SQL.</p>
+        </div>
+
+        <article class="card visual">
+          <div class="eyebrow">Optional field map</div>
+          <h3>Data Analysis Field Overview</h3>
+          <p>A wider conceptual map of pipelines, roles, tools, statistics, SQL, and decision support. Read it when you want the larger picture; it is not a prerequisite for the core route.</p>
+          <div class="link-row">
+            <a class="btn primary" href="notes/data_analysis_field_overview.html">Open Chapter</a>
           </div>
         </article>
 
@@ -288,7 +483,8 @@ main { padding:48px 52px 72px; }
           <p>Choosing charts for a reason, reading what they do and do not show, and using visuals to support the analytical question.</p>
           <div class="link-row">
             <a class="btn primary" href="notes/block_5_visualisation.html">Open Chapter</a>
-            <a class="btn" href="notebooks/blocks_1_10/block_05_visualisation.ipynb">Notebook</a>
+            <a class="btn" target="_blank" rel="noopener" href="http://localhost:8888/lab/tree/notebooks/blocks_1_10/block_05_visualisation.ipynb">Open In JupyterLab</a>
+            <a class="btn" target="_blank" rel="noopener" href="http://localhost:8888/lab/tree/notebooks/refresh_checks/refresh_block_05.ipynb">Open Refresh Check</a>
           </div>
         </article>
 
@@ -298,7 +494,8 @@ main { padding:48px 52px 72px; }
           <p>Statistical thinking in plain English: measures, distributions, and the ideas that support later evidence-based analysis.</p>
           <div class="link-row">
             <a class="btn primary" href="notes/block_6_statistics_foundations.html">Open Chapter</a>
-            <a class="btn" href="notebooks/blocks_1_10/block_06_statistics_foundations.ipynb">Notebook</a>
+            <a class="btn" target="_blank" rel="noopener" href="http://localhost:8888/lab/tree/notebooks/blocks_1_10/block_06_statistics_foundations.ipynb">Open In JupyterLab</a>
+            <a class="btn" target="_blank" rel="noopener" href="http://localhost:8888/lab/tree/notebooks/refresh_checks/refresh_block_06.ipynb">Open Refresh Check</a>
           </div>
         </article>
 
@@ -308,7 +505,8 @@ main { padding:48px 52px 72px; }
           <p>Using data as evidence, distinguishing importance from significance, and reading what a result actually justifies.</p>
           <div class="link-row">
             <a class="btn primary" href="notes/block_7_hypothesis_and_evidence.html">Open Chapter</a>
-            <a class="btn" href="notebooks/blocks_1_10/block_07_hypothesis_and_evidence.ipynb">Notebook</a>
+            <a class="btn" target="_blank" rel="noopener" href="http://localhost:8888/lab/tree/notebooks/blocks_1_10/block_07_hypothesis_and_evidence.ipynb">Open In JupyterLab</a>
+            <a class="btn" target="_blank" rel="noopener" href="http://localhost:8888/lab/tree/notebooks/refresh_checks/refresh_block_07.ipynb">Open Refresh Check</a>
           </div>
         </article>
 
@@ -318,7 +516,8 @@ main { padding:48px 52px 72px; }
           <p>A performance block: load an unfamiliar dataset, inspect it, clean it, analyse it, and write the findings without teaching scaffolds.</p>
           <div class="link-row">
             <a class="btn primary" href="notes/block_8_full_eda_cycle.html">Open Chapter</a>
-            <a class="btn" href="notebooks/blocks_1_10/block_08_full_eda_cycle.ipynb">Notebook</a>
+            <a class="btn" target="_blank" rel="noopener" href="http://localhost:8888/lab/tree/notebooks/blocks_1_10/block_08_full_eda_cycle.ipynb">Open In JupyterLab</a>
+            <a class="btn" target="_blank" rel="noopener" href="http://localhost:8888/lab/tree/notebooks/refresh_checks/refresh_block_08.ipynb">Open Refresh Check</a>
           </div>
         </article>
 
@@ -328,7 +527,7 @@ main { padding:48px 52px 72px; }
           <p>Load, clean, transform, save, and explain. The learner repeats the pipeline on two datasets, with the second run used as a timed drill.</p>
           <div class="link-row">
             <a class="btn primary" href="notes/block_9_etl_drill.html">Open Chapter</a>
-            <a class="btn" href="notebooks/blocks_1_10/block_09_etl_drill.ipynb">Notebook</a>
+            <a class="btn" target="_blank" rel="noopener" href="http://localhost:8888/lab/tree/notebooks/blocks_1_10/block_09_etl_drill.ipynb">Open In JupyterLab</a>
           </div>
         </article>
 
@@ -338,7 +537,7 @@ main { padding:48px 52px 72px; }
           <p>Moving from analysis into communication: KPIs, chart selection, findings summaries, and presentation-ready outputs.</p>
           <div class="link-row">
             <a class="btn primary" href="notes/block_10_dashboard_and_presentation.html">Open Chapter</a>
-            <a class="btn" href="notebooks/blocks_1_10/block_10_dashboard_and_presentation.ipynb">Notebook</a>
+            <a class="btn" target="_blank" rel="noopener" href="http://localhost:8888/lab/tree/notebooks/blocks_1_10/block_10_dashboard_and_presentation.ipynb">Open In JupyterLab</a>
           </div>
         </article>
       </div>
@@ -351,13 +550,14 @@ main { padding:48px 52px 72px; }
         <span class="note-rule"></span>
       </div>
       <div class="stack">
-        <div class="panel resolution">
+        <div class="panel resolution notebook-route-panel">
           <header><span class="tag">What the notebooks are</span><span class="type">companion materials</span></header>
           <div class="body">
             <p>The notebooks are included so the learner can actually perform the moves discussed in the HTML chapters. They belong to the same project and use the bundled datasets in <span class="mono">datasets/</span>.</p>
             <p>Some notebooks ask the learner to create new output files as part of the exercise. Those are learner-generated results, not files the project has to ship with in advance.</p>
           </div>
           <div class="plain-english">Inputs ship with the project. Some outputs are created by the learner.</div>
+          <div class="link-row"><a class="btn primary" href="notebooks/index.html">Open Jupyter Notebook Hub</a></div>
         </div>
       </div>
     </section>
@@ -375,24 +575,6 @@ main { padding:48px 52px 72px; }
           <p>A charting-side reference covering seaborn versus matplotlib, the main plot types, and the command patterns used throughout the visualisation material.</p>
           <div class="link-row">
             <a class="btn primary" href="notes/seaborn_foundations.html">Open Reference</a>
-          </div>
-        </article>
-
-        <article class="card sql">
-          <div class="eyebrow">Reference</div>
-          <h3>SQL Foundations</h3>
-          <p>The core SQL mental model, the five statements that matter first, and the command patterns used before moving into browser-based exercises.</p>
-          <div class="link-row">
-            <a class="btn primary" href="notes/sql_reference.html">Open Reference</a>
-          </div>
-        </article>
-
-        <article class="card exercise">
-          <div class="eyebrow">Practice</div>
-          <h3>SQL Exercise List</h3>
-          <p>An ordered SQLZoo practice route matching the course concepts, plus a short failure checklist for the most common beginner SQL errors.</p>
-          <div class="link-row">
-            <a class="btn primary" href="notes/sql_exercise_list.html">Open Exercise List</a>
           </div>
         </article>
 
@@ -419,5 +601,55 @@ main { padding:48px 52px 72px; }
     <p class="footer">Git-facing bookshelf for Learn Python Data. HTML is the live book. Notebooks and datasets travel with it.</p>
   </main>
 </article>
+<script>
+  (() => {
+    const path = decodeURIComponent(location.pathname);
+    document.querySelectorAll('a[href$=".ipynb"]').forEach(link => {
+      const href = link.getAttribute('href');
+      if (!href || !href.startsWith('notebooks/')) return;
+      link.href = `http://localhost:8888/lab/tree/${href}`;
+      link.target = '_blank';
+      link.rel = 'noopener';
+      if (link.textContent.trim() === 'Notebook') link.textContent = 'Open in JupyterLab';
+      if (link.textContent.trim() === 'Refresh check') link.textContent = 'Open Refresh Check';
+    });
+    if (!path.split('/').includes('release_shell')) return;
+    const sourceNotes = {
+      'notes/data_analysis_field_overview.html': '../notes/Data Analysis Field Overview.html',
+      'notes/block_1_table_literacy_bridge.html': '../notes/Block 1 Table Literacy Bridge.html',
+      'notes/block_2_selection_and_filtering.html': '../notes/Block 2 Selection and Filtering.html',
+      'notes/block_3_missing_data_and_cleaning.html': '../notes/Block 3 Missing Data and Cleaning.html',
+      'notes/block_4_grouping_and_insight.html': '../notes/Block 4 Grouping and Insight.html',
+      'notes/sql_readiness_handoff.html': '../notes/sql_readiness_handoff.html',
+      'notes/block_5_visualisation.html': '../notes/Block 5 Visualisation.html',
+      'notes/block_6_statistics_foundations.html': '../notes/Block 6 Statistics Foundations.html',
+      'notes/block_7_hypothesis_and_evidence.html': '../notes/Block 7 Hypothesis and Evidence.html',
+      'notes/block_8_full_eda_cycle.html': '../notes/Block 8 Full EDA Cycle.html',
+      'notes/block_9_etl_drill.html': '../notes/Block 9 ETL Drill.html',
+      'notes/block_10_dashboard_and_presentation.html': '../notes/Block 10 Dashboard and Presentation.html',
+      'notes/seaborn_foundations.html': '../notes/Seaborn Foundations.html',
+      'notes/sql_reference.html': '../../../../Codex-Projects/Learning_SQL/guide/html/SQLBolt%20Compressed%20Map.html',
+      'notes/git_and_github/git_and_github_reference.html': '../notes/Git and GitHub/Git and GitHub Reference.html'
+    };
+    document.querySelector('.rail-logo').src = '../assets/tidyweb_logo.png';
+    document.querySelectorAll('a[href]').forEach(link => {
+      const href = link.getAttribute('href');
+      if (!href) return;
+      if (sourceNotes[href]) {
+        link.href = sourceNotes[href];
+      } else if (href.startsWith('notebooks/blocks_1_10/') || href.startsWith('notebooks/refresh_checks/')) {
+        link.href = '../blank_slate_exercises/Block Tutorial/' + href.split('/').pop();
+      } else if (href.startsWith('notebooks/')) {
+        link.href = '../release_shell/' + href;
+      } else if (href.startsWith('assets/')) {
+        link.href = '../' + href;
+      } else if (href.startsWith('sql/exercises/')) {
+        link.href = '../../../../Codex-Projects/Learning_SQL/exercises/html/' + href.split('/').pop();
+      } else if (href.startsWith('sql/guide/')) {
+        link.href = '../../../../Codex-Projects/Learning_SQL/guide/html/' + href.split('/').pop();
+      }
+    });
+  })();
+</script>
 </body>
 </html>

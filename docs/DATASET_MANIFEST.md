@@ -14,9 +14,9 @@ These datasets support `DATA_ANALYTICS_BOOTCAMP_PREP_COURSE.md`.
 
 Shared copy:
 
-- `/home/Phil/C&C/Learn_Python_Data/datasets/`
+- `datasets/`
 
 Project copy:
 
-- `/home/Phil/Codex-Projects/Learning_Python/datasets/`
+- `datasets/`
 

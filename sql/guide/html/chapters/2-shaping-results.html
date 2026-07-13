@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 2 - Shaping Results</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;family=IBM+Plex+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+:root{--paper:#fffdf9;--ink:#20303c;--muted:#5f6f7d;--line:#d8e0e7;--navy:#1d4e89;--cyan:#1e7c8a;--amber:#d48920;--rose:#a55462;--green:#2f6b61;--soft-blue:#edf4ff;--soft-cyan:#eefbfc;--soft-amber:#fff8eb;--soft-rose:#fff1f3;--soft-green:#edf8f4;--code:#101821}*{box-sizing:border-box}body{margin:0;background:#eef4f7;color:var(--ink);font-family:'IBM Plex Sans',sans-serif}.page{max-width:1080px;margin:24px auto 56px;background:var(--paper);border:1px solid var(--line);box-shadow:0 18px 44px rgba(28,41,52,.14)}main{padding:40px 46px 60px}.eyebrow,.label,.step{font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase}.eyebrow{color:var(--cyan);margin-bottom:10px}h1,h2,h3{font-family:'Atkinson Hyperlegible',sans-serif;color:var(--navy)}h1{font-size:42px;line-height:1.05;margin:0 0 14px}h2{font-size:28px;margin:40px 0 14px}h3{font-size:21px;margin:0 0 10px}p,li{font-size:16px;line-height:1.72}p{color:var(--muted);margin:0 0 12px}ul,ol{padding-left:22px;display:grid;gap:8px}.lead{font-size:18px;max-width:78ch}.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.panel{border:1px solid var(--line);border-radius:18px;background:#fff;padding:20px}.panel h2{margin-top:0}.concept{border-left:6px solid var(--navy);background:var(--soft-blue)}.syntax{border-left:6px solid var(--cyan);background:var(--soft-cyan)}.example{border-left:6px solid var(--green);background:var(--soft-green)}.mistake{border-left:6px solid var(--rose);background:var(--soft-rose)}.checkpoint{border-left:6px solid var(--amber);background:var(--soft-amber)}.stack{display:grid;gap:16px}.label{display:block;color:var(--cyan);margin-bottom:8px}.question{font-weight:700;color:var(--ink)}pre{margin:12px 0;background:var(--code);color:#e8eef4;padding:16px 18px;border-radius:14px;overflow:auto;font:14px/1.75 'IBM Plex Mono',monospace}code{font-family:'IBM Plex Mono',monospace;background:#f0f3f6;border-radius:4px;padding:.08em .3em;color:#173f6a}pre code{background:transparent;color:inherit;padding:0}.command{font:700 19px/1.5 'IBM Plex Mono',monospace;color:var(--navy);overflow-wrap:anywhere}.plain{border-top:1px solid var(--line);padding-top:12px;font-style:italic;color:var(--ink)}table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px}th,td{border:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top}th{background:#f3f7fa;color:var(--navy);font:600 12px 'IBM Plex Mono',monospace}.parts td:first-child{width:25%;font:600 13px 'IBM Plex Mono',monospace;color:var(--navy)}.route{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:22px 0}.route div{border:1px solid var(--line);border-radius:14px;background:#fff;padding:14px}.route strong{display:block;color:var(--navy);margin:5px 0}.route span:last-child{font-size:14px;line-height:1.5;color:var(--muted)}.footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}@media(max-width:820px){.grid,.route{grid-template-columns:1fr}main{padding:26px 20px 42px}h1{font-size:32px}}
+.panel,.stack,.grid>*{min-width:0}table{display:block;max-width:100%;overflow-x:auto}
+</style></head>
+<body><div class="page"><main>
+<div class="eyebrow">Chapter 2 · Output Control</div>
+<h1>Shaping Results</h1>
+<p class="lead">A correct result can still be badly shaped. It may repeat the same value, arrive in no useful order, or contain far more rows than the question asks for. This chapter teaches how to turn the right records into a deliberate, checkable answer.</p>
+
+<div class="route" aria-label="Chapter learning route">
+  <div><span class="step">01</span><strong>Remove repetition</strong><span>Use <code>DISTINCT</code> when the returned combinations should be unique.</span></div>
+  <div><span class="step">02</span><strong>Define order</strong><span>Use <code>ORDER BY</code> with an explicit direction.</span></div>
+  <div><span class="step">03</span><strong>Keep a slice</strong><span>Use <code>LIMIT</code> only after deciding what “first” means.</span></div>
+  <div><span class="step">04</span><strong>Move the window</strong><span>Use <code>OFFSET</code> to skip a known number of sorted rows.</span></div>
+</div>
+
+<section class="panel concept">
+  <span class="label">The material for this chapter</span>
+  <h2>A Small Theatre Programme</h2>
+  <p>This neutral worked table is separate from the practice labs. Notice that some venues and prices repeat; those repetitions make the shaping operations visible.</p>
+  <table><thead><tr><th>performance</th><th>venue</th><th>ticket_price</th><th>seats</th></tr></thead><tbody>
+    <tr><td>Morning Chorus</td><td>Studio</td><td>12</td><td>60</td></tr><tr><td>City Lights</td><td>Main Hall</td><td>28</td><td>240</td></tr><tr><td>Paper Moons</td><td>Studio</td><td>12</td><td>80</td></tr><tr><td>Open Strings</td><td>Courtyard</td><td>18</td><td>140</td></tr><tr><td>Winter Tales</td><td>Main Hall</td><td>32</td><td>240</td></tr><tr><td>Late Sketches</td><td>Studio</td><td>15</td><td>60</td></tr>
+  </tbody></table>
+</section>
+
+<div class="stack" style="margin-top:16px">
+  <section class="panel concept"><span class="label">Concept 1 · Unique returned values</span><h2><code>DISTINCT</code> Removes Duplicate Result Rows</h2><p><code>DISTINCT</code> acts on the columns named in the <code>SELECT</code> list. It asks SQL to return each selected value—or each selected combination—only once. It does not delete duplicates from the stored table.</p></section>
+  <section class="panel syntax"><span class="label">Command bridge</span><div class="command">SELECT DISTINCT venue FROM performances;</div><table class="parts"><tbody><tr><td>SELECT</td><td>Begins the returned column list.</td></tr><tr><td>DISTINCT</td><td>Collapses repeated result rows into one copy.</td></tr><tr><td>venue</td><td>The column whose returned values are checked for repetition.</td></tr></tbody></table></section>
+  <section class="panel example"><span class="label">Worked example · before and after</span><div class="grid"><div><p class="question">Without DISTINCT</p><table><tbody><tr><td>Studio</td></tr><tr><td>Main Hall</td></tr><tr><td>Studio</td></tr><tr><td>Courtyard</td></tr><tr><td>Main Hall</td></tr><tr><td>Studio</td></tr></tbody></table></div><div><p class="question">With DISTINCT</p><table><tbody><tr><td>Studio</td></tr><tr><td>Main Hall</td></tr><tr><td>Courtyard</td></tr></tbody></table></div></div></section>
+</div>
+
+<section class="panel mistake" style="margin-top:16px">
+  <h2><code>DISTINCT</code> Applies To The Whole Selected Combination</h2>
+  <pre><code>SELECT DISTINCT venue, seats
+FROM performances;</code></pre>
+  <p>This does not mean “make only venue distinct”. It returns unique <em>venue-and-seats pairs</em>. <code>Studio, 60</code> and <code>Studio, 80</code> are different result rows, so both remain.</p>
+</section>
+
+<div class="stack" style="margin-top:16px">
+  <section class="panel concept"><span class="label">Concept 2 · Deliberate order</span><h2><code>ORDER BY</code> Defines What Comes First</h2><p>Without <code>ORDER BY</code>, SQL does not promise a meaningful row order. The order you happen to see is not a ranking you should rely on. Sorting is part of the question whenever words such as highest, lowest, newest, oldest, first, last, A–Z, or top appear.</p></section>
+  <section class="panel syntax"><span class="label">Command bridge</span><div class="command">ORDER BY ticket_price DESC</div><table class="parts"><tbody><tr><td>ORDER BY</td><td>Introduces the sorting rule.</td></tr><tr><td>ticket_price</td><td>The first column SQL compares when arranging rows.</td></tr><tr><td>DESC</td><td>Descending: high to low, newest to oldest, or Z to A.</td></tr><tr><td>ASC</td><td>Ascending: low to high, oldest to newest, or A to Z. This is usually the default, but writing it makes intent visible.</td></tr></tbody></table></section>
+  <section class="panel example"><span class="label">Worked example · sorted result</span><pre><code>SELECT performance, ticket_price
+FROM performances
+ORDER BY ticket_price DESC;</code></pre><table><thead><tr><th>performance</th><th>ticket_price</th></tr></thead><tbody><tr><td>Winter Tales</td><td>32</td></tr><tr><td>City Lights</td><td>28</td></tr><tr><td>Open Strings</td><td>18</td></tr><tr><td>Late Sketches</td><td>15</td></tr><tr><td>Morning Chorus</td><td>12</td></tr><tr><td>Paper Moons</td><td>12</td></tr></tbody></table></section>
+</div>
+
+<section class="panel syntax" style="margin-top:16px">
+  <h2>Sort Ties With A Second Rule</h2>
+  <p>When two rows tie on the first sort column, a second sort column makes their order predictable. SQL uses the second rule only inside a tie on the first.</p>
+  <pre><code>SELECT performance, ticket_price
+FROM performances
+ORDER BY ticket_price DESC, performance ASC;</code></pre>
+  <p>Read it as: highest price first; when prices tie, put performance names in A–Z order.</p>
+</section>
+
+<div class="stack" style="margin-top:16px">
+  <section class="panel concept"><span class="label">Concept 3 · A controlled number of rows</span><h2><code>LIMIT</code> Trims The Current Order</h2><p><code>LIMIT</code> does not understand words such as “best” or “largest”. It simply returns the requested number of rows from the front of the result as currently ordered. Ranking must come first.</p></section>
+  <section class="panel syntax"><span class="label">Command bridge</span><div class="command">ORDER BY seats DESC LIMIT 3;</div><table class="parts"><tbody><tr><td>ORDER BY seats DESC</td><td>Defines largest seating capacity as the front of the result.</td></tr><tr><td>LIMIT</td><td>Says that only a fixed number of rows should be returned.</td></tr><tr><td>3</td><td>The maximum number of rows. No equals sign and no brackets.</td></tr></tbody></table></section>
+  <section class="panel example"><span class="label">Worked example · “largest three”</span><pre><code>SELECT performance, seats
+FROM performances
+ORDER BY seats DESC
+LIMIT 3;</code></pre><table><thead><tr><th>performance</th><th>seats</th></tr></thead><tbody><tr><td>City Lights</td><td>240</td></tr><tr><td>Winter Tales</td><td>240</td></tr><tr><td>Open Strings</td><td>140</td></tr></tbody></table><p>Because two performances tie at 240, add a second sort rule if their order matters.</p></section>
+</div>
+
+<section class="panel mistake" style="margin-top:16px">
+  <h2>The Most Important Shaping Mistake</h2>
+  <p><strong>Wrong:</strong> <code>LIMIT 3</code> by itself for “the three largest”.</p>
+  <p><strong>Why:</strong> that means only “whichever three rows currently come first”.</p>
+  <p><strong>Correction:</strong> translate the ranking word into <code>ORDER BY</code> and its direction, then apply <code>LIMIT</code>.</p>
+</section>
+
+<div class="stack" style="margin-top:16px">
+  <section class="panel concept"><span class="label">Concept 4 · Move the result window</span><h2><code>OFFSET</code> Skips Rows Before Returning Any</h2><p>Pagination means dividing an ordered result into pages or chunks. <code>OFFSET</code> says how many rows to pass over before <code>LIMIT</code> begins collecting rows. A stable <code>ORDER BY</code> is essential; otherwise the pages have no dependable sequence.</p></section>
+  <section class="panel example"><span class="label">Worked example · the second pair</span><pre><code>SELECT performance
+FROM performances
+ORDER BY performance ASC
+LIMIT 2 OFFSET 2;</code></pre><p>First arrange all names A–Z. Then skip rows 1 and 2. Finally return the next two rows: positions 3 and 4 in that ordered result.</p><table><thead><tr><th>performance</th></tr></thead><tbody><tr><td>Late Sketches</td></tr><tr><td>Morning Chorus</td></tr></tbody></table></section>
+</div>
+
+<section class="panel checkpoint" style="margin-top:16px">
+  <span class="label">The complete shaping sequence</span>
+  <h2>Build In Question Order, Write In SQL Order</h2>
+  <ol>
+    <li>Decide the columns and source: <code>SELECT ... FROM ...</code>.</li>
+    <li>Keep only qualifying rows: <code>WHERE ...</code>, if needed.</li>
+    <li>Collapse repeated selected combinations: <code>DISTINCT</code>, if the question asks for unique results.</li>
+    <li>Define the ranking or sequence: <code>ORDER BY ... ASC/DESC</code>.</li>
+    <li>Keep or skip a slice: <code>LIMIT ... OFFSET ...</code>.</li>
+  </ol>
+  <pre><code>SELECT DISTINCT column_name
+FROM table_name
+WHERE row_condition
+ORDER BY column_name DESC
+LIMIT number OFFSET number;</code></pre>
+</section>
+
+<section class="panel mistake" style="margin-top:16px">
+  <h2>How To Debug A Shaping Result</h2>
+  <table><thead><tr><th>Symptom</th><th>Likely place to inspect</th></tr></thead><tbody>
+    <tr><td>Repeated values remain.</td><td>Are the entire selected rows truly duplicates? Did you select an extra column that makes them different?</td></tr>
+    <tr><td>The right rows are in the wrong sequence.</td><td>Check the <code>ORDER BY</code> column and whether the direction should be <code>ASC</code> or <code>DESC</code>.</td></tr>
+    <tr><td>The result shows three rows, but not the highest three.</td><td>The <code>LIMIT</code> works; the missing or incorrect part is the ranking before it.</td></tr>
+    <tr><td>Pages overlap or change order.</td><td>Make the sort stable, usually by adding a unique tie-breaker as a final <code>ORDER BY</code> column.</td></tr>
+  </tbody></table>
+</section>
+
+<section class="panel checkpoint" style="margin-top:16px">
+  <span class="label">Ready for the Chapter 2 exercises?</span>
+  <h2>You Are Ready When You Can Explain These</h2>
+  <ul><li>Why <code>DISTINCT</code> changes the result but not the stored table.</li><li>Why “top five” always contains two decisions: what top means, then how many.</li><li>How to choose <code>ASC</code> or <code>DESC</code> from ordinary wording.</li><li>How a second sort column resolves ties.</li><li>Why <code>OFFSET</code> without a dependable order makes unreliable pages.</li></ul>
+</section>
+
+<section class="panel" style="margin-top:16px"><h2>Next: When One Table Is Not Enough</h2><p>So far, every answer has come from one table. Chapter 3 introduces relationships: how shared identifiers connect tables, why some records fail to match, and how the chosen join decides whether those unmatched records disappear or remain visible.</p></section>
+<p class="footer">Learning route: SQLBolt Lesson 4 and the simple-query review, expanded into a result-shaping mental model. The theatre data is deliberately separate from the exercise datasets.</p>
+</main></div><script src="../../../shared/site-nav.js"></script></body></html>

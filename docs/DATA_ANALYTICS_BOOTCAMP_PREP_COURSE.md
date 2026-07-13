@@ -3,9 +3,13 @@
 Created: 2026-07-02
 Restructured: 2026-07-03
 
-Purpose: prepare for the data analytics syllabus while building enough Python and pandas fluency to keep up in class.
+Purpose: prepare a beginner to use Python and pandas to turn supplied data into
+a clean, deliberate table that SQL can query, then hand that table clearly into
+the separate Learning SQL book.
 
-This is not a general Python course. It is a practical data analytics readiness course.
+This is not a general Python course. It is a practical data-preparation course
+with a clear Python-to-SQL core route and a separate optional continuation into
+broader data analysis.
 
 ## Operating Principle
 
@@ -15,7 +19,27 @@ A block is a unit of skill. It ends when the learner can perform the core moves 
 
 Phil may complete one block in a few hours, or several blocks in one long study day. The 8-hour study capacity should be used through depth, repetition, dataset rotation, refresh checks, and plain-English findings, not through thin overviews.
 
-## The Syllabus We Are Preparing For
+## Primary Route: Python Data Preparation for SQL
+
+This is the route a new learner should see first and complete before moving to
+the separate SQL book:
+
+1. Environment check and Python foundations.
+2. Load and inspect a table.
+3. Select and filter rows and columns.
+4. Clean missing or awkward values.
+5. Group, reshape, rename, and save a prepared table.
+6. Complete the SQL-readiness hand-off and produce the required `prepared_df`.
+7. Prove the hand-off in the Python-to-SQL bridge, then continue to Learning SQL.
+
+Blocks 5–10, visualisation references, and Git material remain available as
+optional continuation work. They must not be presented as prerequisites for
+reaching SQL.
+
+## The Wider Syllabus This Course Supports
+
+The following topics explain the broader bootcamp context. They are useful
+continuation material, not requirements for the Python-to-SQL route above.
 
 From the course outline:
 
@@ -39,7 +63,8 @@ From the course outline:
 Every concept inside every teaching block must use this four-part sequence:
 
 1. Explain the concept in plain English. What it is, why it exists, and what problem it solves. No code yet.
-2. Show a worked example as a real executed code cell with visible output.
+2. Show a worked example as a real executed code cell with visible output stored
+   in the notebook.
 3. Ask a specific question immediately above the learner's empty cell. The question must name the dataset and the column or operation.
 4. Provide an empty code cell. No pre-filled hints.
 
@@ -47,7 +72,8 @@ Each concept is taught once on one lesson dataset per block. Dummy worked exampl
 
 ## Refresh Checks
 
-At the end of every block, before moving to the next block, the learner completes a refresh check.
+At the end of each of Blocks 1 through 8, before moving to the next block, the
+learner completes a refresh check.
 
 The refresh check must:
 
@@ -58,17 +84,23 @@ The refresh check must:
 - provide empty code cells only
 - end with a plain-English findings note about what the data showed
 
-The refresh check is capped at 45 minutes. If it runs over, stop anyway. Incomplete is acceptable. Skipped is not.
+The refresh check is capped at 45 minutes. If it runs over, stop anyway.
+Incomplete is acceptable. Skipped is not.
+
+Blocks 9 and 10 are capstones, so they do not have separate refresh checks.
+Block 9 is verified by the completed ETL artifacts from both runs. Block 10 is
+verified by its three KPI charts, findings report, and verbal summary. These
+completion artifacts are the retrieval and transfer check for each capstone.
 
 ## Dataset Pool
 
 Shared dataset folder:
 
-- `/home/Phil/C&C/Learn_Python_Data/datasets/`
+- `datasets/`
 
 Project dataset folder:
 
-- `/home/Phil/Codex-Projects/Learning_Python/datasets/`
+- `datasets/`
 
 Current datasets:
 
@@ -82,11 +114,11 @@ Current datasets:
 
 Primary live notebook folder:
 
-- `/home/Phil/C&C/Learn_Python_Data/Live_Jupyter_Notebooks/`
+- `Live_Jupyter_Notebooks/`
 
 Project copy folder:
 
-- `/home/Phil/Codex-Projects/Learning_Python/`
+- `project root/`
 
 User-facing notes and references must also be copied to the shared folder when created.
 
@@ -124,7 +156,7 @@ Findings artifact:
 Active artifacts:
 
 - `block_01_table_literacy.ipynb`
-- `block_01_refresh_check.ipynb`
+- `refresh_block_01.ipynb`
 
 ## Block 2 - Selection and Filtering
 

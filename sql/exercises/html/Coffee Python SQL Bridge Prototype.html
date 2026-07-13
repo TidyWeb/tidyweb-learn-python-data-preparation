@@ -1,0 +1,1845 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Python CSV to SQL Bridge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#efece7;
+  --paper:#fffdf9;
+  --ink:#2d2a26;
+  --muted:#6e665f;
+  --line:#ddd4ca;
+  --brown:#6a4a2f;
+  --olive:#59673f;
+  --teal:#2c6c6d;
+  --slate:#17212b;
+  --soft-brown:#f5eee8;
+  --soft-olive:#f2f7ed;
+  --soft-teal:#edf8f8;
+  --shadow:0 18px 46px rgba(30,42,53,.14);
+  --code:#101821;
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body {
+  background:
+    radial-gradient(circle at top left, rgba(106,74,47,.11), transparent 30%),
+    radial-gradient(circle at top right, rgba(44,108,109,.09), transparent 24%),
+    linear-gradient(180deg, #f7f4ef 0%, var(--bg) 100%);
+  color:var(--ink);
+  font-family:'IBM Plex Sans', sans-serif;
+}
+.page {
+  width:min(1440px, calc(100vw - 28px));
+  margin:24px auto 56px;
+  display:grid;
+  grid-template-columns:280px minmax(0, 1fr);
+  border:1px solid var(--line);
+  background:var(--paper);
+  box-shadow:var(--shadow);
+}
+.rail {
+  background:var(--slate);
+  color:#dbe7ef;
+  padding:28px 22px 34px;
+  position:sticky;
+  top:0;
+  height:100vh;
+  overflow-y:auto;
+}
+.rail h1 {
+  font-family:'Atkinson Hyperlegible', sans-serif;
+  font-size:24px;
+  line-height:1.1;
+  margin-bottom:10px;
+  color:#fff;
+}
+.rail p {
+  color:#9eb2c1;
+  font-size:13px;
+  line-height:1.65;
+  margin-bottom:16px;
+}
+.mini-card,
+.rail a,
+.panel,
+.table-wrap,
+.editor-wrap,
+.result-wrap,
+.prompt-card,
+.status-card {
+  border-radius:18px;
+}
+.mini-card,
+.status-card {
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  padding:13px 14px;
+  margin-bottom:16px;
+}
+.mono,
+.mini-label,
+.rail-nav-title,
+.schema-pill,
+.button,
+textarea,
+pre,
+th,
+.status-chip {
+  font-family:'IBM Plex Mono', monospace;
+}
+.mini-label,
+.rail-nav-title,
+.schema-pill,
+.status-chip {
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.mini-label { color:#8fc6d0; margin-bottom:6px; display:block; }
+.mini-card strong { display:block; color:#fff; line-height:1.4; font-size:14px; }
+.status-card strong {
+  display:block;
+  color:#fff;
+  line-height:1.4;
+  font-size:13px;
+  margin-bottom:6px;
+}
+.status-card p {
+  color:#aab9c5;
+  font-size:12px;
+  line-height:1.55;
+}
+.status-chip {
+  display:inline-block;
+  padding:6px 8px;
+  border-radius:999px;
+  margin-bottom:8px;
+}
+.status-chip.pending { background:rgba(255,255,255,.08); color:#c4d3de; }
+.status-chip.ready { background:rgba(88,187,123,.18); color:#9fe0ae; }
+.status-chip.error { background:rgba(214,73,89,.18); color:#f0b6bd; }
+.rail-nav { margin-top:18px; }
+.rail-nav-title { color:#8ea4b5; margin-bottom:10px; }
+.rail a {
+  display:block;
+  color:#dbe7ef;
+  text-decoration:none;
+  padding:9px 10px;
+  border:1px solid rgba(255,255,255,.06);
+  background:rgba(255,255,255,.03);
+  margin-bottom:10px;
+  line-height:1.35;
+  font-size:13px;
+}
+.rail a:hover { color:#fff; }
+main { padding:38px 44px 72px; }
+.hero {
+  border:1px solid var(--line);
+  background:linear-gradient(135deg, rgba(106,74,47,.09), rgba(44,108,109,.08)), var(--paper);
+  border-radius:26px;
+  padding:32px 32px 26px;
+  margin-bottom:24px;
+}
+.hero .eyebrow {
+  color:var(--brown);
+  font:600 11px 'IBM Plex Mono', monospace;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  margin-bottom:10px;
+}
+.hero h2 {
+  font-family:'Atkinson Hyperlegible', sans-serif;
+  color:var(--brown);
+  font-size:42px;
+  line-height:1.05;
+  margin-bottom:12px;
+}
+.hero p {
+  color:var(--muted);
+  line-height:1.75;
+  max-width:78ch;
+  font-size:16px;
+}
+.hero-grid,
+.top-grid,
+.prompt-grid,
+.dual-grid,
+.output-grid {
+  display:grid;
+  gap:16px;
+}
+.hero-grid {
+  grid-template-columns:1.1fr .9fr;
+  margin-top:18px;
+}
+.dual-grid {
+  grid-template-columns:1fr 1fr;
+}
+.output-grid {
+  grid-template-columns:1fr 1fr;
+}
+.panel {
+  border:1px solid var(--line);
+  background:#fff;
+  padding:18px;
+}
+.panel h3,
+.section-head h3 {
+  font-family:'Atkinson Hyperlegible', sans-serif;
+  color:var(--brown);
+  font-size:22px;
+  margin-bottom:10px;
+}
+.panel p,
+.prompt-card p,
+.section-sub,
+.panel li {
+  color:var(--muted);
+  line-height:1.65;
+  font-size:15px;
+}
+.panel ul,
+.prompt-card ul,
+.mapping-list {
+  padding-left:18px;
+  display:grid;
+  gap:8px;
+  line-height:1.55;
+}
+.mapping-list { padding-left:0; list-style:none; }
+.mapping-list li {
+  border:1px solid var(--line);
+  background:#faf8f5;
+  border-radius:12px;
+  padding:10px 12px;
+}
+.schema-pills {
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:12px;
+}
+.schema-pill {
+  display:inline-block;
+  padding:7px 10px;
+  border-radius:999px;
+  background:var(--soft-brown);
+  color:var(--brown);
+  border:1px solid var(--line);
+}
+.file-indicator {
+  margin-top:14px;
+  padding:14px 16px;
+  border-radius:16px;
+  border:1px solid rgba(44,108,109,.22);
+  background:linear-gradient(135deg, rgba(44,108,109,.08), rgba(106,74,47,.10));
+}
+.file-indicator-label {
+  color:var(--teal);
+  font-size:13px;
+  font-weight:700;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+}
+.file-indicator-name {
+  color:var(--brown);
+  font-size:18px;
+  font-weight:600;
+  word-break:break-word;
+}
+.guidance-panel {
+  margin-bottom:16px;
+  border:1px solid rgba(44,108,109,.2);
+  background:linear-gradient(180deg, #fcfffe 0%, #f4fbfa 100%);
+}
+.guidance-panel h3 {
+  color:var(--teal);
+}
+.guidance-intro {
+  margin-bottom:14px;
+}
+.guidance-steps {
+  display:grid;
+  gap:12px;
+}
+.guidance-step {
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:#fff;
+  padding:14px;
+}
+.guidance-step-title {
+  color:var(--brown);
+  font-weight:700;
+  margin-bottom:8px;
+}
+.guidance-step p + p {
+  margin-top:8px;
+}
+.guidance-step .mono {
+  display:inline-block;
+  padding:2px 8px;
+  border-radius:999px;
+  background:#e8f3f3;
+  border:1px solid rgba(44,108,109,.24);
+  color:var(--teal);
+  font-size:13px;
+  font-weight:600;
+  line-height:1.4;
+}
+.reveal-row {
+  margin-top:10px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  align-items:flex-start;
+}
+.reveal-line {
+  flex:1 1 280px;
+  border:1px dashed rgba(44,108,109,.32);
+  border-radius:12px;
+  background:#f8fcfb;
+  padding:10px 12px;
+  color:var(--teal);
+  min-height:44px;
+}
+.reveal-line.hidden {
+  color:var(--muted);
+  background:#fcfaf7;
+  border-color:var(--line);
+}
+.reveal-line code {
+  white-space:pre-wrap;
+}
+.section {
+  margin-top:28px;
+}
+.section-head {
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-bottom:14px;
+}
+.section-head h3 { margin-bottom:0; }
+.rule { flex:1; height:1px; background:var(--line); }
+.top-grid {
+  grid-template-columns:1.25fr .75fr;
+}
+.table-wrap,
+.editor-wrap,
+.result-wrap {
+  border:1px solid var(--line);
+  background:#fff;
+  overflow:hidden;
+}
+.table-head,
+.editor-head,
+.result-head {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  padding:12px 16px;
+  border-bottom:1px solid var(--line);
+  background:#fbf8f5;
+}
+.table-head strong,
+.editor-head strong,
+.result-head strong {
+  color:var(--brown);
+}
+.table-scroll { overflow:auto; }
+table {
+  width:100%;
+  border-collapse:collapse;
+  min-width:900px;
+}
+th, td {
+  border-bottom:1px solid var(--line);
+  padding:12px 14px;
+  text-align:left;
+}
+th {
+  background:#fbf8f5;
+  color:var(--brown);
+  font-size:12px;
+  letter-spacing:.05em;
+}
+td { font-size:15px; }
+pre {
+  background:var(--code);
+  color:#e7eef5;
+  padding:16px;
+  border-radius:14px;
+  overflow:auto;
+  font-size:13px;
+  line-height:1.7;
+  white-space:pre-wrap;
+}
+.prompt-grid { grid-template-columns:repeat(3, minmax(0, 1fr)); }
+.prompt-card {
+  border:1px solid var(--line);
+  background:linear-gradient(180deg, #ffffff 0%, #fbfcfd 100%);
+  padding:16px;
+}
+.prompt-card:nth-child(1) { border-top:6px solid var(--brown); }
+.prompt-card:nth-child(2) { border-top:6px solid var(--olive); }
+.prompt-card:nth-child(3) { border-top:6px solid var(--teal); }
+.prompt-card .prompt-label {
+  color:var(--muted);
+  margin-bottom:8px;
+  display:block;
+  font:600 11px 'IBM Plex Mono', monospace;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.editor-tools,
+.button-row {
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.button {
+  appearance:none;
+  border:1px solid var(--line);
+  background:#fff;
+  color:var(--brown);
+  padding:9px 12px;
+  border-radius:12px;
+  cursor:pointer;
+  font-size:12px;
+  font-weight:600;
+}
+.select-input {
+  width:100%;
+  border:1px solid var(--line);
+  background:#fff;
+  color:var(--ink);
+  border-radius:12px;
+  padding:10px 12px;
+  font-size:14px;
+  margin-top:10px;
+}
+.button.primary {
+  background:var(--brown);
+  color:#fff;
+  border-color:var(--brown);
+}
+.button.secondary {
+  background:var(--teal);
+  color:#fff;
+  border-color:var(--teal);
+}
+.button:hover { transform:translateY(-1px); }
+.button:disabled {
+  opacity:.55;
+  cursor:not-allowed;
+  transform:none;
+}
+textarea {
+  width:100%;
+  min-height:230px;
+  border:0;
+  padding:18px;
+  resize:vertical;
+  font-size:14px;
+  line-height:1.7;
+  background:var(--code);
+  color:#e8eef4;
+}
+.editor-note,
+.status,
+.hint-box {
+  padding:12px 16px;
+  border-top:1px solid var(--line);
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.5;
+}
+.hint-box {
+  border:1px dashed var(--line);
+  border-radius:16px;
+  background:#fcfaf7;
+}
+.status.error {
+  color:#8a2230;
+  background:#fff2f4;
+}
+.status.ok {
+  color:#215f3f;
+  background:#f0fbf4;
+}
+.status.pending {
+  color:#675d4e;
+  background:#faf3e8;
+}
+.result-body,
+.empty-state {
+  padding:16px;
+}
+.empty-state { color:var(--muted); }
+.muted {
+  color:var(--muted);
+}
+.footer {
+  margin-top:20px;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.6;
+}
+.locked {
+  opacity:.65;
+}
+.locked .button.primary,
+.locked textarea {
+  pointer-events:none;
+}
+@media (max-width: 1180px) {
+  .page { grid-template-columns:1fr; }
+  .rail { display:none; }
+  main { padding:28px 20px 56px; }
+  .hero-grid,
+  .top-grid,
+  .prompt-grid,
+  .dual-grid,
+  .output-grid { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+<article class="page">
+  <aside class="rail">
+    <h1>Python to SQL Bridge</h1>
+    <p id="rail-intro">Load a CSV, prepare a DataFrame with Python, then query the prepared table with SQL in the same page.</p>
+
+    <div class="mini-card">
+      <span class="mini-label">Dataset</span>
+      <strong id="dataset-card-copy">Choose a dataset pack, then load a CSV.</strong>
+    </div>
+
+    <div class="mini-card">
+      <span class="mini-label">Workflow</span>
+      <strong>1. Load CSV</strong>
+      <strong>2. Prepare with pandas</strong>
+      <strong>3. Query with SQL</strong>
+    </div>
+
+    <div class="status-card">
+      <div class="status-chip pending" id="py-engine-chip">Pending</div>
+      <strong>Python engine</strong>
+      <p id="py-engine-copy">Pyodide has not loaded yet.</p>
+    </div>
+
+    <div class="status-card">
+      <div class="status-chip pending" id="csv-chip">Pending</div>
+      <strong>CSV source</strong>
+      <p id="csv-copy">No CSV loaded yet.</p>
+    </div>
+
+    <div class="status-card">
+      <div class="status-chip pending" id="prep-chip">Pending</div>
+      <strong>DataFrame prep</strong>
+      <p id="prep-copy">Run the Python step to produce <span class="mono">prepared_df</span>.</p>
+    </div>
+
+    <div class="status-card">
+      <div class="status-chip pending" id="sql-chip">Pending</div>
+      <strong>SQL table</strong>
+      <p id="sql-copy">The SQL table will appear after the Python step succeeds.</p>
+    </div>
+
+    <div class="rail-nav">
+      <div class="rail-nav-title">Jump To</div>
+      <a href="#load">Load a CSV</a>
+      <a href="#python">Python prep</a>
+      <a href="#bridge">Bridge mapping</a>
+      <a href="#sql">SQL practice</a>
+    </div>
+  </aside>
+
+  <main>
+    <section class="hero">
+      <div class="eyebrow">Prototype Lab</div>
+      <h2 id="hero-title">CSV to pandas to SQL</h2>
+      <p id="hero-copy">This page loads a CSV, uses Python and pandas to make the data easier to work with, and then passes the prepared table into a live SQL practice area. The handover is visible on purpose, so the learner can see what changes before SQL starts.</p>
+
+      <div class="hero-grid">
+        <div class="panel">
+          <h3 id="hero-proof-title">What This Page Proves</h3>
+          <ul id="hero-proof-list">
+            <li>You can load a CSV into the page and inspect it with Python.</li>
+            <li>You can reshape awkward columns into SQL-friendly names in pandas first.</li>
+            <li>You can pass the prepared table into a SQL engine and ask dataset-specific questions against it.</li>
+          </ul>
+        </div>
+
+        <div class="panel">
+          <h3 id="teaching-idea-title">Important Teaching Idea</h3>
+          <p id="teaching-idea-copy">The Python section explains <em>how to get the data ready</em>. The SQL section assumes the data is ready and focuses on <em>asking questions of it</em>. That separation makes the roles of the two tools clearer.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="load">
+      <div class="section-head">
+        <h3>1. Load The CSV</h3>
+        <div class="rule"></div>
+      </div>
+
+      <div class="dual-grid">
+        <div class="panel">
+          <h3>Choose Your Starting Point</h3>
+          <p id="load-copy">Pick a dataset pack first. You can then load the bundled project copy for that pack, or choose your own local CSV.</p>
+          <label class="mini-label" for="dataset-pack" style="margin-top:14px; display:block; color:var(--muted);">Dataset pack</label>
+          <select id="dataset-pack" class="select-input">
+            <option value="coffee">Coffee quality</option>
+            <option value="movie">Movie films</option>
+            <option value="generic">Any CSV</option>
+          </select>
+          <div class="button-row" style="margin-top:14px;">
+            <button class="button" id="load-supplied-csv" type="button">Load Supplied CSV</button>
+            <label class="button primary" for="csv-file">Choose Local CSV</label>
+            <input id="csv-file" type="file" accept=".csv,text/csv" style="display:none;">
+          </div>
+          <div class="hint-box" style="margin-top:16px;" id="load-hint">
+            Use <span class="mono">Load Supplied CSV</span> when this page is served from a local web server or website. If you opened the HTML file directly and the browser blocks that request, use <span class="mono">Choose Local CSV</span> instead.
+          </div>
+          <div class="status pending" id="load-status">No CSV loaded yet.</div>
+        </div>
+
+        <div class="panel">
+          <h3>Why This Step Exists</h3>
+          <ul id="load-why-list">
+            <li>The page needs the raw CSV text before Python can do anything useful.</li>
+            <li>The starter code can then clean, rename, or reshape the data for SQL.</li>
+            <li>Once the CSV is loaded, the Python box can read the raw text through <span class="mono">StringIO</span>.</li>
+          </ul>
+          <div class="file-indicator">
+            <div class="file-indicator-label">Current file:</div>
+            <div class="file-indicator-name mono" id="current-file-name">none</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="python">
+      <div class="section-head">
+        <h3>2. Python Prep</h3>
+        <div class="rule"></div>
+      </div>
+
+      <div class="panel" style="margin-bottom:16px;">
+        <h3>What You Are Meant To Do Here</h3>
+        <p id="python-copy">The Python stage is where you take a raw CSV and turn it into something comfortable to query. The exact cleanup can change by dataset, but the goal is always the same: leave one prepared DataFrame that SQL can use cleanly.</p>
+        <div class="schema-pills" id="python-pill-row">
+          <span class="schema-pill">pd.read_csv(StringIO(csv_text))</span>
+          <span class="schema-pill">clean column names</span>
+          <span class="schema-pill">fill or reshape values</span>
+          <span class="schema-pill">produce prepared_df</span>
+        </div>
+      </div>
+
+      <div class="panel guidance-panel">
+        <h3>Build The Python Lines One At A Time</h3>
+        <p class="guidance-intro" id="python-guidance-intro">Start with the import lines, then turn the CSV text into something pandas can read like a file.</p>
+        <div class="guidance-steps" id="python-guidance-steps"></div>
+      </div>
+
+      <div class="editor-wrap">
+        <div class="editor-head">
+          <strong id="python-editor-title">Write Python that creates <span class="mono">prepared_df</span></strong>
+          <div class="editor-tools">
+            <button class="button primary" id="run-python" type="button">Run Python Prep</button>
+            <button class="button" id="reset-python" type="button">Clear Editor</button>
+          </div>
+        </div>
+        <textarea id="python-code" spellcheck="false"></textarea>
+        <div class="editor-note" id="python-editor-note">Rule: your Python must leave a pandas DataFrame called <span class="mono">prepared_df</span>. When this succeeds, the SQL section will rebuild itself from that DataFrame.</div>
+        <div class="status pending" id="python-status">Waiting for Python engine and CSV.</div>
+      </div>
+
+      <div class="output-grid" style="margin-top:16px;">
+        <div class="result-wrap">
+          <div class="result-head">
+            <strong>Python Output</strong>
+            <span class="section-sub">Anything you print appears here.</span>
+          </div>
+          <div class="result-body" id="python-output">
+            <div class="empty-state">Run the Python step to see output.</div>
+          </div>
+        </div>
+
+        <div class="result-wrap">
+          <div class="result-head">
+            <strong>Prepared DataFrame Preview</strong>
+            <span class="section-sub">First few rows after cleanup.</span>
+          </div>
+          <div class="result-body" id="python-preview">
+            <div class="empty-state">Run the Python step to preview the DataFrame.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="bridge">
+      <div class="section-head">
+        <h3>3. Bridge Into SQL</h3>
+        <div class="rule"></div>
+      </div>
+
+      <div class="dual-grid">
+        <div class="panel">
+          <h3>Column Mapping</h3>
+          <p id="bridge-copy">This is the handover point. The page takes the prepared pandas DataFrame and builds one SQL table called <span class="mono">prepared_data</span>. If the Python step leaves awkward names in place, SQL becomes harder to read. The cleanup pass exists to reduce that friction.</p>
+          <ul class="mapping-list" id="mapping-list">
+            <li>No prepared DataFrame yet.</li>
+          </ul>
+        </div>
+
+        <div class="panel">
+          <h3>SQL-Ready Summary</h3>
+          <p id="bridge-summary" class="muted">The summary will appear after the Python prep succeeds.</p>
+          <div class="schema-pills" id="sql-column-pills"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="sql">
+      <div class="section-head">
+        <h3>4. SQL Practice</h3>
+        <div class="rule"></div>
+      </div>
+
+      <div class="prompt-grid" id="prompt-grid">
+        <div class="prompt-card">
+          <span class="prompt-label">Dataset prompts</span>
+          <p>Load a dataset pack and run the Python step. The SQL prompts here will then match the prepared table.</p>
+          <ul>
+            <li>Known datasets use curated prompts.</li>
+            <li>Other CSVs get prompts generated from the prepared columns.</li>
+            <li>The SQL section changes when the dataset changes.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="top-grid" style="margin-top:16px;">
+        <div class="editor-wrap" id="sql-wrap">
+          <div class="editor-head">
+            <strong id="sql-editor-title">Write a SQL query against <span class="mono">prepared_data</span></strong>
+            <div class="editor-tools">
+              <button class="button primary" id="run-sql" type="button" disabled>Run SQL</button>
+              <button class="button" id="reset-sql" type="button" disabled>Reset Query</button>
+              <button class="button" id="rebuild-sql" type="button" disabled>Rebuild SQL Table</button>
+            </div>
+          </div>
+          <textarea id="sql-code" spellcheck="false" disabled></textarea>
+          <div class="editor-note" id="sql-editor-note">The SQL side stays read-only. Use <span class="mono">SELECT</span> queries to explore the prepared table.</div>
+          <div class="status pending" id="sql-status">Run the Python prep first to unlock SQL.</div>
+        </div>
+
+        <div class="panel">
+          <h3>Why The Questions Work Here</h3>
+          <p id="sql-guidance-copy">The SQL prompts should match the CSV that was prepared. Known dataset packs use curated teaching text. Other CSVs use prompts generated from the columns left by your Python cleanup.</p>
+          <ul id="sql-guidance-list">
+            <li>The Python stage explains the cleanup.</li>
+            <li>The SQL stage assumes the cleanup happened.</li>
+            <li>The prompts are tied to the prepared columns, not guessed in the dark.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="result-wrap" style="margin-top:16px;">
+        <div class="result-head">
+          <strong>SQL Result</strong>
+          <span class="section-sub">Your query output appears here.</span>
+        </div>
+        <div class="result-body" id="sql-result">
+          <div class="empty-state">Prepare the DataFrame first, then run a SQL query.</div>
+        </div>
+      </div>
+    </section>
+
+    <p class="footer" id="footer-note">Prototype note: the bridge is general, but the teaching text should change with the dataset. This page now uses dataset packs for known files and a generic fallback for other CSVs.</p>
+  </main>
+</article>
+
+<script src="https://cdn.jsdelivr.net/pyodide/v314.0.2/full/pyodide.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sql.js@1.10.3/dist/sql-wasm.js"></script>
+<script>
+const PREPARED_DF_NAME = "prepared_df";
+const SQL_TABLE_NAME = "prepared_data";
+
+const datasetPacks = {
+  coffee: {
+    key: "coffee",
+    label: "Coffee quality",
+    bundledFile: "coffee.csv",
+    bundledPath: "../../datasets/coffee.csv",
+    matchNames: ["coffee.csv"],
+    datasetCardCopy: 'Expected starter file: <span class="mono">coffee.csv</span>',
+    railIntro: 'This pack starts with <span class="mono">coffee.csv</span>. Choose that file locally, clean the raw coffee columns in Python, then move into coffee-specific SQL.',
+    heroTitle: "Coffee CSV to pandas to SQL",
+    heroCopy: "This version shows a full cleanup pass on the coffee dataset. The Python step renames awkward raw headers, and the SQL step then uses the cleaned result to ask coffee-specific questions.",
+    heroProofTitle: "What This Coffee Pack Proves",
+    heroProofList: [
+      "You can load a real CSV into the page and inspect it with Python.",
+      "You can rename awkward dotted column names into SQL-friendly names in pandas first.",
+      "You can pass the prepared table into SQL and ask coffee questions that match the cleaned columns."
+    ],
+    teachingIdeaCopy: "The Python section explains how the raw coffee data becomes query-ready. The SQL section then focuses on reading and comparing coffee records, not on cleanup syntax.",
+    loadCopy: 'The target dataset for this pack is <span class="mono">coffee.csv</span>. Choose that file from the local project <span class="mono">datasets</span> folder.',
+    loadHint: 'Use <span class="mono">Choose Local CSV</span> and pick <span class="mono">coffee.csv</span>. The page already knows what teaching pack to use once that file is loaded.',
+    loadWhyList: [
+      "The page needs the raw CSV text before Python can do anything useful.",
+      "The coffee dataset has long dotted column names, so it is a strong cleanup example.",
+      'Once the CSV is loaded, the Python box can read the raw text through <span class="mono">StringIO</span>.'
+    ],
+    pythonCopy: 'The Python stage is where you turn the raw coffee CSV into something comfortable to query. The big task here is renaming the dotted headers into shorter names like <span class="mono">country</span>, <span class="mono">processing_method</span>, and <span class="mono">total_score</span>.',
+    pythonPills: [
+      "from io import StringIO",
+      "import pandas as pd",
+      "pd.read_csv(StringIO(csv_text))",
+      "rename columns",
+      "fill missing text",
+      "produce prepared_df"
+    ],
+    pythonGuidanceIntro: 'The browser already holds the coffee CSV as plain text in <span class="mono">csv_text</span>. Python cannot read that text with <span class="mono">pd.read_csv(...)</span> until you wrap it in <span class="mono">StringIO</span>, which makes the text behave like a file for pandas. For this coffee pack, do not run yet after the first read line: you also need the rename step so SQL gets the cleaner column names it expects.',
+    pythonSteps: [
+      {
+        title: "1. Import the tool that turns text into a file-like object",
+        hint: 'Use <span class="mono">from io import StringIO</span>. This matters because the browser has the CSV in memory as text, not as an open file on disk.',
+        success: 'Success looks like: Python now knows what <span class="mono">StringIO</span> means.',
+        line: "from io import StringIO"
+      },
+      {
+        title: "2. Import pandas with the short name pd",
+        hint: 'Use <span class="mono">import pandas as pd</span>. We shorten the name to <span class="mono">pd</span> because that is the standard pandas shortcut used in tutorials and examples.',
+        success: 'Success looks like: you can now call <span class="mono">pd.read_csv(...)</span>.',
+        line: "import pandas as pd"
+      },
+      {
+        title: "3. Build prepared_df from the CSV text",
+        hint: 'Write <span class="mono">prepared_df = pd.read_csv(StringIO(csv_text))</span>. Use <span class="mono">prepared_df</span> here because the tutorial expects that final DataFrame name.',
+        success: 'Success looks like: <span class="mono">prepared_df</span> exists and contains the raw coffee table.',
+        line: "prepared_df = pd.read_csv(StringIO(csv_text))"
+      },
+      {
+        title: "4. Rename the awkward coffee columns before SQL uses them",
+        hint: 'Next, rename the long dotted column names into shorter SQL-friendly names. Do not run yet until this block is in place too.',
+        success: 'Success looks like: columns such as <span class="mono">Location.Country</span> become <span class="mono">country</span> and <span class="mono">Data.Scores.Total</span> becomes <span class="mono">total_score</span>.',
+        line: `prepared_df = prepared_df.rename(columns={
+    "Location.Country": "country",
+    "Location.Region": "region",
+    "Location.Altitude.Min": "altitude_min",
+    "Location.Altitude.Max": "altitude_max",
+    "Location.Altitude.Average": "altitude_average",
+    "Year": "year",
+    "Data.Owner": "owner",
+    "Data.Type.Species": "species",
+    "Data.Type.Variety": "variety",
+    "Data.Type.Processing method": "processing_method",
+    "Data.Production.Number of bags": "number_of_bags",
+    "Data.Production.Bag weight": "bag_weight",
+    "Data.Scores.Aroma": "aroma",
+    "Data.Scores.Flavor": "flavor",
+    "Data.Scores.Aftertaste": "aftertaste",
+    "Data.Scores.Acidity": "acidity",
+    "Data.Scores.Body": "body",
+    "Data.Scores.Balance": "balance",
+    "Data.Scores.Uniformity": "uniformity",
+    "Data.Scores.Sweetness": "sweetness",
+    "Data.Scores.Moisture": "moisture",
+    "Data.Scores.Total": "total_score",
+    "Data.Color": "color",
+})`
+      }
+    ],
+    pythonCode: `from io import StringIO
+import pandas as pd
+
+prepared_df = pd.read_csv(StringIO(csv_text))
+
+prepared_df = prepared_df.rename(columns={
+    "Location.Country": "country",
+    "Location.Region": "region",
+    "Location.Altitude.Min": "altitude_min",
+    "Location.Altitude.Max": "altitude_max",
+    "Location.Altitude.Average": "altitude_average",
+    "Year": "year",
+    "Data.Owner": "owner",
+    "Data.Type.Species": "species",
+    "Data.Type.Variety": "variety",
+    "Data.Type.Processing method": "processing_method",
+    "Data.Production.Number of bags": "number_of_bags",
+    "Data.Production.Bag weight": "bag_weight",
+    "Data.Scores.Aroma": "aroma",
+    "Data.Scores.Flavor": "flavor",
+    "Data.Scores.Aftertaste": "aftertaste",
+    "Data.Scores.Acidity": "acidity",
+    "Data.Scores.Body": "body",
+    "Data.Scores.Balance": "balance",
+    "Data.Scores.Uniformity": "uniformity",
+    "Data.Scores.Sweetness": "sweetness",
+    "Data.Scores.Moisture": "moisture",
+    "Data.Scores.Total": "total_score",
+    "Data.Color": "color",
+})
+
+prepared_df["variety"] = prepared_df["variety"].fillna("Unknown")
+prepared_df["processing_method"] = prepared_df["processing_method"].fillna("Unknown")
+prepared_df["color"] = prepared_df["color"].fillna("Unknown")
+
+print("Rows:", len(prepared_df))
+print("Columns:", len(prepared_df.columns))
+print("Ready for SQL:", "${PREPARED_DF_NAME}")`,
+    sqlStarter: `SELECT country, region, total_score
+FROM prepared_data
+ORDER BY total_score DESC
+LIMIT 10;`,
+    promptCards: [
+      {
+        label: "Basic Reads",
+        intro: "Use the cleaned names from the Python step:",
+        items: [
+          'Show <span class="mono">country</span>, <span class="mono">region</span>, and <span class="mono">total_score</span> for the top 10 coffees.',
+          "Show all rows from Brazil.",
+          'Show distinct <span class="mono">country</span> values in alphabetical order.'
+        ]
+      },
+      {
+        label: "Filtering",
+        intro: "Ask more focused coffee questions:",
+        items: [
+          'Find coffees with <span class="mono">total_score &gt; 86</span>.',
+          'Find rows where <span class="mono">variety = \'Unknown\'</span>.',
+          'Find coffees with <span class="mono">processing_method = \'Unknown\'</span>.'
+        ]
+      },
+      {
+        label: "Grouping",
+        intro: "Once the table is ready, try summaries:",
+        items: [
+          'Show average <span class="mono">total_score</span> by <span class="mono">country</span>.',
+          'Show row counts by <span class="mono">species</span>.',
+          'Show countries with more than 5 rows using <span class="mono">HAVING</span>.'
+        ]
+      }
+    ],
+    guidanceCopy: 'These prompts are specific to <span class="mono">coffee.csv</span>. The Python cleanup creates the exact column names that the SQL questions depend on.',
+    guidanceList: [
+      "The Python stage explains the cleanup.",
+      "The SQL stage assumes the cleanup happened.",
+      "The prompts are tied to columns that actually exist after the prep step."
+    ],
+    footerNote: "Pack note: coffee keeps the original prototype idea. The bridge stays general, but the teaching text is deliberately coffee-specific."
+  },
+  movie: {
+    key: "movie",
+    label: "Movie films",
+    bundledFile: "movie_films.csv",
+    bundledPath: "../../datasets/movie_films.csv",
+    matchNames: ["movie_films.csv", "movies.csv"],
+    datasetCardCopy: 'Expected starter file: <span class="mono">movie_films.csv</span>',
+    railIntro: 'This pack starts with <span class="mono">movie_films.csv</span>. Choose that file locally, normalise the film data in Python, then move into film-specific SQL.',
+    heroTitle: "Movie CSV to pandas to SQL",
+    heroCopy: "This version uses a film dataset that is already fairly tidy, so the Python step is lighter. That makes it a useful contrast with coffee: not every CSV needs heavy cleanup before SQL.",
+    heroProofTitle: "What This Movie Pack Proves",
+    heroProofList: [
+      "A CSV can need only light prep before it becomes SQL-friendly.",
+      "Python can still standardise text and numeric columns before SQL starts.",
+      "The SQL prompts can switch to match the film columns and questions."
+    ],
+    teachingIdeaCopy: "The Python section here is lighter because the source file is already close to query-ready. That helps the learner see that Python prep can be small or large depending on the dataset.",
+    loadCopy: 'The target dataset for this pack is <span class="mono">movie_films.csv</span>. Choose that file from the local project <span class="mono">datasets</span> folder.',
+    loadHint: 'Use <span class="mono">Choose Local CSV</span> and pick <span class="mono">movie_films.csv</span>.',
+    loadWhyList: [
+      "The page still needs the raw CSV text before Python can inspect it.",
+      "This film dataset is already close to SQL-ready, which makes it a good light-prep example.",
+      "The SQL prompts later rely on the cleaned column names left by the Python step."
+    ],
+    pythonCopy: 'The Python stage here is mostly about making sure the film data is consistent. You can trim text, fill missing genre labels, and coerce number columns before sending the table into SQL.',
+    pythonPills: [
+      "from io import StringIO",
+      "import pandas as pd",
+      "pd.read_csv(StringIO(csv_text))",
+      "trim text",
+      "coerce numeric columns",
+      "produce prepared_df"
+    ],
+    pythonGuidanceIntro: 'This dataset also starts as plain text in <span class="mono">csv_text</span>, so you still need <span class="mono">StringIO</span> before pandas can read it as a table.',
+    pythonSteps: [
+      {
+        title: "1. Import StringIO",
+        hint: 'Use <span class="mono">from io import StringIO</span> so pandas can treat the CSV text like a file.',
+        success: 'Success looks like: <span class="mono">StringIO</span> is available in Python.',
+        line: "from io import StringIO"
+      },
+      {
+        title: "2. Import pandas as pd",
+        hint: 'Use <span class="mono">import pandas as pd</span> so you can call pandas functions with the short name <span class="mono">pd</span>.',
+        success: 'Success looks like: <span class="mono">pd.read_csv(...)</span> is now available.',
+        line: "import pandas as pd"
+      },
+      {
+        title: "3. Read the CSV text into df",
+        hint: 'Write <span class="mono">df = pd.read_csv(StringIO(csv_text))</span> to build the raw DataFrame.',
+        success: 'Success looks like: <span class="mono">df</span> now holds the film rows.',
+        line: "df = pd.read_csv(StringIO(csv_text))"
+      }
+    ],
+    pythonCode: `from io import StringIO
+import pandas as pd
+
+prepared_df = pd.read_csv(StringIO(csv_text))
+
+for column in ["title", "director", "genre"]:
+    prepared_df[column] = prepared_df[column].fillna("Unknown").astype(str).str.strip()
+
+for column in ["release_year", "runtime_minutes", "imdb_rating", "box_office_m"]:
+    prepared_df[column] = pd.to_numeric(prepared_df[column], errors="coerce")
+
+print("Rows:", len(prepared_df))
+print("Columns:", len(prepared_df.columns))
+print("Ready for SQL:", "${PREPARED_DF_NAME}")`,
+    sqlStarter: `SELECT title, director, imdb_rating
+FROM prepared_data
+ORDER BY imdb_rating DESC
+LIMIT 10;`,
+    promptCards: [
+      {
+        label: "Basic Reads",
+        intro: "Use the film columns from the prepared table:",
+        items: [
+          'Show <span class="mono">title</span>, <span class="mono">director</span>, and <span class="mono">imdb_rating</span> for the highest-rated films.',
+          'Show all films in the <span class="mono">Science Fiction</span> genre.',
+          'Show distinct directors in alphabetical order.'
+        ]
+      },
+      {
+        label: "Filtering",
+        intro: "Ask more focused film questions:",
+        items: [
+          'Find films released after <span class="mono">2010</span>.',
+          'Find films with <span class="mono">runtime_minutes &gt; 130</span>.',
+          'Find films with <span class="mono">box_office_m &gt; 400</span>.'
+        ]
+      },
+      {
+        label: "Grouping",
+        intro: "Once the table is ready, try summaries:",
+        items: [
+          'Show average <span class="mono">imdb_rating</span> by <span class="mono">genre</span>.',
+          'Show how many films each director has in the table.',
+          'Show genres with more than one film using <span class="mono">HAVING</span>.'
+        ]
+      }
+    ],
+    guidanceCopy: 'These prompts are specific to the film dataset. The SQL questions only make sense because the page knows which columns the movie prep step leaves behind.',
+    guidanceList: [
+      "The Python stage standardises text and number columns first.",
+      "The SQL stage then uses the film columns directly.",
+      "The prompts change because the dataset changed."
+    ],
+    footerNote: "Pack note: movie shows the same bridge with lighter prep. The SQL side changes because the learner is now asking film questions instead of coffee questions."
+  },
+  generic: {
+    key: "generic",
+    label: "Any CSV",
+    bundledFile: "",
+    bundledPath: "",
+    matchNames: [],
+    datasetCardCopy: 'Bring your own file. The page will use generic prep and then build SQL prompts from the columns left in <span class="mono">prepared_df</span>.',
+    railIntro: "This pack is the fallback for other CSVs. The bridge still works, but the SQL guidance is generated from the prepared columns after your Python step succeeds.",
+    heroTitle: "Any CSV to pandas to SQL",
+    heroCopy: "This mode keeps the front half open: load any CSV, do the prep work you need in Python, and then let the page generate SQL guidance from the prepared columns you created.",
+    heroProofTitle: "What The Fallback Pack Proves",
+    heroProofList: [
+      "The front half of the page can load arbitrary CSV files.",
+      "Python can reshape those files into a cleaner DataFrame for SQL.",
+      "The SQL guidance can change after prep by reading the prepared columns."
+    ],
+    teachingIdeaCopy: "When the source file is not one of the named packs, the teaching layer cannot rely on prewritten domain prompts. Instead, it waits for the Python prep and then writes SQL suggestions from what actually exists.",
+    loadCopy: "Use this pack when you want to load another CSV. Choose the file locally, then adapt the Python prep so it leaves a DataFrame called prepared_df.",
+    loadHint: 'Use <span class="mono">Choose Local CSV</span>, then edit the Python prep so it leaves a DataFrame called <span class="mono">prepared_df</span>.',
+    loadWhyList: [
+      "The page still needs the raw CSV text before Python can inspect it.",
+      "The starter Python code gives you a plain cleanup pattern rather than domain-specific logic.",
+      "The SQL prompts will be generated from the columns that survive your prep step."
+    ],
+    pythonCopy: 'The Python stage is intentionally generic here. Read the CSV, normalise the column names, optionally fill missing text, and leave one DataFrame called <span class="mono">prepared_df</span> for SQL.',
+    pythonPills: [
+      "from io import StringIO",
+      "import pandas as pd",
+      "pd.read_csv(StringIO(csv_text))",
+      "normalise headers",
+      "fill text fields",
+      "produce prepared_df"
+    ],
+    pythonGuidanceIntro: 'Even in fallback mode, the browser gives Python the CSV as text in <span class="mono">csv_text</span>. <span class="mono">StringIO</span> is the bridge that makes that text readable by pandas.',
+    pythonSteps: [
+      {
+        title: "1. Import StringIO",
+        hint: 'Use <span class="mono">from io import StringIO</span> so pandas can read the CSV text as if it were a file.',
+        success: 'Success looks like: Python recognises <span class="mono">StringIO</span>.',
+        line: "from io import StringIO"
+      },
+      {
+        title: "2. Import pandas as pd",
+        hint: 'Use <span class="mono">import pandas as pd</span> so you can use the pandas shortcut name.',
+        success: 'Success looks like: you can call <span class="mono">pd.read_csv(...)</span>.',
+        line: "import pandas as pd"
+      },
+      {
+        title: "3. Read the CSV text into df",
+        hint: 'Write <span class="mono">df = pd.read_csv(StringIO(csv_text))</span> to get the raw table into a DataFrame.',
+        success: 'Success looks like: <span class="mono">df</span> contains your CSV rows.',
+        line: "df = pd.read_csv(StringIO(csv_text))"
+      }
+    ],
+    pythonCode: `from io import StringIO
+import pandas as pd
+import re
+
+prepared_df = pd.read_csv(StringIO(csv_text))
+
+prepared_df.columns = [
+    re.sub(r"_+", "_", re.sub(r"[^a-z0-9]+", "_", str(column).strip().lower())).strip("_")
+    for column in prepared_df.columns
+]
+
+text_columns = prepared_df.select_dtypes(include="object").columns
+for column in text_columns:
+    prepared_df[column] = prepared_df[column].fillna("Unknown").astype(str).str.strip()
+
+print("Rows:", len(prepared_df))
+print("Columns:", len(prepared_df.columns))
+print("Ready for SQL:", "${PREPARED_DF_NAME}")`,
+    sqlStarter: `SELECT *
+FROM prepared_data
+LIMIT 10;`,
+    promptCards: [
+      {
+        label: "After Prep",
+        intro: "Run the Python step first:",
+        items: [
+          "The page will inspect the prepared columns.",
+          "It will rewrite the SQL prompts to match those columns.",
+          "It will also suggest a starter query for the SQL box."
+        ]
+      }
+    ],
+    guidanceCopy: "This fallback pack waits for the prepared DataFrame before it writes the SQL teaching text.",
+    guidanceList: [
+      "The Python step decides what the SQL layer will see.",
+      "The SQL prompts are built from the prepared columns, not the raw file name.",
+      "If you change the prep, run it again and the SQL side will refresh."
+    ],
+    footerNote: "Fallback note: this mode keeps the loader open to any CSV, but the SQL teaching text only becomes specific after the Python prep reveals the final columns."
+  }
+};
+
+const state = {
+  rawCsvText: "",
+  currentFileName: "",
+  pyodide: null,
+  SQL: null,
+  prepared: null,
+  db: null,
+  selectedPackKey: "coffee",
+};
+
+const els = {
+  railIntro: document.getElementById("rail-intro"),
+  datasetCardCopy: document.getElementById("dataset-card-copy"),
+  heroTitle: document.getElementById("hero-title"),
+  heroCopy: document.getElementById("hero-copy"),
+  heroProofTitle: document.getElementById("hero-proof-title"),
+  heroProofList: document.getElementById("hero-proof-list"),
+  teachingIdeaCopy: document.getElementById("teaching-idea-copy"),
+  loadCopy: document.getElementById("load-copy"),
+  loadHint: document.getElementById("load-hint"),
+  loadWhyList: document.getElementById("load-why-list"),
+  datasetPack: document.getElementById("dataset-pack"),
+  loadBundledCsv: document.getElementById("load-supplied-csv"),
+  csvFile: document.getElementById("csv-file"),
+  loadStatus: document.getElementById("load-status"),
+  currentFileName: document.getElementById("current-file-name"),
+  pythonCopy: document.getElementById("python-copy"),
+  pythonPillRow: document.getElementById("python-pill-row"),
+  pythonGuidanceIntro: document.getElementById("python-guidance-intro"),
+  pythonGuidanceSteps: document.getElementById("python-guidance-steps"),
+  pythonEditorTitle: document.getElementById("python-editor-title"),
+  pythonCode: document.getElementById("python-code"),
+  pythonEditorNote: document.getElementById("python-editor-note"),
+  runPython: document.getElementById("run-python"),
+  resetPython: document.getElementById("reset-python"),
+  pythonStatus: document.getElementById("python-status"),
+  pythonOutput: document.getElementById("python-output"),
+  pythonPreview: document.getElementById("python-preview"),
+  bridgeCopy: document.getElementById("bridge-copy"),
+  mappingList: document.getElementById("mapping-list"),
+  bridgeSummary: document.getElementById("bridge-summary"),
+  sqlColumnPills: document.getElementById("sql-column-pills"),
+  promptGrid: document.getElementById("prompt-grid"),
+  sqlEditorTitle: document.getElementById("sql-editor-title"),
+  sqlCode: document.getElementById("sql-code"),
+  sqlEditorNote: document.getElementById("sql-editor-note"),
+  sqlGuidanceCopy: document.getElementById("sql-guidance-copy"),
+  sqlGuidanceList: document.getElementById("sql-guidance-list"),
+  runSql: document.getElementById("run-sql"),
+  resetSql: document.getElementById("reset-sql"),
+  rebuildSql: document.getElementById("rebuild-sql"),
+  sqlStatus: document.getElementById("sql-status"),
+  sqlResult: document.getElementById("sql-result"),
+  footerNote: document.getElementById("footer-note"),
+  pyEngineChip: document.getElementById("py-engine-chip"),
+  pyEngineCopy: document.getElementById("py-engine-copy"),
+  csvChip: document.getElementById("csv-chip"),
+  csvCopy: document.getElementById("csv-copy"),
+  prepChip: document.getElementById("prep-chip"),
+  prepCopy: document.getElementById("prep-copy"),
+  sqlChip: document.getElementById("sql-chip"),
+  sqlCopy: document.getElementById("sql-copy"),
+};
+
+let currentPythonStarter = "";
+let currentSqlStarter = "";
+
+function currentPack() {
+  return datasetPacks[state.selectedPackKey] || datasetPacks.generic;
+}
+
+function setChip(chipEl, copyEl, stateName, message) {
+  chipEl.className = `status-chip ${stateName}`;
+  chipEl.textContent = stateName === "ready" ? "Ready" : stateName === "error" ? "Error" : "Pending";
+  copyEl.textContent = message;
+}
+
+function setStatus(el, message, kind = "pending") {
+  el.className = `status ${kind}`;
+  el.textContent = message;
+}
+
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
+function renderBullets(el, items) {
+  el.innerHTML = items.map((item) => `<li>${item}</li>`).join("");
+}
+
+function renderPills(el, pills) {
+  el.innerHTML = pills.map((pill) => `<span class="schema-pill">${escapeHtml(pill)}</span>`).join("");
+}
+
+function renderPromptCards(cards) {
+  els.promptGrid.innerHTML = cards.map((card) => `
+    <div class="prompt-card">
+      <span class="prompt-label">${escapeHtml(card.label)}</span>
+      <p>${card.intro}</p>
+      <ul>${card.items.map((item) => `<li>${item}</li>`).join("")}</ul>
+    </div>
+  `).join("");
+}
+
+function renderPythonGuidance(pack) {
+  els.pythonGuidanceIntro.innerHTML = pack.pythonGuidanceIntro || "";
+  els.pythonGuidanceSteps.innerHTML = (pack.pythonSteps || []).map((step, index) => `
+    <div class="guidance-step">
+      <div class="guidance-step-title">${escapeHtml(step.title)}</div>
+      <p>${step.hint}</p>
+      <p>${step.success}</p>
+      <div class="reveal-row">
+        <button class="button" type="button" data-reveal-line="${index}">Reveal Solution Line</button>
+        <button class="button secondary" type="button" data-insert-line="${index}">Add This Line To Editor</button>
+        <div class="reveal-line hidden" id="reveal-line-${index}">Hidden until you ask to reveal it.</div>
+      </div>
+    </div>
+  `).join("");
+}
+
+function renderTable(container, columns, rows) {
+  if (!rows.length) {
+    container.innerHTML = '<div class="empty-state">No rows to show.</div>';
+    return;
+  }
+
+  const head = columns.map((column) => `<th>${escapeHtml(column)}</th>`).join("");
+  const body = rows.map((row) => {
+    const cells = columns.map((column) => {
+      const value = row[column];
+      return `<td>${value === null || value === undefined ? "NULL" : escapeHtml(value)}</td>`;
+    }).join("");
+    return `<tr>${cells}</tr>`;
+  }).join("");
+
+  container.innerHTML = `
+    <div class="table-scroll">
+      <table>
+        <thead><tr>${head}</tr></thead>
+        <tbody>${body}</tbody>
+      </table>
+    </div>
+  `;
+}
+
+function sqlTypeFromDtype(dtype) {
+  if (dtype.includes("int")) return "INTEGER";
+  if (dtype.includes("float")) return "REAL";
+  if (dtype.includes("bool")) return "INTEGER";
+  return "TEXT";
+}
+
+function sanitizeSqlName(name) {
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "_")
+    .replace(/^_+|_+$/g, "") || "column";
+}
+
+function uniqueSqlNames(columns) {
+  const seen = new Map();
+  return columns.map((column) => {
+    const base = sanitizeSqlName(column);
+    const count = seen.get(base) || 0;
+    seen.set(base, count + 1);
+    return count === 0 ? base : `${base}_${count + 1}`;
+  });
+}
+
+function syncFileName() {
+  els.currentFileName.textContent = state.currentFileName || "none";
+}
+
+function detectPackFromFileName(fileName) {
+  const normalized = String(fileName || "").toLowerCase();
+  for (const pack of Object.values(datasetPacks)) {
+    if (pack.matchNames.some((name) => name.toLowerCase() === normalized)) {
+      return pack.key;
+    }
+  }
+  return "generic";
+}
+
+function resetPreparedViews() {
+  state.prepared = null;
+  state.db = null;
+  els.pythonOutput.innerHTML = '<div class="empty-state">Run the Python step to see output.</div>';
+  els.pythonPreview.innerHTML = '<div class="empty-state">Run the Python step to preview the DataFrame.</div>';
+  els.mappingList.innerHTML = "<li>No prepared DataFrame yet.</li>";
+  els.bridgeSummary.textContent = "The summary will appear after the Python prep succeeds.";
+  els.sqlColumnPills.innerHTML = "";
+  els.sqlResult.innerHTML = '<div class="empty-state">Prepare the DataFrame first, then run a SQL query.</div>';
+}
+
+function resetCsvState() {
+  state.rawCsvText = "";
+  state.currentFileName = "";
+  syncFileName();
+  setStatus(els.loadStatus, "No CSV loaded yet.", "pending");
+  setChip(els.csvChip, els.csvCopy, "pending", "No CSV loaded yet.");
+}
+
+function resetForPackChange() {
+  resetCsvState();
+  resetPreparedViews();
+  setStatus(els.pythonStatus, "Load a CSV and run the Python prep.", "pending");
+  setChip(els.prepChip, els.prepCopy, "pending", `Run the Python step to produce ${PREPARED_DF_NAME}.`);
+  lockSql("Run the Python prep first to unlock SQL.");
+}
+
+function setSqlStarter(sqlText, force = false) {
+  const nextStarter = sqlText.trim();
+  if (force || !els.sqlCode.value.trim() || els.sqlCode.value.trim() === currentSqlStarter.trim()) {
+    els.sqlCode.value = nextStarter;
+  }
+  currentSqlStarter = nextStarter;
+}
+
+function setPythonStarter(pythonText, force = false) {
+  const nextStarter = pythonText.trim();
+  if (force && els.pythonCode.value.trim() === currentPythonStarter.trim()) {
+    els.pythonCode.value = "";
+  }
+  currentPythonStarter = nextStarter;
+}
+
+function applyPackUi(packKey, options = {}) {
+  const pack = datasetPacks[packKey] || datasetPacks.generic;
+  state.selectedPackKey = pack.key;
+  els.datasetPack.value = pack.key;
+
+  document.title = `${pack.label} Python SQL Bridge`;
+  els.railIntro.innerHTML = pack.railIntro;
+  els.datasetCardCopy.innerHTML = pack.datasetCardCopy;
+  els.heroTitle.textContent = pack.heroTitle;
+  els.heroCopy.textContent = pack.heroCopy;
+  els.heroProofTitle.textContent = pack.heroProofTitle;
+  renderBullets(els.heroProofList, pack.heroProofList);
+  els.teachingIdeaCopy.innerHTML = pack.teachingIdeaCopy;
+  els.loadCopy.innerHTML = pack.loadCopy;
+  els.loadHint.innerHTML = pack.loadHint;
+  renderBullets(els.loadWhyList, pack.loadWhyList);
+  els.pythonCopy.innerHTML = pack.pythonCopy;
+  renderPills(els.pythonPillRow, pack.pythonPills);
+  els.pythonEditorTitle.innerHTML = `Write Python that creates <span class="mono">${PREPARED_DF_NAME}</span>`;
+  els.pythonEditorNote.innerHTML = `Rule: your Python must leave a pandas DataFrame called <span class="mono">${PREPARED_DF_NAME}</span>. When this succeeds, the SQL section will rebuild itself from that DataFrame.`;
+  els.bridgeCopy.innerHTML = `This is the handover point. The page takes the prepared pandas DataFrame and builds one SQL table called <span class="mono">${SQL_TABLE_NAME}</span>. If the Python step leaves awkward names in place, SQL becomes harder to read. The cleanup pass exists to reduce that friction.`;
+  els.sqlEditorTitle.innerHTML = `Write a SQL query against <span class="mono">${SQL_TABLE_NAME}</span>`;
+  els.sqlEditorNote.innerHTML = `The SQL side stays read-only. Use <span class="mono">SELECT</span> queries to explore the prepared table.`;
+  els.sqlGuidanceCopy.innerHTML = pack.guidanceCopy;
+  renderBullets(els.sqlGuidanceList, pack.guidanceList);
+  els.footerNote.textContent = pack.footerNote;
+  renderPromptCards(pack.promptCards);
+  renderPythonGuidance(pack);
+
+  setPythonStarter(pack.pythonCode, options.forceStarters);
+  setSqlStarter(pack.sqlStarter, options.forceStarters);
+}
+
+function buildGenericTeaching() {
+  if (!state.prepared) {
+    return {
+      sqlStarter: datasetPacks.generic.sqlStarter,
+      promptCards: datasetPacks.generic.promptCards,
+      guidanceCopy: datasetPacks.generic.guidanceCopy,
+      guidanceList: datasetPacks.generic.guidanceList,
+      footerNote: datasetPacks.generic.footerNote,
+    };
+  }
+
+  const columns = state.prepared.mapping.map((item) => item.sql);
+  const numericColumns = state.prepared.mapping.filter((item) => /(int|float|bool)/i.test(item.dtype)).map((item) => item.sql);
+  const textColumns = state.prepared.mapping.filter((item) => !/(int|float|bool)/i.test(item.dtype)).map((item) => item.sql);
+  const previewColumns = columns.slice(0, Math.min(3, columns.length));
+  const firstColumn = columns[0] || "column_1";
+  const secondColumn = columns[1] || firstColumn;
+  const textColumn = textColumns[0] || firstColumn;
+  const numericColumn = numericColumns[0] || columns.find((column) => column !== textColumn) || firstColumn;
+  const sqlStarter = `SELECT ${previewColumns.length ? previewColumns.join(", ") : "*"}\nFROM ${SQL_TABLE_NAME}\nLIMIT 10;`;
+
+  return {
+    sqlStarter,
+    promptCards: [
+      {
+        label: "Basic Reads",
+        intro: "Start by inspecting the prepared columns you created:",
+        items: [
+          `Show <span class="mono">${escapeHtml(previewColumns[0] || firstColumn)}</span>${previewColumns[1] ? `, <span class="mono">${escapeHtml(previewColumns[1])}</span>` : ""}${previewColumns[2] ? `, and <span class="mono">${escapeHtml(previewColumns[2])}</span>` : ""} for the first 10 rows.`,
+          `Show distinct <span class="mono">${escapeHtml(textColumn)}</span> values in alphabetical order.`,
+          `Show all columns for rows where <span class="mono">${escapeHtml(textColumn)}</span> is not null.`
+        ]
+      },
+      {
+        label: "Filtering",
+        intro: "Use the prepared columns to ask narrower questions:",
+        items: [
+          `Filter rows where <span class="mono">${escapeHtml(textColumn)}</span> matches a value you can see in the preview.`,
+          `Sort by <span class="mono">${escapeHtml(numericColumn)}</span> in descending order and keep the top results.`,
+          `Select only <span class="mono">${escapeHtml(firstColumn)}</span> and <span class="mono">${escapeHtml(secondColumn)}</span> while testing your <span class="mono">WHERE</span> clause.`
+        ]
+      },
+      {
+        label: "Summaries",
+        intro: "Once the table looks right, try summary questions:",
+        items: [
+          `Count rows by <span class="mono">${escapeHtml(textColumn)}</span>.`,
+          `If <span class="mono">${escapeHtml(numericColumn)}</span> is numeric, show its average by <span class="mono">${escapeHtml(textColumn)}</span>.`,
+          `Use <span class="mono">HAVING</span> to keep only groups where the count is greater than 1.`
+        ]
+      }
+    ],
+    guidanceCopy: `The SQL prompts below were generated from the columns in <span class="mono">${escapeHtml(state.currentFileName || "your CSV")}</span> after the Python prep created <span class="mono">${PREPARED_DF_NAME}</span>.`,
+    guidanceList: [
+      "The Python stage decides what column names SQL will see.",
+      "The SQL prompts are now tied to the prepared columns, not guessed from the raw file name.",
+      "If you change the prep code, run it again and the SQL guidance will refresh."
+    ],
+    footerNote: `Fallback note: the page inspected ${columns.length} prepared column(s) and rewrote the SQL guidance to match them.`
+  };
+}
+
+function refreshSqlTeaching() {
+  const pack = currentPack();
+  if (pack.key === "generic") {
+    const derived = buildGenericTeaching();
+    renderPromptCards(derived.promptCards);
+    els.sqlGuidanceCopy.innerHTML = derived.guidanceCopy;
+    renderBullets(els.sqlGuidanceList, derived.guidanceList);
+    els.footerNote.textContent = derived.footerNote;
+    setSqlStarter(derived.sqlStarter, !state.prepared || els.sqlCode.disabled);
+    return;
+  }
+
+  renderPromptCards(pack.promptCards);
+  els.sqlGuidanceCopy.innerHTML = pack.guidanceCopy;
+  renderBullets(els.sqlGuidanceList, pack.guidanceList);
+  els.footerNote.textContent = pack.footerNote;
+  setSqlStarter(pack.sqlStarter, true);
+}
+
+async function initPyodideEngine() {
+  try {
+    setChip(els.pyEngineChip, els.pyEngineCopy, "pending", "Loading Pyodide and pandas...");
+    setStatus(els.pythonStatus, "Loading Python engine...", "pending");
+    state.pyodide = await loadPyodide();
+    await state.pyodide.loadPackage("pandas");
+    setChip(els.pyEngineChip, els.pyEngineCopy, "ready", "Pyodide and pandas are ready.");
+    setStatus(els.pythonStatus, "Python engine ready. Load a CSV and run the prep code.", "ok");
+  } catch (error) {
+    setChip(els.pyEngineChip, els.pyEngineCopy, "error", `Python engine failed: ${error.message}`);
+    setStatus(els.pythonStatus, `Python engine failed: ${error.message}`, "error");
+  }
+}
+
+async function initSqlEngine() {
+  try {
+    state.SQL = await initSqlJs({
+      locateFile: (file) => `https://cdn.jsdelivr.net/npm/sql.js@1.10.3/dist/${file}`
+    });
+  } catch (error) {
+    setStatus(els.sqlStatus, `SQL engine failed: ${error.message}`, "error");
+    setChip(els.sqlChip, els.sqlCopy, "error", `SQL engine failed: ${error.message}`);
+  }
+}
+
+function updateCsvState(message, kind, fileName = state.currentFileName) {
+  state.currentFileName = fileName;
+  syncFileName();
+  setStatus(els.loadStatus, message, kind);
+  if (kind === "ok") {
+    setChip(els.csvChip, els.csvCopy, "ready", `Loaded ${fileName}.`);
+  } else if (kind === "error") {
+    setChip(els.csvChip, els.csvCopy, "error", message);
+  } else {
+    setChip(els.csvChip, els.csvCopy, "pending", message);
+  }
+}
+
+function readPickedFile(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(new Error("Could not read file."));
+    reader.readAsText(file);
+  });
+}
+
+async function handlePickedFile(event) {
+  const [file] = event.target.files;
+  if (!file) return;
+  try {
+    const packKey = detectPackFromFileName(file.name);
+    if (packKey !== state.selectedPackKey) {
+      applyPackUi(packKey, { forceStarters: true });
+    }
+    updateCsvState(`Reading ${file.name}...`, "pending", file.name);
+    state.rawCsvText = await readPickedFile(file);
+    updateCsvState("Local CSV loaded. You can run the Python prep now.", "ok", file.name);
+    resetPreparedViews();
+    setStatus(els.pythonStatus, "CSV loaded. Run the Python prep when you are ready.", "ok");
+    setChip(els.prepChip, els.prepCopy, "pending", `CSV loaded. Run Python to create ${PREPARED_DF_NAME}.`);
+    lockSql("Run the Python prep successfully before using SQL.");
+  } catch (error) {
+    updateCsvState(`Local file failed: ${error.message}`, "error", file.name);
+  } finally {
+    event.target.value = "";
+  }
+}
+
+async function loadSuppliedCsv() {
+  const pack = currentPack();
+  if (!pack.bundledPath) {
+    updateCsvState("The Any CSV pack has no supplied file. Choose your own local CSV.", "pending", "none");
+    return;
+  }
+  try {
+    updateCsvState(`Loading supplied ${pack.bundledFile}...`, "pending", pack.bundledFile);
+    const response = await fetch(pack.bundledPath);
+    if (!response.ok) throw new Error(`The supplied file returned ${response.status}.`);
+    state.rawCsvText = await response.text();
+    updateCsvState("Supplied CSV loaded. You can run the Python prep now.", "ok", pack.bundledFile);
+    resetPreparedViews();
+    setStatus(els.pythonStatus, "CSV loaded. Run the Python prep when you are ready.", "ok");
+    setChip(els.prepChip, els.prepCopy, "pending", `CSV loaded. Run Python to create ${PREPARED_DF_NAME}.`);
+    lockSql("Run the Python prep successfully before using SQL.");
+  } catch (error) {
+    updateCsvState(`Could not load the supplied CSV: ${error.message} Choose Local CSV if this page was opened directly from your computer.`, "error", pack.bundledFile);
+  }
+}
+
+async function runPythonPrep() {
+  if (!state.pyodide) {
+    setStatus(els.pythonStatus, "Python engine is not ready yet.", "error");
+    return;
+  }
+  if (!state.rawCsvText) {
+    setStatus(els.pythonStatus, "Load a CSV first.", "error");
+    return;
+  }
+
+  try {
+    setStatus(els.pythonStatus, "Running Python prep...", "pending");
+    state.pyodide.globals.set("csv_text", state.rawCsvText);
+    state.pyodide.globals.set("user_code", els.pythonCode.value);
+
+    const payloadText = await state.pyodide.runPythonAsync(`
+import json
+from io import StringIO as _StringIO
+from contextlib import redirect_stdout
+import pandas as pd
+from io import StringIO
+
+namespace = {
+    "pd": pd,
+    "StringIO": StringIO,
+    "csv_text": csv_text,
+}
+stdout_capture = _StringIO()
+
+with redirect_stdout(stdout_capture):
+    exec(user_code, namespace)
+
+if "${PREPARED_DF_NAME}" not in namespace:
+    raise Exception("Your script must create a pandas DataFrame called ${PREPARED_DF_NAME}.")
+
+prepared_df = namespace["${PREPARED_DF_NAME}"]
+if not isinstance(prepared_df, pd.DataFrame):
+    raise Exception("${PREPARED_DF_NAME} exists, but it is not a pandas DataFrame.")
+
+preview_df = prepared_df.head(8).copy()
+preview_df = preview_df.astype(object).where(pd.notnull(preview_df), None)
+records_df = prepared_df.copy()
+records_df = records_df.astype(object).where(pd.notnull(records_df), None)
+
+payload = {
+    "stdout": stdout_capture.getvalue(),
+    "columns": prepared_df.columns.tolist(),
+    "dtypes": {column: str(dtype) for column, dtype in prepared_df.dtypes.items()},
+    "row_count": int(len(prepared_df)),
+    "preview": preview_df.to_dict(orient="records"),
+    "records": records_df.to_dict(orient="records"),
+}
+
+json.dumps(payload)
+    `);
+
+    const payload = JSON.parse(payloadText);
+    const sqlColumns = uniqueSqlNames(payload.columns);
+    const mapping = payload.columns.map((original, index) => ({
+      original,
+      sql: sqlColumns[index],
+      dtype: payload.dtypes[original] || "object",
+    }));
+
+    state.prepared = {
+      rowCount: payload.row_count,
+      originalColumns: payload.columns,
+      preview: payload.preview,
+      records: payload.records,
+      dtypes: payload.dtypes,
+      mapping,
+    };
+
+    els.pythonOutput.innerHTML = payload.stdout
+      ? `<pre>${escapeHtml(payload.stdout)}</pre>`
+      : '<div class="empty-state">The script ran successfully and did not print anything.</div>';
+    renderTable(els.pythonPreview, payload.columns, payload.preview);
+    updateBridgeUi();
+    refreshSqlTeaching();
+    rebuildSqlTable();
+    setStatus(els.pythonStatus, `Python prep succeeded. ${PREPARED_DF_NAME} is ready and SQL has been rebuilt.`, "ok");
+    setChip(els.prepChip, els.prepCopy, "ready", `Prepared ${payload.row_count} rows into ${PREPARED_DF_NAME}.`);
+  } catch (error) {
+    state.prepared = null;
+    setStatus(els.pythonStatus, error.message, "error");
+    els.pythonOutput.innerHTML = `<pre>${escapeHtml(error.message)}</pre>`;
+    els.pythonPreview.innerHTML = '<div class="empty-state">No DataFrame preview available because the Python step failed.</div>';
+    els.mappingList.innerHTML = "<li>Python prep failed, so there is no SQL mapping yet.</li>";
+    els.bridgeSummary.textContent = "No bridge summary yet because the Python step failed.";
+    els.sqlColumnPills.innerHTML = "";
+    lockSql("Run the Python prep successfully before using SQL.");
+    setChip(els.prepChip, els.prepCopy, "error", error.message);
+  }
+}
+
+function updateBridgeUi() {
+  if (!state.prepared) return;
+  els.mappingList.innerHTML = state.prepared.mapping.map((item) => `
+    <li>
+      <strong>${escapeHtml(item.original)}</strong><br>
+      <span class="mono">${escapeHtml(item.sql)}</span> · <span class="muted">${escapeHtml(item.dtype)}</span>
+    </li>
+  `).join("");
+
+  els.bridgeSummary.textContent = `${state.prepared.rowCount} rows prepared. ${state.prepared.mapping.length} columns will be available in SQL through the table ${SQL_TABLE_NAME}.`;
+  els.sqlColumnPills.innerHTML = state.prepared.mapping.map((item) => `<span class="schema-pill">${escapeHtml(item.sql)}</span>`).join("");
+}
+
+function lockSql(message) {
+  els.sqlCode.disabled = true;
+  els.runSql.disabled = true;
+  els.resetSql.disabled = true;
+  els.rebuildSql.disabled = true;
+  setStatus(els.sqlStatus, message, "pending");
+  setChip(els.sqlChip, els.sqlCopy, "pending", message);
+}
+
+function unlockSql(message) {
+  els.sqlCode.disabled = false;
+  els.runSql.disabled = false;
+  els.resetSql.disabled = false;
+  els.rebuildSql.disabled = false;
+  setStatus(els.sqlStatus, message, "ok");
+  setChip(els.sqlChip, els.sqlCopy, "ready", message);
+}
+
+function rebuildSqlTable() {
+  if (!state.SQL || !state.prepared) {
+    lockSql("Run the Python prep successfully before using SQL.");
+    return;
+  }
+
+  try {
+    state.db = new state.SQL.Database();
+    const columnDefs = state.prepared.mapping.map((item) => `"${item.sql}" ${sqlTypeFromDtype(item.dtype)}`).join(", ");
+    state.db.run(`CREATE TABLE ${SQL_TABLE_NAME} (${columnDefs});`);
+
+    const placeholders = state.prepared.mapping.map(() => "?").join(", ");
+    const insertColumns = state.prepared.mapping.map((item) => `"${item.sql}"`).join(", ");
+    const statement = state.db.prepare(`INSERT INTO ${SQL_TABLE_NAME} (${insertColumns}) VALUES (${placeholders});`);
+
+    for (const record of state.prepared.records) {
+      const values = state.prepared.mapping.map((item) => {
+        const value = record[item.original];
+        return value === undefined ? null : value;
+      });
+      statement.run(values);
+    }
+    statement.free();
+
+    unlockSql(`SQL table rebuilt from the prepared DataFrame. ${state.prepared.rowCount} rows available.`);
+    els.sqlResult.innerHTML = '<div class="empty-state">SQL table is ready. Run a query to see results.</div>';
+  } catch (error) {
+    lockSql(`SQL rebuild failed: ${error.message}`);
+  }
+}
+
+function runSqlQuery() {
+  if (!state.db) {
+    setStatus(els.sqlStatus, "SQL table is not ready yet.", "error");
+    return;
+  }
+
+  const sql = els.sqlCode.value.trim();
+  if (!sql) {
+    setStatus(els.sqlStatus, "Write a SQL query first.", "error");
+    return;
+  }
+
+  if (!/^(select|with)\b/i.test(sql)) {
+    setStatus(els.sqlStatus, "This prototype keeps the SQL side read-only. Use SELECT queries.", "error");
+    return;
+  }
+
+  try {
+    const result = state.db.exec(sql);
+    if (!result.length) {
+      els.sqlResult.innerHTML = '<div class="empty-state">Query ran successfully, but it returned no visible rows.</div>';
+      setStatus(els.sqlStatus, "Query ran successfully.", "ok");
+      return;
+    }
+
+    const columns = result[0].columns;
+    const rows = result[0].values.map((rowValues) => {
+      const row = {};
+      columns.forEach((column, index) => {
+        row[column] = rowValues[index];
+      });
+      return row;
+    });
+
+    renderTable(els.sqlResult, columns, rows);
+    setStatus(els.sqlStatus, `Query ran successfully. ${rows.length} row(s) returned.`, "ok");
+  } catch (error) {
+    setStatus(els.sqlStatus, error.message, "error");
+  }
+}
+
+function resetPythonCode() {
+  els.pythonCode.value = "";
+  setStatus(els.pythonStatus, "Python editor cleared.", "pending");
+}
+
+function revealGuidanceLine(index, insertIntoEditor = false) {
+  const steps = currentPack().pythonSteps || [];
+  const step = steps[index];
+  const revealEl = document.getElementById(`reveal-line-${index}`);
+  if (!step || !revealEl) return;
+  revealEl.classList.remove("hidden");
+  revealEl.innerHTML = `<code>${escapeHtml(step.line)}</code>`;
+
+  if (insertIntoEditor) {
+    const nextLine = step.line.trim();
+    const current = els.pythonCode.value;
+    const existingLines = current.split("\n").map((line) => line.trim());
+    if (!existingLines.includes(nextLine)) {
+      els.pythonCode.value = current.trim()
+        ? `${current.replace(/\s*$/, "")}\n${step.line}`
+        : step.line;
+    }
+    els.pythonCode.focus();
+    setStatus(els.pythonStatus, "One guidance line was added to the editor.", "pending");
+  }
+}
+
+function resetSqlCode() {
+  els.sqlCode.value = currentSqlStarter;
+  setStatus(els.sqlStatus, "Starter SQL query restored.", "ok");
+}
+
+els.datasetPack.addEventListener("change", (event) => {
+  applyPackUi(event.target.value, { forceStarters: true });
+  resetForPackChange();
+  refreshSqlTeaching();
+});
+els.loadBundledCsv.addEventListener("click", loadSuppliedCsv);
+els.csvFile.addEventListener("change", handlePickedFile);
+els.runPython.addEventListener("click", runPythonPrep);
+els.resetPython.addEventListener("click", resetPythonCode);
+els.runSql.addEventListener("click", runSqlQuery);
+els.resetSql.addEventListener("click", resetSqlCode);
+els.rebuildSql.addEventListener("click", rebuildSqlTable);
+els.pythonGuidanceSteps.addEventListener("click", (event) => {
+  const revealButton = event.target.closest("[data-reveal-line]");
+  if (revealButton) {
+    revealGuidanceLine(Number(revealButton.dataset.revealLine), false);
+    return;
+  }
+
+  const insertButton = event.target.closest("[data-insert-line]");
+  if (insertButton) {
+    revealGuidanceLine(Number(insertButton.dataset.insertLine), true);
+  }
+});
+
+applyPackUi("coffee", { forceStarters: true });
+syncFileName();
+lockSql("Run the Python prep first to unlock SQL.");
+initPyodideEngine();
+initSqlEngine();
+</script>
+<script src="../../shared/site-nav.js"></script>
+</body>
+</html>

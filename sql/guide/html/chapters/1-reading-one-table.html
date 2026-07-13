@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 1 - Reading One Table</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;family=IBM+Plex+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+:root{--paper:#fffdf9;--ink:#20303c;--muted:#5f6f7d;--line:#d8e0e7;--navy:#1d4e89;--cyan:#1e7c8a;--amber:#d48920;--rose:#a55462;--green:#2f6b61;--soft-blue:#edf4ff;--soft-cyan:#eefbfc;--soft-amber:#fff8eb;--soft-rose:#fff1f3;--soft-green:#edf8f4;--code:#101821}
+*{box-sizing:border-box}body{margin:0;background:#eef4f7;color:var(--ink);font-family:'IBM Plex Sans',sans-serif}.page{max-width:1080px;margin:24px auto 56px;background:var(--paper);border:1px solid var(--line);box-shadow:0 18px 44px rgba(28,41,52,.14)}main{padding:40px 46px 60px}.eyebrow,.label,.step{font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase}.eyebrow{color:var(--cyan);margin-bottom:10px}h1,h2,h3{font-family:'Atkinson Hyperlegible',sans-serif;color:var(--navy)}h1{font-size:42px;line-height:1.05;margin:0 0 14px}h2{font-size:28px;margin:40px 0 14px}h3{font-size:21px;margin:0 0 10px}p,li{font-size:16px;line-height:1.72}p{color:var(--muted);margin:0 0 12px}ul,ol{padding-left:22px;display:grid;gap:8px}.lead{font-size:18px;max-width:78ch}.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.panel{border:1px solid var(--line);border-radius:18px;background:#fff;padding:20px}.panel h2{margin-top:0}.concept{border-left:6px solid var(--navy);background:var(--soft-blue)}.syntax{border-left:6px solid var(--cyan);background:var(--soft-cyan)}.example{border-left:6px solid var(--green);background:var(--soft-green)}.mistake{border-left:6px solid var(--rose);background:var(--soft-rose)}.checkpoint{border-left:6px solid var(--amber);background:var(--soft-amber)}.stack{display:grid;gap:16px}.label{display:block;color:var(--cyan);margin-bottom:8px}.question{font-weight:700;color:var(--ink)}pre{margin:12px 0;background:var(--code);color:#e8eef4;padding:16px 18px;border-radius:14px;overflow:auto;font:14px/1.75 'IBM Plex Mono',monospace}code{font-family:'IBM Plex Mono',monospace;background:#f0f3f6;border-radius:4px;padding:.08em .3em;color:#173f6a}pre code{background:transparent;color:inherit;padding:0}.command{font:700 19px/1.5 'IBM Plex Mono',monospace;color:var(--navy);overflow-wrap:anywhere}.plain{border-top:1px solid var(--line);padding-top:12px;font-style:italic;color:var(--ink)}table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px}th,td{border:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top}th{background:#f3f7fa;color:var(--navy);font:600 12px 'IBM Plex Mono',monospace}.parts td:first-child{width:24%;font:600 13px 'IBM Plex Mono',monospace;color:var(--navy)}.route{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:22px 0}.route div{border:1px solid var(--line);border-radius:14px;background:#fff;padding:14px}.route strong{display:block;color:var(--navy);margin:5px 0}.route span:last-child{font-size:14px;line-height:1.5;color:var(--muted)}.result{border:1px dashed #9fb5c5;border-radius:12px;padding:12px;background:#fff}.footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}@media(max-width:820px){.grid,.route{grid-template-columns:1fr}main{padding:26px 20px 42px}h1{font-size:32px}}
+.panel,.stack,.grid>*{min-width:0}table{display:block;max-width:100%;overflow-x:auto}
+</style>
+</head>
+<body>
+<div class="page"><main>
+<div class="eyebrow">Chapter 1 · Foundation</div>
+<h1>Reading One Table</h1>
+<p class="lead">SQL begins with one deceptively simple ability: turn an ordinary question into a precise request to one table. This chapter takes that journey slowly—from understanding what a table contains, through choosing columns and filtering rows, to deciding which kind of condition the question actually needs.</p>
+
+<div class="route" aria-label="Chapter learning route">
+  <div><span class="step">01</span><strong>See the table</strong><span>Know what rows, columns, cells, and a result mean.</span></div>
+  <div><span class="step">02</span><strong>Choose columns</strong><span>Use <code>SELECT</code> and <code>FROM</code> to say what to show and where it lives.</span></div>
+  <div><span class="step">03</span><strong>Keep rows</strong><span>Use <code>WHERE</code> as a yes-or-no test applied to each row.</span></div>
+  <div><span class="step">04</span><strong>Choose the test</strong><span>Exact value, comparison, range, list, or text pattern.</span></div>
+</div>
+
+<section class="panel concept">
+  <span class="label">The material for this chapter</span>
+  <h2>A Small Community Library Table</h2>
+  <p>The examples use this invented table. It is not data from any of the practice labs. It merely gives the SQL something visible to work on, so you can follow what enters and leaves each step.</p>
+  <table>
+    <thead><tr><th>book_id</th><th>title</th><th>category</th><th>copies</th><th>branch</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>The Long Way Home</td><td>Fiction</td><td>3</td><td>Central</td></tr>
+      <tr><td>2</td><td>Night Sky Guide</td><td>Science</td><td>1</td><td>North</td></tr>
+      <tr><td>3</td><td>Small Garden Handbook</td><td>Practical</td><td>5</td><td>Central</td></tr>
+      <tr><td>4</td><td>The Hidden Harbour</td><td>Fiction</td><td>2</td><td>West</td></tr>
+      <tr><td>5</td><td>Local Walks</td><td>Practical</td><td>0</td><td>North</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<h2>First, Know What You Are Looking At</h2>
+<div class="grid">
+  <section class="panel">
+    <h3>The stored table</h3>
+    <ul>
+      <li>A <strong>table</strong> stores related facts in a grid.</li>
+      <li>A <strong>row</strong> is one record—in this table, one book record.</li>
+      <li>A <strong>column</strong> is one kind of fact, such as <code>title</code> or <code>copies</code>.</li>
+      <li>A <strong>cell</strong> is one value at the meeting point of a row and a column.</li>
+    </ul>
+  </section>
+  <section class="panel">
+    <h3>The returned result</h3>
+    <p>A <strong>query</strong> is the question you write in SQL. The database reads it and returns a new, temporary table called a <strong>result set</strong>.</p>
+    <p>The original table is not cut down when you use <code>SELECT</code>. You are choosing what appears in the answer, not deleting stored data.</p>
+  </section>
+</div>
+
+<div class="stack" style="margin-top:16px">
+  <section class="panel concept">
+    <span class="label">Concept 1 · Choose columns</span>
+    <h2><code>SELECT</code> Means “Show”</h2>
+    <p>Start by asking: <span class="question">Which facts do I want the result to show?</span> The answer to that question becomes the column list after <code>SELECT</code>. A comma separates one requested column from the next.</p>
+  </section>
+  <section class="panel syntax">
+    <span class="label">Command bridge</span>
+    <div class="command">SELECT title, copies FROM library_books;</div>
+    <p class="plain">Plain English: show the title and number of copies from the library books table.</p>
+    <table class="parts">
+      <tbody>
+        <tr><td>SELECT</td><td>Starts a reading query and names what should appear in the result.</td></tr>
+        <tr><td>title, copies</td><td>The two requested columns. The comma separates them; it does not mean “and” as a condition.</td></tr>
+        <tr><td>FROM</td><td>Introduces the source table.</td></tr>
+        <tr><td>library_books</td><td>The table name. It must match a table that actually exists.</td></tr>
+        <tr><td>;</td><td>The normal end marker for the SQL statement—like a full stop.</td></tr>
+      </tbody>
+    </table>
+  </section>
+  <section class="panel example">
+    <span class="label">Worked example · visible result</span>
+    <pre><code>SELECT title, copies
+FROM library_books;</code></pre>
+    <div class="result">
+      <table>
+        <thead><tr><th>title</th><th>copies</th></tr></thead>
+        <tbody><tr><td>The Long Way Home</td><td>3</td></tr><tr><td>Night Sky Guide</td><td>1</td></tr><tr><td>Small Garden Handbook</td><td>5</td></tr><tr><td>The Hidden Harbour</td><td>2</td></tr><tr><td>Local Walks</td><td>0</td></tr></tbody>
+      </table>
+    </div>
+    <p>Five stored rows still produce five result rows, but the result contains only the two columns requested.</p>
+  </section>
+</div>
+
+<div class="grid" style="margin-top:16px">
+  <section class="panel">
+    <h2><code>*</code>: All Columns</h2>
+    <pre><code>SELECT *
+FROM library_books;</code></pre>
+    <p>Here the star is a shortcut for every column. It is useful when first inspecting a small table. Once the question is clear, named columns make the answer more deliberate and easier to check.</p>
+  </section>
+  <section class="panel mistake">
+    <h2>Common Wrong Turn</h2>
+    <p><strong>Wrong idea:</strong> the star means “everything everywhere.”</p>
+    <p><strong>Correction:</strong> it means every column from the table named after <code>FROM</code>. It does not mean every table, and it is not the text-pattern wildcard in this position.</p>
+  </section>
+</div>
+
+<div class="stack" style="margin-top:16px">
+  <section class="panel concept">
+    <span class="label">Concept 2 · Keep rows</span>
+    <h2><code>WHERE</code> Is A Yes-or-No Gate</h2>
+    <p>Choosing columns answers “which facts?” Filtering answers <span class="question">“which records?”</span> SQL tests the <code>WHERE</code> condition against each row. If the test is true, that row stays in the result. If false, it is left out.</p>
+  </section>
+  <section class="panel syntax">
+    <span class="label">Command bridge</span>
+    <div class="command">SELECT title, copies FROM library_books WHERE copies &gt;= 2;</div>
+    <table class="parts">
+      <tbody>
+        <tr><td>WHERE</td><td>Introduces the row test.</td></tr>
+        <tr><td>copies</td><td>The column tested in each row.</td></tr>
+        <tr><td>&gt;=</td><td>Means greater than or equal to. The boundary value counts.</td></tr>
+        <tr><td>2</td><td>The number each row is compared with. Numbers are written without quotes.</td></tr>
+      </tbody>
+    </table>
+  </section>
+  <section class="panel example">
+    <span class="label">Worked example · row-by-row reasoning</span>
+    <pre><code>SELECT title, copies
+FROM library_books
+WHERE copies &gt;= 2;</code></pre>
+    <table>
+      <thead><tr><th>Book</th><th>Test</th><th>Keep?</th></tr></thead>
+      <tbody><tr><td>The Long Way Home</td><td>3 &gt;= 2</td><td>Yes</td></tr><tr><td>Night Sky Guide</td><td>1 &gt;= 2</td><td>No</td></tr><tr><td>Small Garden Handbook</td><td>5 &gt;= 2</td><td>Yes</td></tr><tr><td>The Hidden Harbour</td><td>2 &gt;= 2</td><td>Yes—the boundary counts</td></tr><tr><td>Local Walks</td><td>0 &gt;= 2</td><td>No</td></tr></tbody>
+    </table>
+  </section>
+</div>
+
+<h2>Choose The Test That Matches The Question</h2>
+<div class="grid">
+  <section class="panel">
+    <h3>Exact value or comparison</h3>
+    <table class="parts"><tbody>
+      <tr><td>=</td><td>Exactly equal to</td></tr><tr><td>!=</td><td>Not equal to</td></tr><tr><td>&gt; / &lt;</td><td>Greater than / less than</td></tr><tr><td>&gt;= / &lt;=</td><td>Include the boundary too</td></tr>
+    </tbody></table>
+    <pre><code>WHERE branch = 'North'
+WHERE copies != 0
+WHERE copies &lt;= 2</code></pre>
+  </section>
+  <section class="panel">
+    <h3>Text and numbers are written differently</h3>
+    <p>Text values use single quotes because SQL must distinguish a literal piece of text from a column or table name. Numbers stay bare so SQL can treat them numerically.</p>
+    <pre><code>WHERE category = 'Fiction'
+WHERE copies = 3</code></pre>
+  </section>
+</div>
+
+<div class="grid" style="margin-top:16px">
+  <section class="panel syntax">
+    <h3>Both tests: <code>AND</code></h3>
+    <p>Every joined condition must be true for the row to stay.</p>
+    <pre><code>WHERE category = 'Practical'
+  AND copies &gt; 0</code></pre>
+  </section>
+  <section class="panel syntax">
+    <h3>Either test: <code>OR</code></h3>
+    <p>At least one of the joined conditions must be true.</p>
+    <pre><code>WHERE branch = 'Central'
+   OR branch = 'West'</code></pre>
+  </section>
+</div>
+
+<section class="panel mistake" style="margin-top:16px">
+  <h2>When <code>AND</code> And <code>OR</code> Meet</h2>
+  <p>Mixed conditions can be read in more than one way by a person. Parentheses make your intended grouping visible.</p>
+  <pre><code>WHERE category = 'Fiction'
+  AND (branch = 'Central' OR branch = 'West');</code></pre>
+  <p>This means: the row must be Fiction, and its branch may be either Central or West. The parentheses turn the two branch choices into one grouped decision.</p>
+</section>
+
+<div class="grid" style="margin-top:16px">
+  <section class="panel">
+    <h2>A Range: <code>BETWEEN</code></h2>
+    <p><code>BETWEEN 1 AND 3</code> includes 1, 2, and 3. Both end values count.</p>
+    <pre><code>WHERE copies BETWEEN 1 AND 3</code></pre>
+  </section>
+  <section class="panel">
+    <h2>A Short List: <code>IN</code></h2>
+    <p><code>IN</code> checks one value against a list. It is a clearer form of several exact-match choices joined with <code>OR</code>.</p>
+    <pre><code>WHERE branch IN ('Central', 'West')</code></pre>
+  </section>
+</div>
+
+<div class="stack" style="margin-top:16px">
+  <section class="panel concept">
+    <span class="label">Concept 3 · Exact text or text pattern</span>
+    <h2><code>=</code> And <code>LIKE</code> Ask Different Questions</h2>
+    <p>Use <code>=</code> when the whole text value is known exactly. Use <code>LIKE</code> when the shape of the text matters—such as starts with, ends with, or contains.</p>
+  </section>
+  <section class="panel syntax">
+    <table class="parts"><tbody>
+      <tr><td>%</td><td>Any run of characters, including no characters.</td></tr>
+      <tr><td>_</td><td>Exactly one character.</td></tr>
+    </tbody></table>
+    <pre><code>WHERE title = 'Local Walks'   -- exact whole value
+WHERE title LIKE 'The%'       -- starts with The
+WHERE title LIKE '%Guide%'    -- contains Guide</code></pre>
+  </section>
+  <section class="panel example">
+    <span class="label">Worked example · pattern result</span>
+    <pre><code>SELECT title
+FROM library_books
+WHERE title LIKE 'The%';</code></pre>
+    <table><thead><tr><th>title</th></tr></thead><tbody><tr><td>The Long Way Home</td></tr><tr><td>The Hidden Harbour</td></tr></tbody></table>
+    <p>The percent sign has special wildcard meaning because it is inside a pattern used with <code>LIKE</code>. Writing <code>title = 'The%'</code> would instead look for the literal full value <em>The%</em>.</p>
+  </section>
+</div>
+
+<section class="panel checkpoint" style="margin-top:16px">
+  <span class="label">Build the query without guessing</span>
+  <h2>The Three-Pass Method</h2>
+  <ol>
+    <li><strong>Output:</strong> underline the facts the question asks you to display. Those become the <code>SELECT</code> columns.</li>
+    <li><strong>Source:</strong> identify the table containing those facts. That becomes <code>FROM</code>.</li>
+    <li><strong>Row rule:</strong> identify what must be true for a record to stay. That becomes <code>WHERE</code>, with the correct exact, comparison, list, range, or pattern test.</li>
+  </ol>
+  <p class="plain">Read the finished query back in clause-sized English. If your reading does not match the original question, repair the logic before running it.</p>
+</section>
+
+<section class="panel mistake" style="margin-top:16px">
+  <h2>Frequent Early Mistakes</h2>
+  <table>
+    <thead><tr><th>What went wrong</th><th>What to check</th></tr></thead>
+    <tbody>
+      <tr><td>Text was written without quotes.</td><td>Literal text values normally need single quotes: <code>'Central'</code>.</td></tr>
+      <tr><td>A wildcard was used with <code>=</code>.</td><td>Pattern-shaped question means <code>LIKE</code>; exact known value means <code>=</code>.</td></tr>
+      <tr><td>A comma was used between conditions.</td><td>Commas separate selected columns. Conditions are joined with <code>AND</code> or <code>OR</code>.</td></tr>
+      <tr><td>The result has the right rows but wrong columns.</td><td>Repair the <code>SELECT</code> list; do not change a correct <code>WHERE</code> rule.</td></tr>
+      <tr><td>The result has the right columns but wrong rows.</td><td>Repair the <code>WHERE</code> logic; the output list may already be right.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="panel checkpoint" style="margin-top:16px">
+  <span class="label">Ready for the Chapter 1 exercises?</span>
+  <h2>You Are Ready When You Can Explain These</h2>
+  <ul>
+    <li>Why selecting fewer columns does not alter the stored table.</li>
+    <li>Why <code>WHERE</code> changes the number of result rows but not the underlying data.</li>
+    <li>Why a number and a piece of text are written differently.</li>
+    <li>When to choose <code>=</code>, <code>!=</code>, <code>BETWEEN</code>, <code>IN</code>, <code>LIKE</code>, <code>AND</code>, or <code>OR</code>.</li>
+    <li>How to check a result by comparing its columns, its rows, and the original wording of the question.</li>
+  </ul>
+</section>
+
+<section class="panel" style="margin-top:16px">
+  <h2>Next: Shape The Returned Answer</h2>
+  <p>You can now decide what the result contains. Chapter 2 adds control over duplication, order, and size. That is how “show records” becomes “show the highest three”, “show each category once”, or “show the next page”.</p>
+</section>
+
+<p class="footer">Learning route: SQLBolt introduction, Lessons 1–4, and the simple review. The worked library data is deliberately separate from the exercise datasets.</p>
+</main></div>
+<script src="../../../shared/site-nav.js"></script>
+</body>
+</html>

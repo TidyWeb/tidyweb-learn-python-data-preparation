@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Block 1 Table Literacy Bridge</title>
+<title>Block 1: Table Literacy</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -120,47 +120,6 @@ body { background:var(--bg); color:var(--ink); font-family:'IBM Plex Sans', sans
   flex-shrink: 0;
   width: 22px;
 }
-
-.course-nav a.active { color:white; font-weight:700; }
-.course-nav a.active .num { color:white; }
-.chapter-nav {
-  margin-top: 42px;
-  padding-top: 22px;
-  border-top: 2px solid var(--mono-bg);
-  display: flex;
-  justify-content: flex-end;
-}
-.chapter-next {
-  display:inline-flex;
-  align-items:center;
-  gap:12px;
-  padding:14px 20px;
-  border-radius:999px;
-  text-decoration:none;
-  background:var(--navy);
-  color:#fff;
-  box-shadow:0 10px 20px rgba(31,79,130,.18);
-  border:1px solid var(--navy);
-}
-.chapter-next:hover { filter:brightness(.96); }
-.chapter-next .label {
-  font:600 11px 'IBM Plex Mono', monospace;
-  text-transform:uppercase;
-  letter-spacing:.08em;
-  color:#d8e7ff;
-}
-.chapter-next .title {
-  font-family:'Atkinson Hyperlegible', sans-serif;
-  font-size:18px;
-  line-height:1.2;
-  color:#fff;
-}
-.chapter-next .arrow {
-  font-size:20px;
-  line-height:1;
-  color:#fff;
-}
-
 main { padding: 48px 52px 72px; }
 .page-mode {
   font: 700 11px 'IBM Plex Mono', monospace;
@@ -185,6 +144,18 @@ main { padding: 48px 52px 72px; }
   padding-bottom: 28px;
   border-bottom: 2px solid var(--mono-bg);
 }
+.page-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+.page-link {
+  display: inline-block;
+  padding: 9px 13px;
+  border: 1px solid var(--navy);
+  border-radius: 4px;
+  color: var(--navy);
+  background: #fff;
+  font-weight: 700;
+  text-decoration: none;
+}
+.page-link:hover { color: #fff; background: var(--navy); }
 .note-section { margin-bottom: 64px; scroll-margin-top: 20px; }
 .note-eyebrow {
   display: flex;
@@ -231,6 +202,8 @@ main { padding: 48px 52px 72px; }
 .panel header .type { color: var(--muted); }
 .panel .body { padding: 16px 20px; font-size: 16px; line-height: 1.8; }
 .panel .body p + p { margin-top: 10px; }
+.panel .body ol { margin: 0 0 14px 1.35em; }
+.panel .body li + li { margin-top: 8px; }
 .panel.translation { border-left: 4px solid var(--yellow); }
 .panel.rule { border-left: 4px solid var(--orange); }
 .panel.resolution { border-left: 4px solid var(--cyan); }
@@ -347,34 +320,19 @@ th {
 <article class="frame">
   <aside class="rail">
     <div class="rail-logo-wrap">
-      <img class="rail-logo" src="../assets/tidyweb_logo.png" alt="TidyWeb logo">
+      <a class="rail-logo-link" href="../index.html" aria-label="Return to the Learn Python Data home page">
+        <img class="rail-logo" src="../assets/tidyweb_logo.png" alt="TidyWeb logo">
+      </a>
     </div>
-    <div class="rail-title">Block 1 Table Literacy Bridge</div>
-    <div class="rail-sub">A reference bridge from the earlier Python notebooks into the Block 1 table literacy workflow.</div>
+    <div class="rail-title">Block 1: Table Literacy</div>
+    <div class="rail-sub">Learn how to load a CSV file and inspect it as a table with Python.</div>
     <div class="token"><span class="dot"></span> Translation</div>
     <div class="token"><span class="dot cyan"></span> Command Meaning</div>
     <div class="token"><span class="dot green"></span> Code Breakdown</div>
     <div class="token"><span class="dot orange"></span> Vocabulary Rule</div>
-        <nav class="rail-nav course-nav">
-      <div class="rail-nav-label">Bookshelf Home</div>
-      <a href="../index.html"><span class="num">00</span><span>Main Shelf</span></a>
-    </nav>
-    <nav class="rail-nav course-nav">
-      <div class="rail-nav-label">Course Chapters</div>
-      <a href="data_analysis_field_overview.html"><span class="num">01</span><span>Field Overview</span></a>
-      <a href="block_1_table_literacy_bridge.html" class="active"><span class="num">02</span><span>Block 1</span></a>
-      <a href="block_2_selection_and_filtering.html"><span class="num">03</span><span>Block 2</span></a>
-      <a href="block_3_missing_data_and_cleaning.html"><span class="num">04</span><span>Block 3</span></a>
-      <a href="block_4_grouping_and_insight.html"><span class="num">05</span><span>Block 4</span></a>
-      <a href="block_5_visualisation.html"><span class="num">06</span><span>Block 5</span></a>
-      <a href="block_6_statistics_foundations.html"><span class="num">07</span><span>Block 6</span></a>
-      <a href="block_7_hypothesis_and_evidence.html"><span class="num">08</span><span>Block 7</span></a>
-      <a href="block_8_full_eda_cycle.html"><span class="num">09</span><span>Block 8</span></a>
-      <a href="block_9_etl_drill.html"><span class="num">10</span><span>Block 9</span></a>
-      <a href="block_10_dashboard_and_presentation.html"><span class="num">11</span><span>Block 10</span></a>
-    </nav>
     <nav class="rail-nav">
-      <div class="rail-nav-label">This Chapter</div>
+      <div class="rail-nav-label">Sections</div>
+      <a href="#notebook-sequence"><span class="num">00</span><span>Start Here</span></a>
       <a href="#shift"><span class="num">01</span><span>The Layer Shift</span></a>
       <a href="#table"><span class="num">02</span><span>Translation Table</span></a>
       <a href="#commands"><span class="num">03</span><span>Block 1 Commands</span></a>
@@ -383,8 +341,75 @@ th {
   </aside>
   <main>
     <div class="page-mode">Reference Guide</div>
-    <h1 class="page-title">Block 1 Table Literacy Bridge</h1>
-    <p class="page-sub">You are not abandoning the Python vocabulary from the earlier notebooks. You are moving up one layer, from hand-built data structures into pandas table work. This page translates the terms and gives you the Block 1 commands as large glanceable boxes.</p>
+    <h1 class="page-title">Block 1: Table Literacy</h1>
+    <p class="page-sub">This is the first practical lesson in the course. You will use Python and pandas to open a small data file called <span class="mono">iris.csv</span>, look at its rows and columns, and begin asking simple questions of the table. This page explains the ideas; the companion notebook is where you run the code and practise.</p>
+
+    <section class="note-section" id="notebook-sequence">
+      <div class="note-eyebrow">
+        <span class="note-num">NOTE 00</span>
+        <h2 class="note-heading">Start here: use this page with the notebook</h2>
+        <span class="note-rule"></span>
+      </div>
+      <div class="stack">
+        <div class="panel resolution">
+          <header><span class="tag">What this lesson is</span><span class="type">your first practical lesson</span></header>
+          <div class="body">
+            <p><span class="mono">Block 1</span> is the first practical unit in this course. <span class="mono">Table literacy</span> means learning how a data table is organised: its rows, columns, values, and size.</p>
+            <p>The lesson table is called <span class="mono">iris.csv</span>. It contains measurements of iris flowers. You will load it with pandas, look at its contents, and ask simple questions about it.</p>
+            <p>This page explains each move. The companion notebook is where you run the code and answer the practice questions.</p>
+          </div>
+        </div>
+        <div class="panel translation">
+          <header><span class="tag">Start JupyterLab</span><span class="type">do this before any notebook link</span></header>
+          <div class="body">
+            <p>The JupyterLab links open a notebook running on your own computer. A browser link cannot start JupyterLab for you.</p>
+            <ol>
+              <li>Open a terminal in the downloaded course folder—the folder containing <span class="mono">notebooks/</span> and <span class="mono">start_jupyter_lab.sh</span>.</li>
+              <li>On Linux or macOS, run <span class="mono">./start_jupyter_lab.sh</span> from that folder. On Windows, double-click <span class="mono">start_jupyter_lab.bat</span>.</li>
+              <li>Leave the terminal window open and wait for JupyterLab to open in your browser.</li>
+              <li>Return to this page, then choose the Block 1 JupyterLab link in the left-hand navigation.</li>
+            </ol>
+            <p><strong>If the terminal says “No such file or directory”:</strong> you are not in the folder containing the launcher. Use your file manager's <span class="mono">Open Terminal Here</span> action on the downloaded repository folder, or change to that folder first. The command <span class="mono">bash start_jupyter_lab.sh</span> works only when that file is in the terminal's current folder. If <span class="mono">./start_jupyter_lab.sh</span> says “Permission denied”, run <span class="mono">bash start_jupyter_lab.sh</span> from the same folder.</p>
+            <p><strong>If you see “Failed to connect” or “Could not find path: notebooks/...”:</strong> JupyterLab is not running, or an older Jupyter server is using port <span class="mono">8888</span> with the wrong root folder. Run <span class="mono">jupyter server list</span> to see what is running. If port 8888 is listed, stop that old server with <span class="mono">jupyter server stop 8888</span>, or press <span class="mono">Ctrl+C</span> in the terminal that started it. Then return to the course home page, start the course launcher, close the old Jupyter tab, and use a fresh link. Do not double-click the raw <span class="mono">.ipynb</span> file.</p>
+            <div class="page-links">
+              <a class="page-link" data-notebook-hub href="../notebooks/index.html">Open the Notebook Hub</a>
+              <a class="page-link" data-course-home href="../index.html">Course home and startup instructions</a>
+            </div>
+          </div>
+        </div>
+        <div class="panel translation">
+          <header><span class="tag">What you will do</span><span class="type">the learning sequence</span></header>
+          <div class="body"><p>The notebook sometimes demonstrates a command on tiny bread-stock data first, because a small table makes the result easier to see. You then use the same command on <span class="mono">iris.csv</span>.</p><table><thead><tr><th>Step</th><th>What you will learn</th></tr></thead><tbody><tr><td>1</td><td>Bring pandas into the notebook</td></tr>
+<tr><td>2</td><td>Store the Iris file path</td></tr>
+<tr><td>3</td><td>Read a CSV from a path</td></tr>
+<tr><td>4</td><td>Store the loaded table as <span class="mono">df</span></td></tr>
+<tr><td>5</td><td>Take a first look with <span class="mono">df.head()</span></td></tr>
+<tr><td>6</td><td>Check the table size with <span class="mono">df.shape</span></td></tr>
+<tr><td>7</td><td>Check the table structure with <span class="mono">df.info()</span></td></tr>
+<tr><td>8</td><td>See a summary with <span class="mono">df.describe(include="all")</span></td></tr>
+<tr><td>9</td><td>Check column types with <span class="mono">df.dtypes</span></td></tr>
+<tr><td>10</td><td>Select one column</td></tr>
+<tr><td>11</td><td>Select several columns</td></tr>
+<tr><td>12</td><td>Count values in a column</td></tr></tbody></table></div>
+        </div>
+        <div class="panel code">
+          <header><span class="tag">Commands you will meet</span><span class="type">the main operations</span></header>
+          <div class="body"><pre>import pandas as pd
+pd.__name__
+dataset_path = &quot;../../datasets/iris.csv&quot;
+pd.read_csv(dataset_path)
+df = pd.read_csv(dataset_path)
+df.head()
+df.shape
+df.info()
+df.describe(include=&quot;all&quot;)
+df.dtypes
+df[&quot;species&quot;]
+df[[&quot;sepal_length&quot;, &quot;species&quot;]]
+df[&quot;species&quot;].value_counts()</pre></div>
+        </div>
+      </div>
+    </section>
 
     <section class="note-section" id="shift">
       <div class="note-eyebrow">
@@ -394,12 +419,28 @@ th {
       </div>
       <div class="stack">
         <div class="panel resolution">
-          <header><span class="tag">At-a-glance command boxes</span><span class="sep" aria-hidden="true"> - </span><span class="type">Block 1 core moves</span></header>
+          <header><span class="tag">At-a-glance command boxes</span><span class="type">Block 1 core moves</span></header>
           <div class="body">
             <div class="command-grid">
               <div class="command-box">
-                <span class="command">pd.read_csv()</span>
-                <span class="meaning">Reads a CSV file and turns it into a pandas table. Usually stored as <span class="mono">df</span>.</span>
+                <span class="command">import pandas as pd</span>
+                <span class="meaning">Brings pandas into the notebook and gives it the short nickname <span class="mono">pd</span>.</span>
+              </div>
+              <div class="command-box">
+                <span class="command">pd.__name__</span>
+                <span class="meaning">Checks the name Python knows <span class="mono">pd</span> by. The marks around <span class="mono">name</span> are double underscores.</span>
+              </div>
+              <div class="command-box">
+                <span class="command">dataset_path = "../../datasets/iris.csv"</span>
+                <span class="meaning">Stores the Iris CSV file address so it can be reused by later commands.</span>
+              </div>
+              <div class="command-box">
+                <span class="command">pd.read_csv(dataset_path)</span>
+                <span class="meaning">Reads the CSV at the stored path and displays the loaded table.</span>
+              </div>
+              <div class="command-box">
+                <span class="command">df = pd.read_csv(dataset_path)</span>
+                <span class="meaning">Reads the CSV and stores the loaded table under the reusable name <span class="mono">df</span>.</span>
               </div>
               <div class="command-box inspect">
                 <span class="command">df.head()</span>
@@ -437,7 +478,7 @@ th {
           </div>
         </div>
         <div class="panel resolution">
-          <header><span class="tag">What changed</span><span class="sep" aria-hidden="true"> - </span><span class="type">same foundation, higher layer</span></header>
+          <header><span class="tag">What changed</span><span class="type">same foundation, higher layer</span></header>
           <div class="body">
             <p><strong>Python basics</strong> means building the machinery yourself: lists, dictionaries, keys, loops, and indexing.</p>
             <p><strong>pandas</strong> means using a ready-made table tool built on top of Python.</p>
@@ -456,7 +497,7 @@ th {
       </div>
       <div class="stack">
         <div class="panel translation">
-          <header><span class="tag">Python to pandas</span><span class="sep" aria-hidden="true"> - </span><span class="type">vocabulary bridge</span></header>
+          <header><span class="tag">Python to pandas</span><span class="type">vocabulary bridge</span></header>
           <div class="body">
             <table>
               <thead>
@@ -494,8 +535,18 @@ th {
                 </tr>
                 <tr>
                   <td><span class="mono">print(...)</span> to inspect</td>
-                  <td><span class="mono">head()</span>, <span class="mono">shape</span>, <span class="mono">info()</span>, <span class="mono">describe()</span></td>
+                  <td><span class="mono">head()</span>, <span class="mono">shape</span>, <span class="mono">info()</span>, <span class="mono">describe()</span>, <span class="mono">dtypes</span></td>
                   <td>pandas gives you built-in table inspection tools.</td>
+                </tr>
+                <tr>
+                  <td>one dictionary key</td>
+                  <td>one DataFrame column</td>
+                  <td>A column is selected with square brackets, such as <span class="mono">df["species"]</span>.</td>
+                </tr>
+                <tr>
+                  <td>counting by hand in a loop</td>
+                  <td><span class="mono">value_counts()</span></td>
+                  <td>pandas can count repeated category values for you.</td>
                 </tr>
               </tbody>
             </table>
@@ -512,80 +563,133 @@ th {
       </div>
       <div class="stack">
         <div class="panel resolution">
-          <header><span class="tag">Command 1</span><span class="sep" aria-hidden="true"> - </span><span class="type">bring pandas in</span></header>
+          <header><span class="tag">Command 1</span><span class="type">bring pandas in</span></header>
           <div class="body">
             <p><span class="mono">import pandas as pd</span> means: bring the pandas library into the notebook and give it the short nickname <span class="mono">pd</span>.</p>
           </div>
         </div>
         <div class="panel code">
-          <header><span class="tag">Code breakdown</span><span class="sep" aria-hidden="true"> - </span><span class="type">import line</span></header>
+          <header><span class="tag">Code breakdown</span><span class="type">import line</span></header>
           <div class="body">
             <pre><span class="part-outer">import</span> <span class="part-inner">pandas</span> <span class="part-core">as pd</span></pre>
           </div>
         </div>
         <div class="panel resolution">
-          <header><span class="tag">Command 2</span><span class="sep" aria-hidden="true"> - </span><span class="type">load the CSV</span></header>
+          <header><span class="tag">Command 1 check</span><span class="type">confirm the nickname</span></header>
           <div class="body">
-            <p><span class="mono">df = pd.read_csv("datasets/iris.csv")</span> loads the file and stores the table in <span class="mono">df</span>.</p>
-            <p>The path is inside quotes. Here it uses a project-relative path instead of a machine-specific home-folder path.</p>
+            <p><span class="mono">pd.__name__</span> checks the name Python knows <span class="mono">pd</span> by. It confirms that the nickname points to pandas.</p>
+            <p>The marks before and after <span class="mono">name</span> are double underscores: two <span class="mono">_</span> characters on each side. Python uses these double-underscore names for built-in special labels.</p>
           </div>
         </div>
         <div class="panel code">
-          <header><span class="tag">Code breakdown</span><span class="sep" aria-hidden="true"> - </span><span class="type">load line</span></header>
+          <header><span class="tag">Code breakdown</span><span class="type">name check</span></header>
           <div class="body">
-            <pre><span class="part-var">df</span> = <span class="part-outer">pd</span>.<span class="part-inner">read_csv</span>(<span class="part-core">"datasets/iris.csv"</span>)</pre>
+            <pre><span class="part-var">pd</span>.<span class="part-inner">__name__</span></pre>
           </div>
         </div>
         <div class="panel translation">
-          <header><span class="tag">What each part means</span><span class="sep" aria-hidden="true"> - </span><span class="type">load line</span></header>
+          <header><span class="tag">What each part means</span><span class="type">name check</span></header>
+          <div class="body legend">
+            <p><span class="part-outer">pd</span> = the pandas nickname</p>
+            <p><span class="part-inner">__name__</span> = the built-in special label that stores the object's name</p>
+          </div>
+        </div>
+        <div class="panel resolution">
+          <header><span class="tag">Command 2a</span><span class="type">store the CSV path</span></header>
+          <div class="body">
+            <p><span class="mono">dataset_path = "../../datasets/iris.csv"</span> stores the Iris CSV file address under the reusable name <span class="mono">dataset_path</span>.</p>
+            <p>This is a relative path. If your file is somewhere else, point this value at your own copy of <span class="mono">iris.csv</span>.</p>
+          </div>
+        </div>
+        <div class="panel code">
+          <header><span class="tag">Code breakdown</span><span class="type">path variable</span></header>
+          <div class="body">
+            <pre><span class="part-var">dataset_path</span> <span class="part-note">=</span> <span class="part-core">"../../datasets/iris.csv"</span></pre>
+          </div>
+        </div>
+        <div class="panel translation">
+          <header><span class="tag">What each part means</span><span class="type">path variable</span></header>
+          <div class="body legend">
+            <p><span class="part-var">dataset_path</span> = the variable that stores the file address</p>
+            <p><span class="part-core">"../../datasets/iris.csv"</span> = a relative path to the supplied Iris CSV</p>
+          </div>
+        </div>
+        <div class="panel resolution">
+          <header><span class="tag">Command 2b</span><span class="type">read from the path</span></header>
+          <div class="body">
+            <p><span class="mono">pd.read_csv(dataset_path)</span> asks pandas to read the CSV file at the stored path and display the resulting table.</p>
+            <p>This shows the loaded table, but it does not store the table under the reusable name <span class="mono">df</span> yet.</p>
+          </div>
+        </div>
+        <div class="panel code">
+          <header><span class="tag">Code breakdown</span><span class="type">read line</span></header>
+          <div class="body">
+            <pre><span class="part-outer">pd</span>.<span class="part-inner">read_csv</span>(<span class="part-core">dataset_path</span>)</pre>
+          </div>
+        </div>
+        <div class="panel resolution">
+          <header><span class="tag">Command 2c</span><span class="type">store the loaded table</span></header>
+          <div class="body">
+            <p><span class="mono">df = pd.read_csv(dataset_path)</span> reads the CSV at <span class="mono">dataset_path</span> and stores the resulting table under the name <span class="mono">df</span>.</p>
+            <p>After this step, later commands can inspect the loaded table by using <span class="mono">df</span>.</p>
+          </div>
+        </div>
+        <div class="panel code">
+          <header><span class="tag">Code breakdown</span><span class="type">store line</span></header>
+          <div class="body">
+            <pre><span class="part-var">df</span> = <span class="part-outer">pd</span>.<span class="part-inner">read_csv</span>(<span class="part-core">dataset_path</span>)</pre>
+          </div>
+        </div>
+        <div class="panel translation">
+          <header><span class="tag">What each part means</span><span class="type">store line</span></header>
           <div class="body legend">
             <p><span class="part-var">df</span> = the variable that will hold the table</p>
             <p><span class="part-outer">pd</span> = the pandas nickname</p>
             <p><span class="part-inner">read_csv</span> = the pandas tool that reads a CSV file</p>
-            <p><span class="part-core">"datasets/iris.csv"</span> = the path to the CSV file written inside quotes</p>
+            <p><span class="part-core">dataset_path</span> = the stored file address pandas should read</p>
           </div>
         </div>
         <div class="panel resolution">
-          <header><span class="tag">Command 3</span><span class="sep" aria-hidden="true"> - </span><span class="type">first look</span></header>
+          <header><span class="tag">Command 3</span><span class="type">first look</span></header>
           <div class="body">
             <p><span class="mono">df.head()</span> shows the first few rows of the table and the column names across the top.</p>
             <p>Nothing goes inside the brackets for the default version.</p>
           </div>
         </div>
         <div class="panel code">
-          <header><span class="tag">Code breakdown</span><span class="sep" aria-hidden="true"> - </span><span class="type">first look</span></header>
+          <header><span class="tag">Code breakdown</span><span class="type">first look</span></header>
           <div class="body">
             <pre><span class="part-var">df</span>.<span class="part-inner">head</span><span class="part-core">()</span></pre>
           </div>
         </div>
         <div class="panel resolution">
-          <header><span class="tag">Command 4</span><span class="sep" aria-hidden="true"> - </span><span class="type">table size</span></header>
+          <header><span class="tag">Command 4</span><span class="type">table size</span></header>
           <div class="body">
             <p><span class="mono">df.shape</span> tells you the table size in the form <span class="mono">(rows, columns)</span>.</p>
             <p>This one does <strong>not</strong> take brackets here.</p>
           </div>
         </div>
         <div class="panel code">
-          <header><span class="tag">Code breakdown</span><span class="sep" aria-hidden="true"> - </span><span class="type">table size</span></header>
+          <header><span class="tag">Code breakdown</span><span class="type">table size</span></header>
           <div class="body">
             <pre><span class="part-var">df</span>.<span class="part-inner">shape</span></pre>
           </div>
         </div>
         <div class="panel resolution">
-          <header><span class="tag">Command 5</span><span class="sep" aria-hidden="true"> - </span><span class="type">structure check</span></header>
+          <header><span class="tag">Command 5</span><span class="type">structure check</span></header>
           <div class="body">
             <p><span class="mono">df.info()</span> shows column names, non-null counts, and data types.</p>
             <p><span class="mono">dtype</span> means data type. <span class="mono">float64</span> means decimal numbers stored in a specific machine format.</p>
           </div>
         </div>
         <div class="panel code">
-          <header><span class="tag">Code breakdown</span><span class="sep" aria-hidden="true"> - </span><span class="type">structure check</span></header>
+          <header><span class="tag">Code breakdown</span><span class="type">structure check</span></header>
           <div class="body">
             <pre><span class="part-var">df</span>.<span class="part-inner">info</span><span class="part-core">()</span></pre>
           </div>
         </div>
         <div class="panel resolution">
-          <header><span class="tag">Command 6</span><span class="sep" aria-hidden="true"> - </span><span class="type">summary</span></header>
+          <header><span class="tag">Command 6</span><span class="type">summary</span></header>
           <div class="body">
             <p><span class="mono">df.describe(include="all")</span> calculates a built-in summary for the columns.</p>
             <p><span class="mono">include="all"</span> tells pandas to include both numeric and text-style columns in that summary.</p>
@@ -594,16 +698,68 @@ th {
           </div>
         </div>
         <div class="panel code">
-          <header><span class="tag">Code breakdown</span><span class="sep" aria-hidden="true"> - </span><span class="type">summary</span></header>
+          <header><span class="tag">Code breakdown</span><span class="type">summary</span></header>
           <div class="body">
             <pre><span class="part-var">df</span>.<span class="part-inner">describe</span>(<span class="part-core">include="all"</span>)</pre>
           </div>
         </div>
+        <div class="panel resolution">
+          <header><span class="tag">Command 7</span><span class="type">column types</span></header>
+          <div class="body">
+            <p><span class="mono">df.dtypes</span> shows only the data type of each column, without the fuller <span class="mono">info()</span> report.</p>
+            <p>This one does <strong>not</strong> take brackets here.</p>
+          </div>
+        </div>
+        <div class="panel code">
+          <header><span class="tag">Code breakdown</span><span class="type">column types</span></header>
+          <div class="body">
+            <pre><span class="part-var">df</span>.<span class="part-inner">dtypes</span></pre>
+          </div>
+        </div>
+        <div class="panel resolution">
+          <header><span class="tag">Command 8</span><span class="type">select one column</span></header>
+          <div class="body">
+            <p><span class="mono">df["column"]</span> selects one column by its column name. The column name is text, so it goes inside quotes.</p>
+            <p>In the Iris lesson, <span class="mono">df["species"]</span> selects the species column.</p>
+          </div>
+        </div>
+        <div class="panel code">
+          <header><span class="tag">Code breakdown</span><span class="type">one column</span></header>
+          <div class="body">
+            <pre><span class="part-var">df</span><span class="part-core">["species"]</span></pre>
+          </div>
+        </div>
+        <div class="panel resolution">
+          <header><span class="tag">Command 9</span><span class="type">select multiple columns</span></header>
+          <div class="body">
+            <p><span class="mono">df[["col1", "col2"]]</span> selects multiple columns. The inner square brackets make a list of column names; the outer square brackets apply that list to the table.</p>
+            <p>In the Iris lesson, <span class="mono">df[["sepal_length", "species"]]</span> selects two columns together.</p>
+          </div>
+        </div>
+        <div class="panel code">
+          <header><span class="tag">Code breakdown</span><span class="type">multiple columns</span></header>
+          <div class="body">
+            <pre><span class="part-var">df</span><span class="part-core">[["sepal_length", "species"]]</span></pre>
+          </div>
+        </div>
+        <div class="panel resolution">
+          <header><span class="tag">Command 10</span><span class="type">count values</span></header>
+          <div class="body">
+            <p><span class="mono">df["column"].value_counts()</span> counts how often each value appears in one column.</p>
+            <p>In the Iris lesson, <span class="mono">df["species"].value_counts()</span> counts each Iris species.</p>
+          </div>
+        </div>
+        <div class="panel code">
+          <header><span class="tag">Code breakdown</span><span class="type">value counts</span></header>
+          <div class="body">
+            <pre><span class="part-var">df</span><span class="part-core">["species"]</span>.<span class="part-inner">value_counts</span><span class="part-core">()</span></pre>
+          </div>
+        </div>
         <div class="panel rule">
-          <header><span class="tag">Dot rule</span><span class="sep" aria-hidden="true"> - </span><span class="type">how to read it</span></header>
+          <header><span class="tag">Dot rule</span><span class="type">how to read it</span></header>
           <div class="body">
             <p>The dot means: reach into this thing and use one of its built-in tools.</p>
-            <p>Examples: <span class="mono">pd.read_csv(...)</span>, <span class="mono">df.head()</span>, <span class="mono">df.info()</span>.</p>
+            <p>Examples: <span class="mono">pd.read_csv(...)</span>, <span class="mono">df.head()</span>, <span class="mono">df.info()</span>, <span class="mono">df["species"].value_counts()</span>.</p>
           </div>
         </div>
       </div>
@@ -617,19 +773,19 @@ th {
       </div>
       <div class="stack">
         <div class="panel translation">
-          <header><span class="tag">Use the older words when</span><span class="sep" aria-hidden="true"> - </span><span class="type">beginner Python</span></header>
+          <header><span class="tag">Use the older words when</span><span class="type">beginner Python</span></header>
           <div class="body">
             <p>list, dictionary, key, loop</p>
           </div>
         </div>
         <div class="panel translation">
-          <header><span class="tag">Use the newer words when</span><span class="sep" aria-hidden="true"> - </span><span class="type">pandas</span></header>
+          <header><span class="tag">Use the newer words when</span><span class="type">pandas</span></header>
           <div class="body">
             <p>DataFrame, row, column, column name, summary</p>
           </div>
         </div>
         <div class="panel resolution">
-          <header><span class="tag">Safest bridge sentence</span><span class="sep" aria-hidden="true"> - </span><span class="type">keep this</span></header>
+          <header><span class="tag">Safest bridge sentence</span><span class="type">keep this</span></header>
           <div class="body">
             <p><span class="mono">Earlier I was learning how Python stores and handles data. Now I am learning how pandas analyses that data in table form.</span></p>
           </div>
@@ -638,16 +794,9 @@ th {
       </div>
     </section>
 
-    <div class="chapter-nav">
-      <a class="chapter-next" href="block_2_selection_and_filtering.html">
-        <span class="label">Next Chapter</span>
-        <span class="title">Block 2</span>
-        <span class="arrow">&rarr;</span>
-      </a>
-    </div>
-
     <p class="footer">Created for the Block 1 table literacy workflow in the Learning_Python project.</p>
   </main>
 </article>
+<script src="../shared/site-nav.js"></script>
 </body>
 </html>

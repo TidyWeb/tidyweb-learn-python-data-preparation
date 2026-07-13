@@ -30,8 +30,6 @@
 body { background:var(--bg); color:var(--ink); font-family:'IBM Plex Sans', sans-serif; }
 .frame { width:min(1160px, calc(100vw - 32px)); margin:30px auto 60px; display:grid; grid-template-columns:220px minmax(0,1fr); background:var(--panel); border:1px solid var(--line); box-shadow:0 16px 46px rgba(39,50,60,.18); }
 .rail { background:var(--rail-bg); color:var(--rail-text); padding:32px 22px 40px; position:sticky; top:0; height:100vh; overflow-y:auto; }
-.rail-logo-wrap { display:flex; justify-content:center; align-items:center; margin:0 0 18px; padding:0 0 18px; border-bottom:1px solid rgba(255,255,255,.1); }
-.rail-logo { display:block; width:min(132px, 100%); height:auto; filter:drop-shadow(0 10px 18px rgba(34, 214, 255, .16)); }
 .rail-title { font-family:'Atkinson Hyperlegible', sans-serif; font-size:20px; font-weight:700; color:white; line-height:1.2; margin-bottom:6px; }
 .rail-sub { font-size:12px; color:var(--rail-muted); line-height:1.55; margin-bottom:28px; padding-bottom:20px; border-bottom:1px solid rgba(255,255,255,.1); }
 .token { display:flex; gap:10px; align-items:center; padding:9px 0; border-top:1px solid rgba(255,255,255,.1); font:600 11px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.06em; color:var(--rail-muted); }
@@ -55,9 +53,8 @@ main { padding:48px 52px 72px; }
 .note-rule { flex:1; height:1px; background:var(--line); margin-left:4px; }
 .stack { display:grid; gap:12px; }
 .panel { border:1px solid var(--line); background:#fbfcfd; border-radius:4px; overflow:hidden; }
-.panel header { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; padding:8px 14px; border-bottom:1px solid var(--line); font:600 11px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.08em; }
+.panel header { display:flex; justify-content:space-between; align-items:center; padding:8px 14px; border-bottom:1px solid var(--line); font:600 11px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.08em; }
 .panel header .tag { color:var(--navy); }
-.panel header .sep { color:var(--muted); }
 .panel header .type { color:var(--muted); }
 .panel .body { padding:16px 20px; font-size:16px; line-height:1.8; }
 .panel .body p + p { margin-top:10px; }
@@ -89,21 +86,17 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
 .legend { display:grid; gap:8px; font-size:15px; }
 .legend p { line-height:1.7; }
 .plain-english { font-style:italic; font-size:15px; color:var(--muted); border-top:1px solid var(--line); padding:14px 20px; line-height:1.7; background:#fbfcfd; }
-.chapter-nav { display:flex; justify-content:flex-end; margin-top:54px; }
-.chapter-next { display:inline-flex; align-items:center; gap:14px; min-width:260px; padding:16px 20px; border-radius:14px; text-decoration:none; background:linear-gradient(135deg, var(--navy), var(--cyan)); color:#fff; box-shadow:0 16px 30px rgba(31,79,130,.22); }
-.chapter-next:hover { filter:brightness(.96); }
-.chapter-next .label { display:block; font:600 11px 'IBM Plex Mono', monospace; letter-spacing:.08em; text-transform:uppercase; color:rgba(255,255,255,.82); }
-.chapter-next .title { display:block; font-family:'Atkinson Hyperlegible', sans-serif; font-size:22px; font-weight:700; line-height:1.1; color:#fff; }
-.chapter-next .arrow { margin-left:auto; font-size:20px; line-height:1; color:#fff; }
 .footer { color:var(--muted); font-size:13px; text-align:center; margin-top:64px; }
-@media (max-width:860px) { .frame { grid-template-columns:1fr; } .rail { display:none; } main { padding:32px 22px 48px; } .page-title { font-size:26px; } .command-grid { grid-template-columns:1fr; } .command-box .command { font-size:18px; } .chapter-nav { justify-content:stretch; } .chapter-next { width:100%; justify-content:center; } }
+@media (max-width:860px) { .frame { grid-template-columns:1fr; } .rail { display:none; } main { padding:32px 22px 48px; } .page-title { font-size:26px; } .command-grid { grid-template-columns:1fr; } .command-box .command { font-size:18px; } }
 </style>
 </head>
 <body>
 <article class="frame">
   <aside class="rail">
     <div class="rail-logo-wrap">
-      <img class="rail-logo" src="../../assets/tidyweb_logo.png" alt="TidyWeb logo">
+      <a class="rail-logo-link" href="../../index.html" aria-label="Return to the Learn Python Data home page">
+        <img class="rail-logo" src="../../assets/tidyweb_logo.png" alt="TidyWeb logo">
+      </a>
     </div>
     <div class="rail-title">Git and GitHub</div>
     <div class="rail-sub">Seven commands. One mental model. No prior experience required.</div>
@@ -111,10 +104,6 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
     <div class="token"><span class="dot cyan"></span> Command</div>
     <div class="token"><span class="dot orange"></span> Rule</div>
     <div class="token"><span class="dot green"></span> Plain-English Summary</div>
-    <nav class="rail-nav course-nav">
-      <div class="rail-nav-label">Bookshelf Home</div>
-      <a href="../../index.html"><span class="num">00</span><span>Main Shelf</span></a>
-    </nav>
     <nav class="rail-nav">
       <div class="rail-nav-label">Sections</div>
       <a href="#model"><span class="num">01</span><span>The Mental Model</span></a>
@@ -133,7 +122,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
       <div class="note-eyebrow"><span class="note-num">NOTE 01</span><h2 class="note-heading">The Mental Model</h2><span class="note-rule"></span></div>
       <div class="stack">
         <div class="panel resolution">
-          <header><span class="tag">Plain English</span><span class="sep" aria-hidden="true"> - </span><span class="type">what Git actually is</span></header>
+          <header><span class="tag">Plain English</span><span class="type">what Git actually is</span></header>
           <div class="body">
             <p>Git tracks changes to files over time. Every time you tell it to, it takes a snapshot of your project. You can go back to any snapshot. You can share snapshots with other people. That is the whole thing.</p>
             <p>Think of it as a save-game system for code. Every commit is a save point. If something breaks, you load an earlier save.</p>
@@ -141,7 +130,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
           <div class="plain-english">Git does not back up automatically. You tell it when to save.</div>
         </div>
         <div class="panel translation">
-          <header><span class="tag">Three Zones</span><span class="sep" aria-hidden="true"> - </span><span class="type">where your work lives</span></header>
+          <header><span class="tag">Three Zones</span><span class="type">where your work lives</span></header>
           <div class="body">
             <table><thead><tr><th>Zone</th><th>What it contains</th></tr></thead><tbody>
               <tr><td>Working directory</td><td>The files you are editing right now. Git watches but does not save yet.</td></tr>
@@ -152,7 +141,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
           <div class="plain-english"><span class="mono">git add</span> moves work from zone 1 to zone 2. <span class="mono">git commit</span> moves it from zone 2 to zone 3.</div>
         </div>
         <div class="panel rule">
-          <header><span class="tag">Rule</span><span class="sep" aria-hidden="true"> - </span><span class="type">commit often, commit small</span></header>
+          <header><span class="tag">Rule</span><span class="type">commit often, commit small</span></header>
           <div class="body">
             <p>A commit should represent one logical change, not a day's work.</p>
             <p>Good commit message: <span class="mono">Add filtering to the sales notebook</span></p>
@@ -168,7 +157,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
       <div class="note-eyebrow"><span class="note-num">NOTE 02</span><h2 class="note-heading">One-Time Setup</h2><span class="note-rule"></span></div>
       <div class="stack">
         <div class="panel resolution">
-          <header><span class="tag">Configure Git</span><span class="sep" aria-hidden="true"> - </span><span class="type">run these once, ever</span></header>
+          <header><span class="tag">Configure Git</span><span class="type">run these once, ever</span></header>
           <div class="body">
             <p>Before using Git for the first time, tell it who you are. These two commands set your name and email on every commit you make. Run them in the terminal once. They persist across all projects.</p>
             <div class="command-grid">
@@ -184,14 +173,14 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
     <section class="note-section" id="commands">
       <div class="note-eyebrow"><span class="note-num">NOTE 03</span><h2 class="note-heading">The Seven Commands</h2><span class="note-rule"></span></div>
       <div class="stack">
-        <div class="panel resolution"><header><span class="tag">Scope</span><span class="sep" aria-hidden="true"> - </span><span class="type">what you need before the bootcamp</span></header><div class="body"><p>These seven commands cover everything you will need in the first weeks of the bootcamp. Learn them in order. Each one builds on the last.</p></div><div class="plain-english">Seven commands is enough to work professionally with Git.</div></div>
-        <div class="panel resolution"><header><span class="tag">git init</span><span class="sep" aria-hidden="true"> - </span><span class="type">start tracking a project</span></header><div class="body"><p>Run this once inside a project folder to tell Git to start tracking it. It creates a hidden <span class="mono">.git</span> folder that stores all the version history. You never touch the <span class="mono">.git</span> folder directly.</p></div><div class="plain-english">One project, one git init, done once.</div></div>
-        <div class="panel resolution"><header><span class="tag">git status</span><span class="sep" aria-hidden="true"> - </span><span class="type">what is happening right now</span></header><div class="body"><p>Shows you which files have changed, which are staged, and which are untracked. Run this constantly. It costs nothing and tells you exactly where you are.</p></div><div class="plain-english">When in doubt, git status. Always.</div></div>
-        <div class="panel resolution"><header><span class="tag">git add</span><span class="sep" aria-hidden="true"> - </span><span class="type">stage a file for saving</span></header><div class="body"><p>Marks a file as ready to be included in the next commit. <span class="mono">git add filename.py</span> stages one file. <span class="mono">git add .</span> stages everything that has changed in the current folder. Staging is reversible. Committing is permanent.</p></div><div class="plain-english">You are choosing what goes into this snapshot. Choose deliberately.</div></div>
-        <div class="panel resolution"><header><span class="tag">git commit</span><span class="sep" aria-hidden="true"> - </span><span class="type">take the snapshot</span></header><div class="body"><p>Saves everything in the staging area as a permanent snapshot with a message. The <span class="mono">-m</span> flag lets you write the message inline. <span class="mono">git commit -m "your message here"</span> Every commit gets a unique ID. You can always return to it.</p></div><div class="plain-english">This is the save point. The message is the label on the save.</div></div>
-        <div class="panel resolution"><header><span class="tag">git log</span><span class="sep" aria-hidden="true"> - </span><span class="type">see the history</span></header><div class="body"><p>Shows the list of all commits made so far, newest first. Each entry shows the commit ID, author, date, and message. Press <span class="mono">q</span> to exit the log view.</p></div><div class="plain-english">git log tells you where you have been. git status tells you where you are.</div></div>
-        <div class="panel resolution"><header><span class="tag">git clone</span><span class="sep" aria-hidden="true"> - </span><span class="type">copy a remote repository to your machine</span></header><div class="body"><p>Downloads a complete copy of a repository from GitHub to your local machine, including all its history.</p><p>So if you wanted to clone this Git repo, for instance, you would enter:</p><p><span class="mono">git clone https://github.com/TidyWeb/learn-python-data.git</span></p><p>The bootcamp will likely give you a repo to clone on day one.</p></div><div class="plain-english">Clone once. Work locally. Push back when ready.</div></div>
-        <div class="panel resolution"><header><span class="tag">git push</span><span class="sep" aria-hidden="true"> - </span><span class="type">send your commits to GitHub</span></header><div class="body"><p>Uploads your local commits to the remote repository on GitHub. <span class="mono">git push origin main</span> <span class="mono">origin</span> is the name Git gives to the remote by default. <span class="mono">main</span> is the name of the primary branch.</p></div><div class="plain-english">Nothing reaches GitHub until you push. Local commits stay local.</div></div>
+        <div class="panel resolution"><header><span class="tag">Scope</span><span class="type">what you need before the bootcamp</span></header><div class="body"><p>These seven commands cover everything you will need in the first weeks of the bootcamp. Learn them in order. Each one builds on the last.</p></div><div class="plain-english">Seven commands is enough to work professionally with Git.</div></div>
+        <div class="panel resolution"><header><span class="tag">git init</span><span class="type">start tracking a project</span></header><div class="body"><p>Run this once inside a project folder to tell Git to start tracking it. It creates a hidden <span class="mono">.git</span> folder that stores all the version history. You never touch the <span class="mono">.git</span> folder directly.</p></div><div class="plain-english">One project, one git init, done once.</div></div>
+        <div class="panel resolution"><header><span class="tag">git status</span><span class="type">what is happening right now</span></header><div class="body"><p>Shows you which files have changed, which are staged, and which are untracked. Run this constantly. It costs nothing and tells you exactly where you are.</p></div><div class="plain-english">When in doubt, git status. Always.</div></div>
+        <div class="panel resolution"><header><span class="tag">git add</span><span class="type">stage a file for saving</span></header><div class="body"><p>Marks a file as ready to be included in the next commit. <span class="mono">git add filename.py</span> stages one file. <span class="mono">git add .</span> stages everything that has changed in the current folder. Staging is reversible. Committing is permanent.</p></div><div class="plain-english">You are choosing what goes into this snapshot. Choose deliberately.</div></div>
+        <div class="panel resolution"><header><span class="tag">git commit</span><span class="type">take the snapshot</span></header><div class="body"><p>Saves everything in the staging area as a permanent snapshot with a message. The <span class="mono">-m</span> flag lets you write the message inline. <span class="mono">git commit -m "your message here"</span> Every commit gets a unique ID. You can always return to it.</p></div><div class="plain-english">This is the save point. The message is the label on the save.</div></div>
+        <div class="panel resolution"><header><span class="tag">git log</span><span class="type">see the history</span></header><div class="body"><p>Shows the list of all commits made so far, newest first. Each entry shows the commit ID, author, date, and message. Press <span class="mono">q</span> to exit the log view.</p></div><div class="plain-english">git log tells you where you have been. git status tells you where you are.</div></div>
+        <div class="panel resolution"><header><span class="tag">git clone</span><span class="type">copy a remote repository to your machine</span></header><div class="body"><p>Downloads a complete copy of a repository from GitHub to your local machine, including all its history.</p><p><span class="mono">git clone https://github.com/TidyWeb/learn-python-data.git</span></p><p>The bootcamp will likely give you a repo to clone on day one.</p></div><div class="plain-english">Clone once. Work locally. Push back when ready.</div></div>
+        <div class="panel resolution"><header><span class="tag">git push</span><span class="type">send your commits to GitHub</span></header><div class="body"><p>Uploads your local commits to the remote repository on GitHub. <span class="mono">git push origin main</span> <span class="mono">origin</span> is the name Git gives to the remote by default. <span class="mono">main</span> is the name of the primary branch.</p></div><div class="plain-english">Nothing reaches GitHub until you push. Local commits stay local.</div></div>
       </div>
     </section>
 
@@ -199,32 +188,25 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
       <div class="note-eyebrow"><span class="note-num">NOTE 04</span><h2 class="note-heading">The Typical Workflow</h2><span class="note-rule"></span></div>
       <div class="stack">
         <div class="panel translation">
-          <header><span class="tag">The Loop</span><span class="sep" aria-hidden="true"> - </span><span class="type">what you do every session</span></header>
+          <header><span class="tag">The Loop</span><span class="type">what you do every session</span></header>
           <div class="body"><table><thead><tr><th>Step</th><th>Command</th></tr></thead><tbody><tr><td>Check what has changed</td><td><span class="mono">git status</span></td></tr><tr><td>Stage the files you want to save</td><td><span class="mono">git add filename</span> or <span class="mono">git add .</span></td></tr><tr><td>Commit with a clear message</td><td><span class="mono">git commit -m "describe what changed"</span></td></tr><tr><td>Send to GitHub</td><td><span class="mono">git push origin main</span></td></tr></tbody></table></div>
           <div class="plain-english">Status, add, commit, push. Repeat every session.</div>
         </div>
-        <div class="panel rule"><header><span class="tag">Rule</span><span class="sep" aria-hidden="true"> - </span><span class="type">push before you finish for the day</span></header><div class="body"><p>A commit that lives only on your local machine is at risk. Push to GitHub at the end of every working session. GitHub is the backup. Your local machine is not.</p></div><div class="plain-english">If your laptop died tonight, would your work survive? Push and it would.</div></div>
+        <div class="panel rule"><header><span class="tag">Rule</span><span class="type">push before you finish for the day</span></header><div class="body"><p>A commit that lives only on your local machine is at risk. Push to GitHub at the end of every working session. GitHub is the backup. Your local machine is not.</p></div><div class="plain-english">If your laptop died tonight, would your work survive? Push and it would.</div></div>
       </div>
     </section>
 
     <section class="note-section" id="github">
       <div class="note-eyebrow"><span class="note-num">NOTE 05</span><h2 class="note-heading">GitHub vs Git</h2><span class="note-rule"></span></div>
       <div class="stack">
-        <div class="panel resolution"><header><span class="tag">Plain English</span><span class="sep" aria-hidden="true"> - </span><span class="type">two different things</span></header><div class="body"><p>Git is the version control system. It runs on your machine. It has no interface.</p><p>GitHub is a website that hosts Git repositories online. It adds collaboration, visibility, and backup to what Git does locally.</p><p>You can use Git without GitHub. You cannot use GitHub without Git.</p></div><div class="plain-english">Git is the tool. GitHub is where the tool's output lives online.</div></div>
-        <div class="panel translation"><header><span class="tag">What GitHub Adds</span><span class="sep" aria-hidden="true"> - </span><span class="type">beyond local version control</span></header><div class="body"><table><thead><tr><th>Feature</th><th>What it means in practice</th></tr></thead><tbody><tr><td>Remote backup</td><td>Your commits are safe even if your machine fails.</td></tr><tr><td>Portfolio</td><td>Your public repositories are visible to employers.</td></tr><tr><td>Collaboration</td><td>Others can clone, contribute, and review your work.</td></tr><tr><td>Pull requests</td><td>A formal way to propose changes before they are merged.</td></tr></tbody></table></div><div class="plain-english">The bootcamp will use GitHub as the submission and collaboration platform.</div></div>
+        <div class="panel resolution"><header><span class="tag">Plain English</span><span class="type">two different things</span></header><div class="body"><p>Git is the version control system. It runs on your machine. It has no interface.</p><p>GitHub is a website that hosts Git repositories online. It adds collaboration, visibility, and backup to what Git does locally.</p><p>You can use Git without GitHub. You cannot use GitHub without Git.</p></div><div class="plain-english">Git is the tool. GitHub is where the tool's output lives online.</div></div>
+        <div class="panel translation"><header><span class="tag">What GitHub Adds</span><span class="type">beyond local version control</span></header><div class="body"><table><thead><tr><th>Feature</th><th>What it means in practice</th></tr></thead><tbody><tr><td>Remote backup</td><td>Your commits are safe even if your machine fails.</td></tr><tr><td>Portfolio</td><td>Your public repositories are visible to employers.</td></tr><tr><td>Collaboration</td><td>Others can clone, contribute, and review your work.</td></tr><tr><td>Pull requests</td><td>A formal way to propose changes before they are merged.</td></tr></tbody></table></div><div class="plain-english">The bootcamp will use GitHub as the submission and collaboration platform.</div></div>
       </div>
     </section>
-
-    <div class="chapter-nav">
-      <a class="chapter-next" href="../../index.html">
-        <span class="label">Return to</span>
-        <span class="title">Main Shelf</span>
-        <span class="arrow">&rarr;</span>
-      </a>
-    </div>
 
     <p class="footer">Created as a supplementary module for Git and GitHub in the Learning_Python project.</p>
   </main>
 </article>
+<script src="../../shared/site-nav.js"></script>
 </body>
 </html>

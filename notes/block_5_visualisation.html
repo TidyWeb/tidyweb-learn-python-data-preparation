@@ -30,22 +30,6 @@
 body { background:var(--bg); color:var(--ink); font-family:'IBM Plex Sans', sans-serif; }
 .frame { width:min(1160px, calc(100vw - 32px)); margin:30px auto 60px; display:grid; grid-template-columns:220px minmax(0,1fr); background:var(--panel); border:1px solid var(--line); box-shadow:0 16px 46px rgba(39,50,60,.18); }
 .rail { background:var(--rail-bg); color:var(--rail-text); padding:32px 22px 40px; position:sticky; top:0; height:100vh; overflow-y:auto; }
-
-.rail-logo-wrap {
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  margin: 0 0 18px;
-  padding: 0 0 18px;
-  border-bottom: 1px solid rgba(255,255,255,.1);
-}
-.rail-logo {
-  display:block;
-  width: min(132px, 100%);
-  height: auto;
-  filter: drop-shadow(0 10px 18px rgba(34, 214, 255, .16));
-}
-
 .rail-title { font-family:'Atkinson Hyperlegible', sans-serif; font-size:20px; font-weight:700; color:white; line-height:1.2; margin-bottom:6px; }
 .rail-sub { font-size:12px; color:var(--rail-muted); line-height:1.55; margin-bottom:28px; padding-bottom:20px; border-bottom:1px solid rgba(255,255,255,.1); }
 .token { display:flex; gap:10px; align-items:center; padding:9px 0; border-top:1px solid rgba(255,255,255,.1); font:600 11px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.06em; color:var(--rail-muted); }
@@ -69,9 +53,8 @@ main { padding:48px 52px 72px; }
 .note-rule { flex:1; height:1px; background:var(--line); margin-left:4px; }
 .stack { display:grid; gap:12px; }
 .panel { border:1px solid var(--line); background:#fbfcfd; border-radius:4px; overflow:hidden; }
-.panel header { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; padding:8px 14px; border-bottom:1px solid var(--line); font:600 11px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.08em; }
+.panel header { display:flex; justify-content:space-between; align-items:center; padding:8px 14px; border-bottom:1px solid var(--line); font:600 11px 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.08em; }
 .panel header .tag { color:var(--navy); }
-.panel header .sep { color:var(--muted); }
 .panel header .type { color:var(--muted); }
 .panel .body { padding:16px 20px; font-size:16px; line-height:1.8; }
 .panel .body p + p { margin-top:10px; }
@@ -104,49 +87,6 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
 .legend p { line-height:1.7; }
 .plain-english { font-style:italic; font-size:15px; color:var(--muted); border-top:1px solid var(--line); padding:14px 20px; line-height:1.7; background:#fbfcfd; }
 .footer { color:var(--muted); font-size:13px; text-align:center; margin-top:64px; }
-
-.chapter-nav {
-  margin-top: 42px;
-  padding-top: 22px;
-  border-top: 2px solid var(--mono-bg);
-  display: flex;
-  justify-content: flex-end;
-}
-.chapter-next {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 20px;
-  border-radius: 999px;
-  text-decoration: none;
-  background: var(--navy);
-  color: #fff;
-  box-shadow: 0 10px 20px rgba(31,79,130,.18);
-  border: 1px solid var(--navy);
-}
-.chapter-next:hover { filter: brightness(.96); }
-.chapter-next .label {
-  font: 600 11px 'IBM Plex Mono', monospace;
-  text-transform: uppercase;
-  letter-spacing: .08em;
-  color: #d8e7ff;
-}
-.chapter-next .title {
-  font-family: 'Atkinson Hyperlegible', sans-serif;
-  font-size: 18px;
-  line-height: 1.2;
-  color: #fff;
-}
-.chapter-next .arrow {
-  font-size: 20px;
-  line-height: 1;
-  color: #fff;
-}
-@media (max-width:860px) {
-  .chapter-nav { justify-content: stretch; }
-  .chapter-next { width: 100%; justify-content: center; }
-}
-
 @media (max-width:860px) { .frame { grid-template-columns:1fr; } .rail { display:none; } main { padding:32px 22px 48px; } .page-title { font-size:26px; } .command-grid { grid-template-columns:1fr; } .command-box .command { font-size:18px; } }
 </style>
 </head>
@@ -154,7 +94,9 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
 <article class="frame">
   <aside class="rail">
     <div class="rail-logo-wrap">
-      <img class="rail-logo" src="../assets/tidyweb_logo.png" alt="TidyWeb logo">
+      <a class="rail-logo-link" href="../index.html" aria-label="Return to the Learn Python Data home page">
+        <img class="rail-logo" src="../assets/tidyweb_logo.png" alt="TidyWeb logo">
+      </a>
     </div>
     <div class="rail-title">Block 5 Visualisation</div>
     <div class="rail-sub">A reference guide to choosing basic chart types and writing clear sentences about what a chart shows and what it cannot show by itself.</div>
@@ -162,26 +104,9 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
     <div class="token"><span class="dot cyan"></span> Command Meaning</div>
     <div class="token"><span class="dot green"></span> Code Breakdown</div>
     <div class="token"><span class="dot orange"></span> Rule</div>
-        <nav class="rail-nav course-nav">
-      <div class="rail-nav-label">Bookshelf Home</div>
-      <a href="../index.html"><span class="num">00</span><span>Main Shelf</span></a>
-    </nav>
-    <nav class="rail-nav course-nav">
-      <div class="rail-nav-label">Course Chapters</div>
-      <a href="data_analysis_field_overview.html"><span class="num">01</span><span>Field Overview</span></a>
-      <a href="block_1_table_literacy_bridge.html"><span class="num">02</span><span>Block 1</span></a>
-      <a href="block_2_selection_and_filtering.html"><span class="num">03</span><span>Block 2</span></a>
-      <a href="block_3_missing_data_and_cleaning.html"><span class="num">04</span><span>Block 3</span></a>
-      <a href="block_4_grouping_and_insight.html"><span class="num">05</span><span>Block 4</span></a>
-      <a href="block_5_visualisation.html" class="active"><span class="num">06</span><span>Block 5</span></a>
-      <a href="block_6_statistics_foundations.html"><span class="num">07</span><span>Block 6</span></a>
-      <a href="block_7_hypothesis_and_evidence.html"><span class="num">08</span><span>Block 7</span></a>
-      <a href="block_8_full_eda_cycle.html"><span class="num">09</span><span>Block 8</span></a>
-      <a href="block_9_etl_drill.html"><span class="num">10</span><span>Block 9</span></a>
-      <a href="block_10_dashboard_and_presentation.html"><span class="num">11</span><span>Block 10</span></a>
-    </nav>
     <nav class="rail-nav">
-      <div class="rail-nav-label">This Chapter</div>
+      <div class="rail-nav-label">Sections</div>
+      <a href="#notebook-sequence"><span class="num">00</span><span>Notebook Match</span></a>
       <a href="#why"><span class="num">01</span><span>Why Use A Chart</span></a>
       <a href="#commands"><span class="num">02</span><span>Command Boxes</span></a>
       <a href="#choices"><span class="num">03</span><span>Chart Choice Rule</span></a>
@@ -193,6 +118,63 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
     <h1 class="page-title">Block 5 Visualisation</h1>
     <p class="page-sub">Block 5 turns table results into views that are quicker to scan. The goal is not decoration. The goal is to choose a chart shape that matches the question, then state clearly what the chart shows and what it still cannot tell from that view alone.</p>
 
+    <section class="note-section" id="notebook-sequence">
+      <div class="note-eyebrow">
+        <span class="note-num">NOTE 00</span>
+        <h2 class="note-heading">How This Guide Matches The Notebook</h2>
+        <span class="note-rule"></span>
+      </div>
+      <div class="stack">
+        <div class="panel resolution">
+          <header><span class="tag">Notebook source</span><span class="type">actual working order</span></header>
+          <div class="body">
+            <p>This guide follows <span class="mono">Block 5 - Visualisation With Seattle Weather</span>. The learner should meet the setup first, then the worked example, then the concept sequence below.</p>
+            <p>Lesson dataset: <span class="mono">seattle_weather.csv</span>, supplied in the <span class="mono">datasets</span> folder. If the supplied folder layout is kept, the example path is <span class="mono">../../datasets/seattle_weather.csv</span>. If the files are moved, point the path at wherever that CSV has been saved.</p>
+            <p>Worked example dataset: <span class="mono">dummy_category_values.csv</span>.</p>
+          </div>
+        </div>
+        <div class="panel translation">
+          <header><span class="tag">Setup cells</span><span class="type">run before the lesson questions</span></header>
+          <div class="body legend">
+            <p><span class="mono">import pandas as pd</span></p>
+<p><span class="mono">import matplotlib.pyplot as plt</span></p>
+<p><span class="mono">dataset_path = &quot;../../datasets/seattle_weather.csv&quot;</span></p>
+<p><span class="mono">df = pd.read_csv(dataset_path)</span></p>
+<p><span class="mono">dummy_path = &quot;../../datasets/dummy_category_values.csv&quot;</span></p>
+<p><span class="mono">dummy_df = pd.read_csv(dummy_path)</span></p>
+          </div>
+        </div>
+        <div class="panel translation">
+          <header><span class="tag">Concept sequence</span><span class="type">same order as the notebook</span></header>
+          <div class="body">
+            <table>
+              <thead><tr><th>Step</th><th>Notebook concept</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>What a chart is and why it exists</td></tr>
+<tr><td>2</td><td>The two imports</td></tr>
+<tr><td>3</td><td>Bar chart</td></tr>
+<tr><td>4</td><td>Histogram</td></tr>
+<tr><td>5</td><td>Scatter plot</td></tr>
+<tr><td>6</td><td>Chart choice rule</td></tr>
+<tr><td>7</td><td>What a chart shows and what it cannot show</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="panel code">
+          <header><span class="tag">Core commands</span><span class="type">notebook order</span></header>
+          <div class="body">
+            <pre>print(pd.__name__) and print(plt.__name__)
+dummy_df[&quot;category&quot;].value_counts().plot(kind=&quot;bar&quot;)
+dummy_df[&quot;value&quot;].plot(kind=&quot;hist&quot;)
+dummy_df.plot.scatter(x=&quot;score&quot;, y=&quot;value&quot;)
+choose the chart shape that matches the question
+write what the chart shows and what it cannot show</pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="note-section" id="why">
       <div class="note-eyebrow">
         <span class="note-num">NOTE 01</span>
@@ -201,7 +183,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
       </div>
       <div class="stack">
         <div class="panel resolution">
-          <header><span class="tag">Plain English</span><span class="sep" aria-hidden="true"> - </span><span class="type">pattern first</span></header>
+          <header><span class="tag">Plain English</span><span class="type">pattern first</span></header>
           <div class="body">
             <p>A chart helps the eye notice pattern, spread, imbalance, or relationship faster than a long printed table.</p>
             <p>A chart is not automatically an explanation. It is a view of the data from one angle.</p>
@@ -219,7 +201,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
       </div>
       <div class="stack">
         <div class="panel resolution">
-          <header><span class="tag">Visualisation</span><span class="sep" aria-hidden="true"> - </span><span class="type">Block 5 core moves</span></header>
+          <header><span class="tag">Visualisation</span><span class="type">Block 5 core moves</span></header>
           <div class="body">
             <div class="command-grid">
               <div class="command-box count">
@@ -235,7 +217,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
                 <span class="meaning">Scatter plot for the relationship between two numeric columns.</span>
               </div>
               <div class="panel resolution">
-                <header><span class="tag">plt</span><span class="sep" aria-hidden="true"> - </span><span class="type">a second import alias</span></header>
+                <header><span class="tag">plt</span><span class="type">a second import alias</span></header>
                 <div class="body">
                   <p>plt is the short nickname given to matplotlib, a separate Python library used for drawing charts. Before plt.show() can be used, matplotlib must be imported with: import matplotlib.pyplot as plt. This line works exactly like import pandas as pd — it loads the library and gives it a nickname. plt.show() tells matplotlib to display the chart that has just been built.</p>
                 </div>
@@ -258,46 +240,46 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
       </div>
       <div class="stack">
         <div class="panel resolution">
-          <header><span class="tag">Bar chart</span><span class="sep" aria-hidden="true"> - </span><span class="type">category comparison</span></header>
+          <header><span class="tag">Bar chart</span><span class="type">category comparison</span></header>
           <div class="body">
             <p>Use a bar chart when the question is about categories and counts or category totals.</p>
             <p>Example question: which weather label appears most often?</p>
           </div>
         </div>
         <div class="panel code">
-          <header><span class="tag">Code breakdown</span><span class="sep" aria-hidden="true"> - </span><span class="type">bar chart</span></header>
+          <header><span class="tag">Code breakdown</span><span class="type">bar chart</span></header>
           <div class="body">
             <pre><span class="part-var">df</span><span class="part-outer">[</span><span class="part-core">"weather"</span><span class="part-outer">]</span><span class="part-inner">.value_counts()</span><span class="part-note">.plot(</span>kind=<span class="part-core">"bar"</span><span class="part-note">)</span></pre>
           </div>
         </div>
         <div class="panel translation">
-          <header><span class="tag">Histogram</span><span class="sep" aria-hidden="true"> - </span><span class="type">one numeric column</span></header>
+          <header><span class="tag">Histogram</span><span class="type">one numeric column</span></header>
           <div class="body">
             <p>Use a histogram when the question is about spread or distribution in one numeric column.</p>
             <p>Example question: are most fares low, medium, or high?</p>
           </div>
         </div>
         <div class="panel code">
-          <header><span class="tag">Code breakdown</span><span class="sep" aria-hidden="true"> - </span><span class="type">histogram</span></header>
+          <header><span class="tag">Code breakdown</span><span class="type">histogram</span></header>
           <div class="body">
             <pre><span class="part-var">df</span><span class="part-outer">[</span><span class="part-core">"amount"</span><span class="part-outer">]</span><span class="part-note">.plot(</span>kind=<span class="part-core">"hist"</span><span class="part-note">)</span></pre>
           </div>
         </div>
         <div class="panel resolution">
-          <header><span class="tag">Scatter plot</span><span class="sep" aria-hidden="true"> - </span><span class="type">two numeric columns</span></header>
+          <header><span class="tag">Scatter plot</span><span class="type">two numeric columns</span></header>
           <div class="body">
             <p>Use a scatter plot when the question is about whether two numeric columns move together or apart.</p>
             <p>Example question: do higher score values tend to sit beside lower result values?</p>
           </div>
         </div>
         <div class="panel code">
-          <header><span class="tag">Code breakdown</span><span class="sep" aria-hidden="true"> - </span><span class="type">scatter plot</span></header>
+          <header><span class="tag">Code breakdown</span><span class="type">scatter plot</span></header>
           <div class="body">
             <pre><span class="part-var">df</span><span class="part-note">.plot.scatter(</span>x=<span class="part-core">"score"</span>, y=<span class="part-core">"result"</span><span class="part-note">)</span></pre>
           </div>
         </div>
         <div class="panel rule">
-          <header><span class="tag">Do not force it</span><span class="sep" aria-hidden="true"> - </span><span class="type">wrong chart, wrong message</span></header>
+          <header><span class="tag">Do not force it</span><span class="type">wrong chart, wrong message</span></header>
           <div class="body">
             <p>A chart type is not neutral. A bad chart choice makes the pattern harder to read or suggests the wrong kind of comparison.</p>
           </div>
@@ -313,14 +295,14 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
       </div>
       <div class="stack">
         <div class="panel rule">
-          <header><span class="tag">Required sentence pair</span><span class="sep" aria-hidden="true"> - </span><span class="type">show plus limit</span></header>
+          <header><span class="tag">Required sentence pair</span><span class="type">show plus limit</span></header>
           <div class="body">
             <p>For every chart, write one sentence saying what the chart shows and one sentence saying what the chart cannot tell from that view alone.</p>
           </div>
           <div class="plain-english">A bar chart can show which category is largest. It cannot explain why that category is largest.</div>
         </div>
         <div class="panel translation">
-          <header><span class="tag">Useful stems</span><span class="sep" aria-hidden="true"> - </span><span class="type">reader-facing language</span></header>
+          <header><span class="tag">Useful stems</span><span class="type">reader-facing language</span></header>
           <div class="body legend">
             <p><strong>Shows:</strong> This chart shows that ___ appears most often.</p>
             <p><strong>Shows:</strong> This histogram suggests that most values sit in the ___ range.</p>
@@ -330,7 +312,7 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
           </div>
         </div>
         <div class="panel translation">
-          <header><span class="tag">Display step</span><span class="sep" aria-hidden="true"> - </span><span class="type">show the chart</span></header>
+          <header><span class="tag">Display step</span><span class="type">show the chart</span></header>
           <div class="body">
             <p><span class="mono">plt.show()</span> is the plain instruction that tells the notebook to display the current chart output.</p>
           </div>
@@ -338,16 +320,9 @@ th { background:#f7f9fb; color:var(--navy); font-family:'IBM Plex Mono', monospa
       </div>
     </section>
 
-    <div class="chapter-nav">
-      <a class="chapter-next" href="block_6_statistics_foundations.html">
-        <span class="label">Next Chapter</span>
-        <span class="title">Block 6</span>
-        <span class="arrow">&rarr;</span>
-      </a>
-    </div>
-
     <p class="footer">Created for the Block 5 visualisation workflow in the Learning_Python project.</p>
   </main>
 </article>
+<script src="../shared/site-nav.js"></script>
 </body>
 </html>

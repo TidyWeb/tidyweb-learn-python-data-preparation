@@ -1,0 +1,879 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Travel SQL Practice Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#edf5f7;
+  --paper:#fffdfb;
+  --ink:#21303a;
+  --muted:#64737b;
+  --line:#d6e1e5;
+  --teal:#1f6f7b;
+  --gold:#c6942d;
+  --berry:#8c4c73;
+  --slate:#17212b;
+  --soft-teal:#edf8fa;
+  --shadow:0 18px 46px rgba(30,42,53,.14);
+  --code:#101821;
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body {
+  background:
+    radial-gradient(circle at top left, rgba(31,111,123,.10), transparent 30%),
+    radial-gradient(circle at top right, rgba(198,148,45,.09), transparent 24%),
+    linear-gradient(180deg, #f6fafb 0%, var(--bg) 100%);
+  color:var(--ink);
+  font-family:'IBM Plex Sans', sans-serif;
+}
+.page {
+  width:min(1280px, calc(100vw - 28px));
+  margin:24px auto 56px;
+  display:grid;
+  grid-template-columns:260px minmax(0, 1fr);
+  border:1px solid var(--line);
+  background:var(--paper);
+  box-shadow:var(--shadow);
+}
+.rail {
+  background:var(--slate);
+  color:#dbe7ef;
+  padding:28px 22px 34px;
+  position:sticky;
+  top:0;
+  height:100vh;
+  overflow-y:auto;
+}
+.rail h1 {
+  font-family:'Atkinson Hyperlegible', sans-serif;
+  font-size:24px;
+  line-height:1.1;
+  margin-bottom:10px;
+  color:#fff;
+}
+.rail p {
+  color:#9eb2c1;
+  font-size:13px;
+  line-height:1.65;
+  margin-bottom:16px;
+}
+.mini-card,
+.rail a,
+.prompt-card,
+.panel,
+.table-wrap,
+.editor-wrap,
+.result-wrap {
+  border-radius:18px;
+}
+.mini-card {
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  padding:13px 14px;
+  margin-bottom:16px;
+}
+.mono,
+.mini-label,
+.rail-nav-title,
+.schema-pill,
+.button,
+textarea,
+pre,
+th {
+  font-family:'IBM Plex Mono', monospace;
+}
+.mini-label,
+.rail-nav-title,
+.schema-pill {
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.mini-label { color:#8fc6d0; margin-bottom:6px; display:block; }
+.mini-card strong { display:block; color:#fff; line-height:1.4; font-size:14px; }
+.rail-nav { margin-top:18px; }
+.rail-nav-title { color:#8ea4b5; margin-bottom:10px; }
+.rail a {
+  display:block;
+  color:#dbe7ef;
+  text-decoration:none;
+  padding:9px 10px;
+  border:1px solid rgba(255,255,255,.06);
+  background:rgba(255,255,255,.03);
+  margin-bottom:10px;
+  line-height:1.35;
+  font-size:13px;
+}
+.rail a:hover { color:#fff; }
+main { padding:38px 44px 72px; }
+.hero {
+  border:1px solid var(--line);
+  background:linear-gradient(135deg, rgba(31,111,123,.08), rgba(140,76,115,.09)), var(--paper);
+  border-radius:26px;
+  padding:32px 32px 26px;
+  margin-bottom:24px;
+}
+.hero .eyebrow {
+  color:var(--teal);
+  font:600 11px 'IBM Plex Mono', monospace;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  margin-bottom:10px;
+}
+.hero h2 {
+  font-family:'Atkinson Hyperlegible', sans-serif;
+  color:var(--teal);
+  font-size:40px;
+  line-height:1.05;
+  margin-bottom:12px;
+}
+.hero p {
+  color:var(--muted);
+  line-height:1.75;
+  max-width:72ch;
+  font-size:16px;
+}
+.hero-grid,
+.top-grid,
+.prompt-grid {
+  display:grid;
+  gap:16px;
+}
+.hero-grid {
+  grid-template-columns:1.1fr .9fr;
+  margin-top:18px;
+}
+.panel {
+  border:1px solid var(--line);
+  background:#fff;
+  padding:18px;
+}
+.panel h3,
+.section-head h3 {
+  font-family:'Atkinson Hyperlegible', sans-serif;
+  color:var(--teal);
+  font-size:22px;
+  margin-bottom:10px;
+}
+.panel p,
+.prompt-card p,
+.section-sub {
+  color:var(--muted);
+  line-height:1.65;
+  font-size:15px;
+}
+.panel ul,
+.prompt-card ul {
+  padding-left:18px;
+  display:grid;
+  gap:8px;
+  line-height:1.55;
+}
+.prompt-card ul {
+  padding-left:0;
+  list-style:none;
+  gap:10px;
+}
+.prompt-item {
+  display:grid;
+  grid-template-columns:20px minmax(0, 1fr);
+  gap:10px;
+  align-items:start;
+  text-wrap:pretty;
+  font-size:14px;
+}
+.prompt-item span:last-child {
+  min-width:0;
+}
+.keep-together {
+  white-space:nowrap;
+}
+.prompt-check {
+  width:18px;
+  height:18px;
+  border:2px solid #bdd0d2;
+  border-radius:6px;
+  background:#fff;
+  position:relative;
+  margin-top:1px;
+  transition:transform .18s ease, background-color .18s ease, border-color .18s ease, box-shadow .18s ease;
+}
+.prompt-item.is-complete {
+  color:var(--teal);
+  font-weight:600;
+}
+.prompt-item.is-complete .prompt-check {
+  background:var(--teal);
+  border-color:var(--teal);
+  box-shadow:0 0 0 4px rgba(45,122,126,.14);
+}
+.prompt-item.is-complete .prompt-check::after {
+  content:"";
+  position:absolute;
+  left:4px;
+  top:1px;
+  width:5px;
+  height:9px;
+  border:solid #fff;
+  border-width:0 2px 2px 0;
+  transform:rotate(45deg);
+}
+.prompt-item.just-completed .prompt-check {
+  animation:prompt-ping .45s ease-out;
+}
+@keyframes prompt-ping {
+  0% { transform:scale(1); box-shadow:0 0 0 0 rgba(45,122,126,.32); }
+  55% { transform:scale(1.12); box-shadow:0 0 0 12px rgba(45,122,126,0); }
+  100% { transform:scale(1); box-shadow:0 0 0 4px rgba(45,122,126,.14); }
+}
+.schema-pills {
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:12px;
+}
+.schema-pill {
+  display:inline-block;
+  padding:7px 10px;
+  border-radius:999px;
+  background:var(--soft-teal);
+  color:var(--teal);
+  border:1px solid var(--line);
+}
+.section {
+  margin-top:28px;
+}
+.section-head {
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-bottom:14px;
+}
+.section-head h3 { margin-bottom:0; }
+.rule { flex:1; height:1px; background:var(--line); }
+.top-grid {
+  grid-template-columns:1fr;
+}
+.table-wrap,
+.editor-wrap,
+.result-wrap {
+  border:1px solid var(--line);
+  background:#fff;
+  overflow:hidden;
+}
+.table-head,
+.editor-head,
+.result-head {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  padding:12px 16px;
+  border-bottom:1px solid var(--line);
+  background:#f8fbfc;
+}
+.table-head strong,
+.editor-head strong,
+.result-head strong {
+  color:var(--teal);
+}
+.table-scroll { overflow:auto; }
+table {
+  width:100%;
+  border-collapse:collapse;
+  min-width:980px;
+}
+th, td {
+  border-bottom:1px solid var(--line);
+  padding:12px 14px;
+  text-align:left;
+}
+th {
+  background:#f8fbfc;
+  color:var(--teal);
+  font-size:12px;
+  letter-spacing:.05em;
+}
+td { font-size:15px; }
+.schema-block {
+  padding:16px;
+  border-top:1px solid var(--line);
+  background:linear-gradient(180deg, #fbfdfe 0%, #f5fafb 100%);
+}
+pre {
+  background:var(--code);
+  color:#e7eef5;
+  padding:16px;
+  border-radius:14px;
+  overflow:auto;
+  font-size:13px;
+  line-height:1.7;
+}
+.prompt-grid { grid-template-columns:repeat(3, minmax(0, 1fr)); }
+.prompt-card {
+  border:1px solid var(--line);
+  background:linear-gradient(180deg, #ffffff 0%, #fbfcfd 100%);
+  padding:16px;
+}
+.prompt-card:nth-child(1) { border-top:6px solid var(--teal); }
+.prompt-card:nth-child(2) { border-top:6px solid var(--gold); }
+.prompt-card:nth-child(3) { border-top:6px solid var(--berry); }
+.prompt-card .prompt-label {
+  color:var(--muted);
+  margin-bottom:8px;
+  display:block;
+  font:600 11px 'IBM Plex Mono', monospace;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.habit-callout {
+  border:1px solid #cfe0e3;
+  border-left:6px solid var(--teal);
+  background:linear-gradient(135deg, #f7fcfd 0%, #edf7f8 100%);
+  padding:16px 18px;
+  margin-bottom:16px;
+  border-radius:18px;
+}
+.habit-callout strong {
+  display:block;
+  margin-bottom:6px;
+  color:var(--teal);
+  font-family:'Atkinson Hyperlegible', sans-serif;
+  font-size:18px;
+}
+.habit-callout p {
+  margin:0;
+  color:var(--ink);
+  font-size:15px;
+  line-height:1.65;
+}
+.habit-callout em {
+  color:var(--teal);
+  font-style:italic;
+}
+.button {
+  appearance:none;
+  border:1px solid var(--line);
+  background:#fff;
+  color:var(--teal);
+  padding:9px 12px;
+  border-radius:12px;
+  cursor:pointer;
+  font-size:12px;
+  font-weight:600;
+}
+.button.primary {
+  background:var(--teal);
+  color:#fff;
+  border-color:var(--teal);
+}
+.button:hover { transform:translateY(-1px); }
+textarea {
+  width:100%;
+  min-height:190px;
+  border:0;
+  padding:18px;
+  resize:vertical;
+  font-size:15px;
+  line-height:1.7;
+  background:var(--code);
+  color:#e8eef4;
+}
+.editor-note,
+.status {
+  padding:12px 16px;
+  border-top:1px solid var(--line);
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.5;
+}
+.status.error {
+  color:#8a2230;
+  background:#fff2f4;
+}
+.status.ok {
+  color:#215f3f;
+  background:#f0fbf4;
+}
+.result-body,
+.empty-state {
+  padding:16px;
+}
+.empty-state { color:var(--muted); }
+.footer {
+  margin-top:20px;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.6;
+}
+@media (max-width: 1060px) {
+  .page { grid-template-columns:1fr; }
+  .rail { display:none; }
+  main { padding:28px 20px 56px; }
+  .hero-grid,
+  .top-grid,
+  .prompt-grid { grid-template-columns:1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .prompt-check {
+    transition:none;
+  }
+  .prompt-item.just-completed .prompt-check {
+    animation:none;
+  }
+}
+</style>
+</head>
+<body>
+<article class="page">
+  <aside class="rail">
+    <h1>Travel SQL Lab</h1>
+    <p>A single-table lab for later flat-query work: subqueries, above-average comparisons, and stacking results with <span class="mono">UNION</span>.</p>
+
+    <div class="mini-card">
+      <span class="mini-label">Dataset</span>
+      <strong>One table only: <span class="mono">trips</span></strong>
+    </div>
+
+    <div class="mini-card">
+      <span class="mini-label">Best For</span>
+      <strong>Subqueries, comparisons against averages, and <span class="mono">UNION</span> without adding joins.</strong>
+    </div>
+
+    <div class="rail-nav">
+      <div class="rail-nav-title">Jump To</div>
+      <a href="#dataset">Dataset and Schema</a>
+      <a href="#prompts">Practice Prompts</a>
+      <a href="#lab">Live SQL Box</a>
+    </div>
+  </aside>
+
+  <main>
+    <section class="hero">
+      <div class="eyebrow">Practice Lab</div>
+      <h2>Travel SQL Practice</h2>
+      <p>This invented travel-booking table is built for deeper single-table thinking. You can compare rows against summary values, answer “which trips are above the average?” questions, and practise the difference between one result set and two result sets stacked together.</p>
+
+      <div class="hero-grid">
+        <div class="panel">
+          <h3>What This Lab Is For</h3>
+          <ul>
+            <li>Use <span class="mono">WHERE</span> to choose rows before grouping, then use <span class="mono">HAVING</span> to choose groups.</li>
+            <li>Use a subquery when the outer query needs a value computed from the whole table.</li>
+            <li>Compare one row against a group or table average.</li>
+            <li>Use <span class="mono">UNION</span> to stack compatible answers into one result set.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="dataset">
+      <div class="section-head">
+        <h3>Dataset And Schema</h3>
+        <div class="rule"></div>
+      </div>
+
+      <div class="top-grid">
+        <div class="table-wrap">
+          <div class="table-head">
+            <strong>Visible Data Table: <span class="mono">trips</span></strong>
+            <span class="section-sub">Keep this in view while you write queries.</span>
+          </div>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>trip_id</th>
+                  <th>traveller_name</th>
+                  <th>destination</th>
+                  <th>travel_style</th>
+                  <th>booking_channel</th>
+                  <th>nights</th>
+                  <th>travellers</th>
+                  <th>package_cost</th>
+                  <th>review_score</th>
+                  <th>season</th>
+                </tr>
+              </thead>
+              <tbody id="source-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="schema-block">
+        <div class="section-head">
+          <h3>SQL Used To Build The Table</h3>
+          <div class="rule"></div>
+        </div>
+        <pre id="schema-sql"></pre>
+      </div>
+
+      <div class="panel" style="margin-top:16px;">
+        <h3>Read This Like A Beginner</h3>
+        <p>If you are stuck, ask:</p>
+        <ul>
+          <li>Do I need one answer from the whole table first?</li>
+          <li>If yes, can I put that inside brackets as a subquery?</li>
+          <li>If I use <span class="mono">UNION</span>, do both <span class="mono">SELECT</span> parts return the same number of columns?</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section" id="prompts">
+      <div class="section-head">
+        <h3>Practice Prompts</h3>
+        <div class="rule"></div>
+      </div>
+      <div class="prompt-grid">
+        <div class="prompt-card">
+          <span class="prompt-label">Subqueries</span>
+          <p>Use a subquery for table-wide comparisons:</p>
+          <ul>
+            <li class="prompt-item" data-prompt-id="subquery-cost-above-average"><span class="prompt-check" aria-hidden="true"></span><span>Display <span class="mono">traveller_name</span>, <span class="mono">destination</span>, and <span class="mono">package_cost</span> for trips with a <span class="keep-together">package cost above</span> the overall average.</span></li>
+            <li class="prompt-item" data-prompt-id="subquery-nights-above-average"><span class="prompt-check" aria-hidden="true"></span><span>Display <span class="mono">traveller_name</span>, <span class="mono">destination</span>, and <span class="mono">nights</span> for trips with more nights than the average trip.</span></li>
+            <li class="prompt-item" data-prompt-id="subquery-review-below-average"><span class="prompt-check" aria-hidden="true"></span><span>Display <span class="mono">traveller_name</span>, <span class="mono">destination</span>, and <span class="mono">review_score</span> for trips whose review score is below the table average.</span></li>
+          </ul>
+        </div>
+        <div class="prompt-card">
+          <span class="prompt-label">Grouped Thinking</span>
+          <p>Use the logical order: choose rows, group them, choose groups, then sort:</p>
+          <ul>
+            <li class="prompt-item" data-prompt-id="group-average-cost-style"><span class="prompt-check" aria-hidden="true"></span><span>Display <span class="mono">travel_style</span> and average package cost by travel style. Name the average column <span class="mono">average_package_cost</span>.</span></li>
+            <li class="prompt-item" data-prompt-id="group-destination-review"><span class="prompt-check" aria-hidden="true"></span><span>Display <span class="mono">destination</span> and average review score. Name the average column <span class="mono">average_review_score</span>, and show only destinations above <span class="mono">8.5</span>.</span></li>
+            <li class="prompt-item" data-prompt-id="group-channel-travellers"><span class="prompt-check" aria-hidden="true"></span><span>Display <span class="mono">booking_channel</span> and total traveller count. Name the total column <span class="mono">total_travellers</span>, and show only booking channels above <span class="mono">8</span>.</span></li>
+            <li class="prompt-item" data-prompt-id="order-winter-channels"><span class="prompt-check" aria-hidden="true"></span><span>First keep only <span class="mono">Winter</span> trips. Then display <span class="mono">booking_channel</span> and the sum of <span class="mono">travellers</span>, named <span class="mono">total_travellers</span>. Group by channel and sort the totals highest first.</span></li>
+            <li class="prompt-item" data-prompt-id="order-website-styles"><span class="prompt-check" aria-hidden="true"></span><span>First keep only <span class="mono">Website</span> bookings. Then display <span class="mono">travel_style</span> and average package cost, named <span class="mono">average_package_cost</span>. Keep only averages above <span class="mono">500</span>, then sort highest first.</span></li>
+            <li class="prompt-item" data-prompt-id="order-top-destinations"><span class="prompt-check" aria-hidden="true"></span><span>Keep trips with review scores of at least <span class="mono">8</span>. Display <span class="mono">destination</span> and total travellers, named <span class="mono">total_travellers</span>. Keep totals of at least <span class="mono">2</span>, sort totals high to low then destination A–Z, and return the first <span class="mono">3</span> groups.</span></li>
+          </ul>
+        </div>
+        <div class="prompt-card">
+          <span class="prompt-label">Union</span>
+          <p>Stack results into one answer:</p>
+          <ul>
+            <li class="prompt-item" data-prompt-id="union-winter-luxury"><span class="prompt-check" aria-hidden="true"></span><span>Return <span class="mono">traveller_name</span>, <span class="mono">destination</span>, and <span class="mono">season</span> for all winter trips and all luxury trips in one result using <span class="mono">UNION</span>.</span></li>
+            <li class="prompt-item" data-prompt-id="union-rome-agent"><span class="prompt-check" aria-hidden="true"></span><span>Return <span class="mono">traveller_name</span>, <span class="mono">destination</span>, and <span class="mono">booking_channel</span> for all trips to Rome and all trips booked through agents in one result.</span></li>
+            <li class="prompt-item" data-prompt-id="union-all-winter-luxury"><span class="prompt-check" aria-hidden="true"></span><span>Return <span class="mono">traveller_name</span>, <span class="mono">destination</span>, and <span class="mono">season</span> for the same winter-and-luxury query, but use <span class="mono">UNION ALL</span> and compare what changes.</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="lab">
+      <div class="section-head">
+        <h3>Live SQL Box</h3>
+        <div class="rule"></div>
+      </div>
+
+      <div class="panel" style="margin-bottom:16px;">
+        <h3>Schema At A Glance</h3>
+        <p>The only table in this lab is <span class="mono">trips</span>. Keep these column names in view while you write your answer.</p>
+        <div class="schema-pills">
+          <span class="schema-pill">trip_id</span>
+          <span class="schema-pill">traveller_name</span>
+          <span class="schema-pill">destination</span>
+          <span class="schema-pill">travel_style</span>
+          <span class="schema-pill">booking_channel</span>
+          <span class="schema-pill">nights</span>
+          <span class="schema-pill">travellers</span>
+          <span class="schema-pill">package_cost</span>
+          <span class="schema-pill">review_score</span>
+          <span class="schema-pill">season</span>
+        </div>
+      </div>
+
+      <div class="habit-callout">
+        <strong>Good Habit To Build</strong>
+        <p><em>A good habit to get into is to use <span class="mono">SELECT</span> with named columns by default.</em><br>Keep <span class="mono">SELECT *</span> for prompts that explicitly ask for every column and row.</p>
+      </div>
+
+      <div class="editor-wrap">
+        <div class="editor-head">
+          <strong>Write a query against <span class="mono">trips</span></strong>
+          <div class="editor-tools">
+            <button class="button primary" id="run-query" type="button">Run Query</button>
+            <button class="button" id="reset-query" type="button">Reset Query</button>
+            <button class="button" id="reset-db" type="button">Reset Ticks</button>
+          </div>
+        </div>
+        <textarea id="query-input" spellcheck="false">-- Write a query against trips here.</textarea>
+        <div class="editor-note">This is still a flat one-table lab. The “deeper” part is in the thinking, not in the table count.</div>
+        <div class="status" id="status-box">SQL engine loading...</div>
+      </div>
+
+      <div class="result-wrap" style="margin-top:16px;">
+        <div class="result-head">
+          <strong>Query Result</strong>
+          <span class="section-sub">Your answer appears here.</span>
+        </div>
+        <div class="result-body" id="result-box">
+          <div class="empty-state">Run a query to see the result table.</div>
+        </div>
+      </div>
+    </section>
+
+    <p class="footer">This lab stays with one table on purpose. It lets you learn later SQL ideas without the extra noise of joins.</p>
+  </main>
+</article>
+
+<script src="https://cdn.jsdelivr.net/npm/sql.js@1.10.3/dist/sql-wasm.js"></script>
+<script>
+const rows = [
+  { trip_id: 1, traveller_name: "Ava", destination: "Rome", travel_style: "City", booking_channel: "Website", nights: 4, travellers: 2, package_cost: 860, review_score: 8.7, season: "Spring" },
+  { trip_id: 2, traveller_name: "Noah", destination: "Reykjavik", travel_style: "Adventure", booking_channel: "Agent", nights: 5, travellers: 2, package_cost: 1450, review_score: 9.1, season: "Winter" },
+  { trip_id: 3, traveller_name: "Mila", destination: "Lisbon", travel_style: "City", booking_channel: "Website", nights: 3, travellers: 1, package_cost: 520, review_score: 8.4, season: "Summer" },
+  { trip_id: 4, traveller_name: "Leo", destination: "Kyoto", travel_style: "Culture", booking_channel: "Agent", nights: 7, travellers: 2, package_cost: 1980, review_score: 9.4, season: "Autumn" },
+  { trip_id: 5, traveller_name: "Zara", destination: "Marrakech", travel_style: "Luxury", booking_channel: "Phone", nights: 6, travellers: 2, package_cost: 1740, review_score: 8.9, season: "Spring" },
+  { trip_id: 6, traveller_name: "Owen", destination: "Berlin", travel_style: "City", booking_channel: "Website", nights: 2, travellers: 1, package_cost: 410, review_score: 7.8, season: "Winter" },
+  { trip_id: 7, traveller_name: "Chloe", destination: "Banff", travel_style: "Adventure", booking_channel: "Agent", nights: 5, travellers: 4, package_cost: 2120, review_score: 9.0, season: "Summer" },
+  { trip_id: 8, traveller_name: "Ethan", destination: "Athens", travel_style: "Culture", booking_channel: "Website", nights: 4, travellers: 2, package_cost: 780, review_score: 8.2, season: "Autumn" },
+  { trip_id: 9, traveller_name: "Ruby", destination: "Dubrovnik", travel_style: "Luxury", booking_channel: "Phone", nights: 5, travellers: 2, package_cost: 1680, review_score: 8.8, season: "Summer" },
+  { trip_id: 10, traveller_name: "Isaac", destination: "Tallinn", travel_style: "City", booking_channel: "Website", nights: 3, travellers: 2, package_cost: 540, review_score: 8.1, season: "Winter" },
+  { trip_id: 11, traveller_name: "Nina", destination: "Seville", travel_style: "Culture", booking_channel: "Agent", nights: 4, travellers: 2, package_cost: 920, review_score: 8.6, season: "Spring" },
+  { trip_id: 12, traveller_name: "Hugo", destination: "Zermatt", travel_style: "Luxury", booking_channel: "Phone", nights: 6, travellers: 3, package_cost: 2390, review_score: 9.3, season: "Winter" }
+];
+
+const seedSQL = `CREATE TABLE trips (
+  trip_id INTEGER PRIMARY KEY,
+  traveller_name TEXT NOT NULL,
+  destination TEXT NOT NULL,
+  travel_style TEXT NOT NULL,
+  booking_channel TEXT NOT NULL,
+  nights INTEGER NOT NULL,
+  travellers INTEGER NOT NULL,
+  package_cost INTEGER NOT NULL,
+  review_score REAL NOT NULL,
+  season TEXT NOT NULL
+);
+
+INSERT INTO trips (trip_id, traveller_name, destination, travel_style, booking_channel, nights, travellers, package_cost, review_score, season) VALUES
+  (1, 'Ava', 'Rome', 'City', 'Website', 4, 2, 860, 8.7, 'Spring'),
+  (2, 'Noah', 'Reykjavik', 'Adventure', 'Agent', 5, 2, 1450, 9.1, 'Winter'),
+  (3, 'Mila', 'Lisbon', 'City', 'Website', 3, 1, 520, 8.4, 'Summer'),
+  (4, 'Leo', 'Kyoto', 'Culture', 'Agent', 7, 2, 1980, 9.4, 'Autumn'),
+  (5, 'Zara', 'Marrakech', 'Luxury', 'Phone', 6, 2, 1740, 8.9, 'Spring'),
+  (6, 'Owen', 'Berlin', 'City', 'Website', 2, 1, 410, 7.8, 'Winter'),
+  (7, 'Chloe', 'Banff', 'Adventure', 'Agent', 5, 4, 2120, 9.0, 'Summer'),
+  (8, 'Ethan', 'Athens', 'Culture', 'Website', 4, 2, 780, 8.2, 'Autumn'),
+  (9, 'Ruby', 'Dubrovnik', 'Luxury', 'Phone', 5, 2, 1680, 8.8, 'Summer'),
+  (10, 'Isaac', 'Tallinn', 'City', 'Website', 3, 2, 540, 8.1, 'Winter'),
+  (11, 'Nina', 'Seville', 'Culture', 'Agent', 4, 2, 920, 8.6, 'Spring'),
+  (12, 'Hugo', 'Zermatt', 'Luxury', 'Phone', 6, 3, 2390, 9.3, 'Winter');`;
+
+let SQL;
+let db;
+
+const sourceTableBody = document.getElementById("source-table-body");
+const schemaBlock = document.getElementById("schema-sql");
+const queryInput = document.getElementById("query-input");
+const statusBox = document.getElementById("status-box");
+const resultBox = document.getElementById("result-box");
+const runQueryButton = document.getElementById("run-query");
+const resetQueryButton = document.getElementById("reset-query");
+const resetDbButton = document.getElementById("reset-db");
+const promptItems = new Map(
+  Array.from(document.querySelectorAll(".prompt-item")).map((item) => [item.dataset.promptId, item])
+);
+const completedPromptIds = new Set();
+const promptDefinitions = [
+  { id: "subquery-cost-above-average", label: "Find trips with a package cost above the overall average.", sql: "SELECT traveller_name, destination, package_cost FROM trips WHERE package_cost > (SELECT AVG(package_cost) FROM trips);", orderSensitive: false },
+  { id: "subquery-nights-above-average", label: "Find trips with more nights than the average trip.", sql: "SELECT traveller_name, destination, nights FROM trips WHERE nights > (SELECT AVG(nights) FROM trips);", orderSensitive: false },
+  { id: "subquery-review-below-average", label: "Find trips whose review score is below the table average.", sql: "SELECT traveller_name, destination, review_score FROM trips WHERE review_score < (SELECT AVG(review_score) FROM trips);", orderSensitive: false },
+  { id: "group-average-cost-style", label: "Show average package cost by travel style.", sql: "SELECT travel_style, AVG(package_cost) AS average_package_cost FROM trips GROUP BY travel_style;", orderSensitive: false },
+  { id: "group-destination-review", label: "Show destinations where the average review score is above 8.5.", sql: "SELECT destination, AVG(review_score) AS average_review_score FROM trips GROUP BY destination HAVING AVG(review_score) > 8.5;", orderSensitive: false },
+  { id: "group-channel-travellers", label: "Show booking channels whose total traveller count is above 8.", sql: "SELECT booking_channel, SUM(travellers) AS total_travellers FROM trips GROUP BY booking_channel HAVING SUM(travellers) > 8;", orderSensitive: false },
+  { id: "order-winter-channels", label: "Group winter trips by booking channel, then sort the totals.", sql: "SELECT booking_channel, SUM(travellers) AS total_travellers FROM trips WHERE season = 'Winter' GROUP BY booking_channel ORDER BY total_travellers DESC;", orderSensitive: true },
+  { id: "order-website-styles", label: "Filter website bookings, then group, filter groups, and sort.", sql: "SELECT travel_style, AVG(package_cost) AS average_package_cost FROM trips WHERE booking_channel = 'Website' GROUP BY travel_style HAVING AVG(package_cost) > 500 ORDER BY average_package_cost DESC;", orderSensitive: true },
+  { id: "order-top-destinations", label: "Use the full logical order to find the top reviewed destinations.", sql: "SELECT destination, SUM(travellers) AS total_travellers FROM trips WHERE review_score >= 8 GROUP BY destination HAVING SUM(travellers) >= 2 ORDER BY total_travellers DESC, destination ASC LIMIT 3;", orderSensitive: true },
+  { id: "union-winter-luxury", label: "Return all winter trips and all luxury trips using UNION.", sql: "SELECT traveller_name, destination, season FROM trips WHERE season = 'Winter' UNION SELECT traveller_name, destination, season FROM trips WHERE travel_style = 'Luxury';", orderSensitive: false },
+  { id: "union-rome-agent", label: "Return all trips to Rome and all trips booked through agents.", sql: "SELECT traveller_name, destination, booking_channel FROM trips WHERE destination = 'Rome' UNION SELECT traveller_name, destination, booking_channel FROM trips WHERE booking_channel = 'Agent';", orderSensitive: false },
+  { id: "union-all-winter-luxury", label: "Try the same query with UNION ALL.", sql: "SELECT traveller_name, destination, season FROM trips WHERE season = 'Winter' UNION ALL SELECT traveller_name, destination, season FROM trips WHERE travel_style = 'Luxury';", orderSensitive: false }
+];
+let promptAnswerKey = new Map();
+
+function renderSourceTable() {
+  sourceTableBody.innerHTML = rows.map((row) => `
+    <tr>
+      <td>${row.trip_id}</td>
+      <td>${row.traveller_name}</td>
+      <td>${row.destination}</td>
+      <td>${row.travel_style}</td>
+      <td>${row.booking_channel}</td>
+      <td>${row.nights}</td>
+      <td>${row.travellers}</td>
+      <td>${row.package_cost}</td>
+      <td>${row.review_score}</td>
+      <td>${row.season}</td>
+    </tr>
+  `).join("");
+}
+
+function buildDatabase() {
+  db = new SQL.Database();
+  db.run(seedSQL);
+  buildPromptAnswerKey();
+}
+
+function buildPromptAnswerKey() {
+  promptAnswerKey = new Map(
+    promptDefinitions.map((prompt) => [prompt.id, db.exec(prompt.sql)[0]])
+  );
+}
+
+function renderResults(columns, values) {
+  if (!values.length) {
+    resultBox.innerHTML = '<div class="empty-state">Query ran successfully, but it returned no rows.</div>';
+    return;
+  }
+
+  const head = columns.map((column) => `<th>${column}</th>`).join("");
+  const body = values.map((row) => `<tr>${row.map((value) => `<td>${value === null ? "NULL" : value}</td>`).join("")}</tr>`).join("");
+
+  resultBox.innerHTML = `
+    <div class="table-scroll">
+      <table>
+        <thead><tr>${head}</tr></thead>
+        <tbody>${body}</tbody>
+      </table>
+    </div>
+  `;
+}
+
+function setStatus(message, kind) {
+  statusBox.textContent = message;
+  statusBox.className = `status ${kind || ""}`.trim();
+}
+
+function serialiseValues(values, orderSensitive) {
+  const normalised = values.map((row) => row.map((value) => (value === null ? "NULL" : String(value))));
+  if (orderSensitive) {
+    return JSON.stringify(normalised);
+  }
+  return JSON.stringify(
+    [...normalised].sort((left, right) => JSON.stringify(left).localeCompare(JSON.stringify(right)))
+  );
+}
+
+function resultsMatch(actual, expected, orderSensitive) {
+  if (!actual || !expected) {
+    return false;
+  }
+
+  if (actual.columns.length !== expected.columns.length) {
+    return false;
+  }
+
+  if (actual.columns.some((column, index) => column !== expected.columns[index])) {
+    return false;
+  }
+
+  return serialiseValues(actual.values, orderSensitive) === serialiseValues(expected.values, orderSensitive);
+}
+
+function markPromptComplete(promptId) {
+  const promptItem = promptItems.get(promptId);
+  if (!promptItem || completedPromptIds.has(promptId)) {
+    return;
+  }
+
+  completedPromptIds.add(promptId);
+  promptItem.classList.add("is-complete", "just-completed");
+  window.setTimeout(() => {
+    promptItem.classList.remove("just-completed");
+  }, 500);
+}
+
+function completeMatchingPrompts(result) {
+  const matchedPrompts = [];
+
+  promptDefinitions.forEach((prompt) => {
+    if (completedPromptIds.has(prompt.id)) {
+      return;
+    }
+
+    if (resultsMatch(result, promptAnswerKey.get(prompt.id), prompt.orderSensitive)) {
+      markPromptComplete(prompt.id);
+      matchedPrompts.push(prompt.label);
+    }
+  });
+
+  return matchedPrompts;
+}
+
+function runQuery() {
+  const sql = queryInput.value.trim();
+
+  if (!db) {
+    setStatus("Wait for the SQL engine to finish loading.", "error");
+    return;
+  }
+
+  if (!sql) {
+    setStatus("Write a query first.", "error");
+    return;
+  }
+
+  if (!/^select\b/i.test(sql)) {
+    setStatus("This practice page is for SELECT queries only.", "error");
+    return;
+  }
+
+  try {
+    const result = db.exec(sql);
+    if (!result.length) {
+      resultBox.innerHTML = '<div class="empty-state">Query ran successfully, but it returned no visible result table.</div>';
+      setStatus("Query ran successfully, but it did not match a prompt yet. Check the requested columns, column names or aliases, filters, and sort order.", "ok");
+      return;
+    }
+
+    renderResults(result[0].columns, result[0].values);
+    const matchedPrompts = completeMatchingPrompts(result[0]);
+    if (matchedPrompts.length) {
+      setStatus(`Query ran successfully. ${matchedPrompts.join(" ")} checked off.`, "ok");
+      return;
+    }
+    setStatus("Query ran successfully, but it did not match a prompt yet. Check the requested columns, column names or aliases, filters, and sort order.", "ok");
+  } catch (error) {
+    setStatus(error.message, "error");
+  }
+}
+
+function resetQuery() {
+  queryInput.value = "-- Write a query against trips here.";
+  setStatus("Query box reset.", "");
+}
+
+function resetPromptProgress() {
+  completedPromptIds.clear();
+  promptItems.forEach((item) => {
+    item.classList.remove("is-complete", "just-completed");
+  });
+  setStatus("Prompt ticks reset.", "");
+}
+
+renderSourceTable();
+schemaBlock.textContent = seedSQL;
+
+initSqlJs({
+  locateFile: (file) => `https://cdn.jsdelivr.net/npm/sql.js@1.10.3/dist/${file}`
+}).then((sqlJs) => {
+  SQL = sqlJs;
+  buildDatabase();
+  setStatus("SQL engine ready. Write a SELECT query and run it.", "ok");
+}).catch((error) => {
+  setStatus(`SQL engine failed to load: ${error.message}`, "error");
+});
+
+runQueryButton.addEventListener("click", runQuery);
+resetQueryButton.addEventListener("click", resetQuery);
+resetDbButton.addEventListener("click", resetPromptProgress);
+</script>
+<script src="../../shared/site-nav.js"></script>
+</body>
+</html>
