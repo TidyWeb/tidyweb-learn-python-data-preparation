@@ -1,6 +1,6 @@
 # Learn Python Data
 
-## [🌐 Open the live site: https://tidyweb.github.io/tidyweb-learn-python-data-preparation/ ↗](https://tidyweb.github.io/tidyweb-learn-python-data-preparation/)
+### [Visit the live site ↗](https://tidyweb.github.io/tidyweb-learn-python-data-preparation/)
 
 
 An explanation-first route for turning supplied data into a clean, deliberate
